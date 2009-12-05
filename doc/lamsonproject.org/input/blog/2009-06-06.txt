@@ -1,0 +1,172 @@
+Title: Lamson 0.9.3 Is Out And Sexy As Hell
+
+This release is the result of me working on my little
+"oneshotblog.com":http://oneshotblog.com/ project while tweaking and refining
+Lamson as I go.  The end result is 0.9.3 didn't have a lot of big code changes,
+but all the tiny little changes add up to a very nice release.  The highlights
+of this release are more secure server runs, better character encoding handling
+for headers, various cleanups in how mail is queued, and fixes for Python 2.6
+support.
+
+My plan is to keep using this release, improving what is there currently and
+only adding minimal features, and just making what is there tighter.  The goal
+is to *have a 1.0 release out* once I've used it on
+"oneshotblog.com":http://oneshotblog.com/ and the new "lamsonproject.org
+mailing lists":/lists/ application.
+
+
+h2. Getting It (As Usual)
+
+All you need to do to get lamson is read the "download instruction":/download.html
+and then go through the "getting started":/docs/getting_started.html to try it out.
+
+The *docs may be out of date with this release*, but I'm going through docs tomorrow.
+
+
+h2. NYLUG Python Workshop Tuesday June 09 6:00PM-8:00PM
+
+I'll be presenting Lamson at the "NYLUG Python Workshop Tuesday June 09 6:00PM-8:00PM":http://nylug.org/pipermail/nylug-announce/2009-June/000795.html
+and helping people get started with it.  If you wanted to try it but didn't want
+to waste the time then come down and I'll hook you up.
+
+
+
+h2. OneShotBlog Sample Is Live
+
+Lamson includes the source to the "oneshotblog.com":http://oneshotblog.com/ project
+in the @examples/osb@ directory.  You can "grab the source tar.gz":/releases/
+and look in there fore the source.  You should also try out the sample site to help
+test out Lamson, especially if you use a weird character set (since that's the biggest
+weakness currently).
+
+This release of OSB features a bunch of bug fixes, tons of tests that improve the code
+coverage, the ability to comment on a post by sending an email, decent spam filtering
+of the comments, ability to flag a comment as spam, and lots of little tweaks.  It 
+uses *all* of the features Lamson has right now.
+
+It still has some work to do, and I want to add the ability to send pictures and source
+code (with syntax highlight).
+
+
+h2. The ChangeLog
+
+The change log for this release is (with the big ones bold):
+
+* Cleaned up some stray printing and logging.
+* Now prints a nicer message if args get a bad argument.
+* *Managed to get a file object out of the maildir which removes the need to reconvert from a message.*
+* A few minor test suite tweaks to get coverage on the most recent features.
+* *Implemented a reorg of how the servers are started so that they can bind port 25 and then drop priv to a safer user.*
+* *Initial support for an undeliverable queue and a forwarding handler that you can run in a queue receiver to deliver unhandled mail to the relay.  Needs tests.*
+* Using the new Router.UNDELIVERABLE_QUEUE feature to have bad mail go to a queue.
+* Fixed the queue_command so that it prints what queue it is working with.
+* Added a setting for the Router to tell it to dump undeliverable mail to a queue.
+* *First cut at semi-automated header encoding conversion.*
+* Initial support for sort-of-automated header decoding/encoding on MailRequest.
+* Found a bug in clear_queue which made it not able to clear alternate queues.
+* Small changes to fix a non-idiomatic has_key usage.
+* Tweaked testing so that it resets the Router state when you do a client.begin() in unit tests.
+* Tweaked the boot vs. test logging setup to make it nicer for both situations.
+* *Since the Router is the primary code loading mechanism, it now uses its own separate logger that you can redirect to stderr to see loading errors during dev.*
+* *Created a disconnected set of config testing gear so that it can test without relying on any examples.   Also configures the logger using a config file and cleans up test output.*
+* *Added a feature to the routes command to print out how each matching regex will match a given test address.*
+* Added an exception handler for loading and reloading handlers so that you can see which ones are broke during development.
+* Added a -test feature to lamson routes that let's you test an address to see what routes it matches.
+* *Updated for Python 2.6 so the tests will run, not sure why they pass in Python 2.5 actually.*
+* Modification to the mail parsing so that it forces 'ascii' encoding to keep email.message_from happy in Python 2.6
+
+
+h2. Using The Drop Privilege
+
+Lamson can now drop privilege after binding port 25.  Previously it was too difficult
+to make the python-daemonize library do it correctly, but after I reorganized some code 
+I was able to do the privilege drop manually to implement it.  What this means is you can
+run your email server and *stop being root* right after you bind port 25.
+
+To do this, you'll just run your server with:
+
+<pre class="code">
+$ sudo lamson start -uid 500 -gid 500
+$ cd ..
+$ sudo chown -R someuser.someuser yourapp
+</pre>
+
+You technically don't have to fix the permissions, but if you use "queue receivers":/docs/deferred_processing_to_queues.html
+then you'll need to change the permissions back.  Lamson still creates a few files as root before 
+dropping to your given UID and GID, but hopefully it will stop doing this soon.
+
+Obviously, you might want to know what your UID and GID is, but it's important that you know
+what *Python* thinks it is:
+
+<pre class="code prettyprint">
+Python 2.5.1 (r251:54863, Jan 13 2009, 10:26:13) 
+[GCC 4.0.1 (Apple Inc. build 5465)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import os
+>>> os.getgid()
+500
+>>> os.getuid()
+500
+>>> 
+</pre>
+
+There's other ways to find it out, but that's the Python way.
+
+h2. Using lamson routes
+
+The @lamson routes@ command has improved a bit so that you can inspect your routing and 
+test out an email address to see how it would be sorted.  Here's a sample run:
+
+<pre class="code">
+osb $ lamson routes -test test.blog@oneshotblog.com
+2009-06-07 02:33:31,678 - root - INFO - Database configured to use sqlite:///app/data/main.db URL.
+Routing ORDER:  [... lots of regex here ...]
+Routing TABLE: 
+---
+... each regex and what state functions it maps ..
+---
+'^post-confirm-(?P<id_number>[a-z0-9]+)@(?P<host>oneshotblog\\.com)$':  app.handlers.post.CONFIRMING  
+---
+
+TEST address 'test.blog@oneshotblog.com' matches:
+  '^(?P<post_name>[a-zA-Z0-9][a-zA-Z0-9.]+)@(?P<host>oneshotblog\\.com)$' app.handlers.index.POSTING
+  -  {'host': 'oneshotblog.com', 'post_name': 'test.blog'}
+  '^(?P<post_name>[a-zA-Z0-9][a-zA-Z0-9.]+)@(?P<host>oneshotblog\\.com)$' app.handlers.post.START
+  -  {'host': 'oneshotblog.com', 'post_name': 'test.blog'}
+  '^(?P<post_name>[a-zA-Z0-9][a-zA-Z0-9.]+)@(?P<host>oneshotblog\\.com)$' app.handlers.post.POSTING
+  -  {'host': 'oneshotblog.com', 'post_name': 'test.blog'}
+osb $ 
+</pre>
+
+If you're working with Lamson this is incredibly helpful, because it tells you what
+routes you have, what functions they call, and then it'll take an email address and
+tell you all the routes that match it.
+
+The output needs to be cleaned up, but for debugging this is nice.
+
+h2. The lamson web Command
+
+While working on "oneshotblog.com":http://oneshotblog.com/ I kept having to 
+open up the site that it generates, so I just threw a dirt simple HTTP server
+into Lamson.   Here's a sample of running it:
+
+<pre class="code">
+~ $ cd projects/lamson/examples/osb/
+osb $ lamson web -basedir app/data/
+Starting server on 127.0.0.1:8888 out of directory 'app/data/'
+localhost - - [06/Jun/2009 12:31:11] "GET / HTTP/1.1" 200 -
+localhost - - [06/Jun/2009 12:31:11] "GET /styles/reset.css HTTP/1.1" 200 -
+localhost - - [06/Jun/2009 12:31:11] "GET /styles/main.css HTTP/1.1" 200 -
+localhost - - [06/Jun/2009 12:31:18] code 404, message File not found
+</pre>
+
+It just stays there running and printing to the console, so I just use
+"GNU screen":http://www.gnu.org/software/screen/screen.html and leave it
+running in one of the windows.
+
+
+h2. As Usual Test And Report
+
+Test this release out, and shoot me feedback.  I'm hanging on irc.freenode.org
+again in the #lamson room, so just stop in if you need help.
+

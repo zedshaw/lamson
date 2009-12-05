@@ -1,0 +1,12 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+
+  {% for post in posts %}
+  <div class="post">
+      <h2><a href="{{ post['x-post-url']}}">{{ post['subject'] | striptags | escape | title }}</a> </h2>
+      <p>{{ post.body()[0:200] }}...<br/><font size="9px">({{ post['date'] }})</font></p>
+  </div>
+  {% endfor %}
+
+{% endblock %}

@@ -1,0 +1,16 @@
+source deploy/env/$1
+source deploy/lib/migrate
+
+assert_env
+setup
+stop $TARGET
+
+TS=`date +%F.%T`
+
+mv $TARGET $FAILS/$TS
+logger_info "Failure was placed in $TS, if the backup fails go there."
+
+rollback 0B $BACKUP $TARGET
+
+logger_info "Rollback complete and failure placed in $TS"
+logger_warn "System is now stopped, you should fix it."

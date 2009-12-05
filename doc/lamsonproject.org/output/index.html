@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Lamson The Python Mail Server</title>
+		<link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+		<![endif]-->
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+			<!-- ATTENTION: The entire #masthead div should be removed for every page *other than* the home page. -->
+			<div id="masthead">
+				<div class="features">
+					<h2>Features</h2>
+					<ul>
+						<li>
+							<p>Avoid aliases forever! Lamson uses friendly regular expressions and FSM-based routing.</p>
+						</li>
+						<li>
+                        <p>Use an RDBMS and ORM instead of a bizarre combination of flat-files and hashtables!</p>
+						</li>
+						<li>
+							<p>Get up and running quickly. Lamson can be installed and running in 30 seconds.</p>
+						</li>
+					</ul>
+					<a id="getstarted" href="/docs/getting_started.html">Get Started &raquo;</a>
+				</div>
+				<div class="content">
+					<h2>The Python SMTP Server</h2>
+					<p class="lightened padded">
+						We've all been there, mucking around in the sendmail m4 macros trying one more time to get the damn mailing list to update for the new users. Every time we say, "This sucks, I want to rewrite this stupid thing." Yet, when we're done, we simply crawl back to our caves covered in our sendmail wounds.
+					</p>
+					<p class="lightened">
+						Lamson's goal is to put an end to the hell that is "e-mail application development". Rather than stay stuck in the 1970s, Lamson adopts modern web application framework design and uses a proven scripting language (Python).
+					</p>
+				</div>
+			</div>
+
+            <div id="main_content">
+                <h1>Lamson The Python Mail Server</h1>
+                
+<p>Rather than stay stuck in the 1970's, Lamson adopts modern web application
+framework design and uses a proven scripting language (Python).</p>
+
+<pre class="code prettyprint">
+@route("(post_name)@(host)")
+def START(message, post_name=None, host=None):
+    message['X-Post-Name'] = post_name
+    confirmation.send(relay, "post", message, "mail/confirm.msg", locals())
+    return CONFIRMING
+</pre>
+
+<p>Instead of hideous aliases files (that you never remember to update) 
+Lamson uses friendly regular expressions and routing decorators that make 
+configuring how email is handled trivial.</p>
+
+<pre class="code prettyprint">
+@route("post-confirm-(id_number)@(host)", id_number="[a-z0-9]+")
+def CONFIRMING(message, id_number=None, host=None):
+    original = confirmation.verify(message, id_number)
+    ...
+
+
+@route("(post_name)@(host)")
+@route("(post_name)-(action)@(host)", action="delete")
+def POSTING(message, post_name=None, host=None, action=None):
+    name, address = parseaddr(message['from'])
+    ...
+</pre>
+
+
+<p>Rather than bizarre flat file "databases" and hashtable stores, Lamson uses anything
+that Python does to store data.  You can use all of the following to store data in Lamson:
+
+<ul>
+<li><a href="http://docs.djangoproject.com/en/dev/ref/models/instances/">Django's ORM</a></li>
+<li><a href="http://webpy.org/">web.py's simple database library</a></li>
+<li><a href="http://tokyocabinet.sourceforge.net/tyrantdoc/">Tokyo Tyrant</a></li>
+<li><a href="http://opensource.plurk.com/LightCloud/">Lightcloud</a></li>
+<li><a href="http://docs.python.org/library/shelve.html">Python's Shelve (not recommended)</a></li>
+<li><a href="http://docs.python.org/library/sqlite3.html">Raw SQLite3</a></li>
+<li><a href="http://sqlobject.org/">SQLObject</a></li>
+<li><a href="http://code.google.com/p/couchdb-python/">CouchDB</a></li>
+<li><a href="http://www.mongodb.org/display/DOCS/Python+Tutorial">Mongo DB</a></li>
+<li><a href="http://www.sqlalchemy.org/">SQLAlchemy</a></li>
+</ul>
+
+<p>There's so many great ways to store data in Python that Lamson doesn't make
+any assumptions other than to provide a convenience function or two for configuring
+SQLAlchemy (since it's kind of a pain to setup).  In reality, there's so many
+ORMs and storage mechanisms available to Python that you should try as many as
+you can and use the one you like the most.</p>
+
+<p>Lamson also supports extensive spam blocking through <a href="http://spambayes.sourceforge.net/">SpamBayes</a>:</p>
+
+<pre class="code prettyprint">
+@route("(anything)@(host)", anything=".+", host=".+")
+@spam_filter(ham_db, "tests/.hammierc", "run/queue", next_state=SPAMMING)
+def START(message, **kw):
+    ....
+</pre>
+
+<p>Bounce detection and analysis is available that regular people can use without going RFC nuts:</p>
+<pre class="code prettyprint">
+@route("(anything)@(host)", anything=".+", host=".+")
+@bounce_to(soft=SOFT_BOUNCED, hard=HARD_BOUNCED)
+def START(message, **kw):
+    ...
+</pre>
+
+<p>All within a framework that works well with existing legacy mail servers so you can 
+gradually get into using Lamson.</p>
+
+
+<h2>The 30 Second Introduction</h2>
+
+If you have Python and easy_install already, then try this out:
+
+<pre class="code">
+$ easy_install lamson
+$ lamson gen -project mymailserver
+$ cd mymailserver
+$ lamson start
+$ lamson log
+$ nosetests
+$ lamson help -for send
+$ lamson send -sender me@mydomain.com -to test@test.com \
+        -subject "My test." -body "Hi there." -port 8823
+$ less logs/lamson.log
+$ mutt -F muttrc
+$ lamson stop -ALL run
+</pre>
+
+<p>You now have a working base Lamson setup ready for you to work on with everything you need installed.</p>
+
+<h2>Next Steps</h2>
+
+<p>Grab <a href="/download.html">the code</a> and you can read through the 
+<a href="/docs/getting_started.html">quick start</a> documentation.  After you've gone through
+that, best thing to do is read the code to the examples/osb example included in
+the <a href="/releases/">source distribution</a> and read the rest of the
+<a href="/docs">documentation</a> on this site.</p>
+
+<p>At any point, you can get help for all available Lamson commands with:</p>
+
+<pre class="code">
+$ lamson help
+</pre>
+
+<p>You can get individual command help with:</p>
+
+<pre class="code">
+$ lamson help -for start
+</pre>
+
+<p>Finally, if you really want to get started using Lamson to implement your dream email
+application, but are completely lost, then you can <a href="/contact.html">contact me</a> for help.</p>
+
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+							<a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    Website Designed by <a href="http://kenkeiter.com/">Ken Keiter</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

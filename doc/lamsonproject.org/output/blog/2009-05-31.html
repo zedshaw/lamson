@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Lamson 0.9 Later Today</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Lamson 0.9 Later Today</h1>
+                	<p>I have been working hard on the documentation and scrubbing the code for Lamson and the 0.9 release
+coming out soon.  The only things I feel I need to do before an official 0.9 release are:</p>
+
+	<ol>
+		<li>Clean up the one-shot-blog demo application a bit more.</li>
+		<li>Write a small set of instructions on writing your own <a href="http://lamsonproject.org/docs/api/lamson.routing.StateStorage-class.html">StateStorage.</a></li>
+		<li>Do a last final code review to check for any obvious problems.</li>
+	</ol>
+
+	<p>Once I do that I&#8217;ll make 0.9 official.  If you&#8217;re using 0.8.x right now, or just playing with
+Lamson, please go grab the <a href="/releases/">0.9 pre-release</a> and make sure it works.</p>
+
+	<p>There is one bug in that 0.9-pre3 release where the router won&#8217;t properly route of the form:</p>
+
+<pre>
+To: "First Last" <route.address@host.com>
+</pre>
+
+	<p>This is fairly rare, since someone would have to craft an email like this, and it would just
+be ignored anyway.  <strong>That bug is fixed in the current 0.9 source.</strong></p>
+
+	<p>Please shoot me any bugs you find and I&#8217;ll work them into the 0.9 release.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

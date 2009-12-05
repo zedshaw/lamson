@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Lamson 0.9.5, The Push To 1.0</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Lamson 0.9.5, The Push To 1.0</h1>
+                	<p>I just released Lamson 0.9.5 with all the major Unicode refactoring done and working.
+This is an important release because 0.9.5 is where I declare that I&#8217;m pushing to a 1.0 
+release and the base Lamson <a href="/docs/api/">APIs</a> won&#8217;t change under penalty of death.  In fact they can&#8217;t
+change because I&#8217;m using them myself in a few applications.</p>
+
+	<p>From now on, if an <span class="caps">API</span> has to change, then I&#8217;ll keep the old one around and attach a 
+deprecation warning, and then provide a new one.  You&#8217;ll then have by 1.0 to stop using
+it and start using the new one.  Except for a situations where a bug must be fixed, I
+can&#8217;t see the actual Lamson <span class="caps">API</span> needing such a drastic change by 1.0.</p>
+
+	<p>What will happen between now and 1.0 is bug fixing, and adding any nice additional 
+features people need within the current <a href="/docs/api/">API</a> to help build applications.
+This would be things like more connectors to other mail protocols (<span class="caps">LMTP</span>, <span class="caps">QPMP</span>), commands
+for deployment features, and possibly a way to write your own command.</p>
+
+	<p>So, if you&#8217;ve been waiting for the <span class="caps">API</span> to stabilize then 0.9.5 is the release to grab
+and start using.  I&#8217;m currently using it on about 6 little projects and it&#8217;s working
+great so far, but I need more people to try it out and send me feedback on how well
+it works for them.</p>
+
+	<h2>Getting This Release</h2>
+
+	<p>As usual, you can read the <a href="/download.html">download</a> documentation to learn how to
+grab it.</p>
+
+	<p>After you grab it, go read these documents:</p>
+
+	<ul>
+		<li><a href="http://lamsonproject.org/docs/getting_started.html">Getting Started With Lamson</a></li>
+		<li><a href="http://lamsonproject.org/docs/introduction_to_finite_state_machines.html">A Painless Introduction To Finite State Machines</a></li>
+		<li><a href="http://lamsonproject.org/docs/deploying_lamson.html">Deploying Lamson And OneShotBlog</a></li>
+	</ul>
+
+	<p>Then you should hit the <a href="http://lamsonproject.org/docs/api/"><span class="caps">API</span> documentation</a> and 
+start writing your application.  Keep your first one small and try deploying it
+in different ways.</p>
+
+	<h2>Simple Virtualhost Deployment Instructions Coming Soon</h2>
+
+	<p>The <a href="http://oneshotblog.com/">oneshotblog.com</a> sample application is now deployed in a
+new virtualhost configuration on a new <span class="caps">VPS</span> I purchased this week.  This configuration
+is different from the ones given in the documentation above because it allows you 
+to run mulitple applications for multiple domains on a single machine.</p>
+
+	<p>I&#8217;ll be writing up how to build your own version of this configuration today, but the
+quick description is this:</p>
+
+	<ol>
+		<li>I have postfix running on port 25 now <strong>in front</strong> of Lamson.</li>
+		<li>Postfix is configured to take all mail for each domain and dump it into a maildir queue for each one.</li>
+		<li>The Lamson applications are then reconfigured in their <code>config/boot.py</code> to use a <a href="http://lamsonproject.org/docs/api/lamson.server.QueueReceiver-class.html">QueueReceiver</a> to feed itself messages from its maildir.</li>
+		<li>Lamson then just uses the same postfix server as its relay host like before.</li>
+	</ol>
+
+	<p>The advantage of this configuration, apart from being able to easily host multiple domains, 
+is that you can shutdown your Lamson application and when you start it back up it
+will catch up on the mail in the maildir.  People will probably never know you did 
+maintenance or stopped the server temporarily.</p>
+
+	<p>The disadvantage of this configuration is that it&#8217;s a royal pain to make postfix do this.
+The instructions will show you step-by-step how to pull it off, so hopefully it&#8217;ll make
+it easier on people who need it.  However, I&#8217;m gonna tell people to start small and
+just use the simpler configuration &#8220;Lamson in front&#8221; configuration and leave this
+for the big times.</p>
+
+	<h2>Mailing List Will Go Down</h2>
+
+	<p>Finally, I&#8217;ll be moving the mailing list shortly, so if you send a message and don&#8217;t receive
+a reply then that&#8217;s why.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

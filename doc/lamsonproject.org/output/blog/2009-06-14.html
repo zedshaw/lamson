@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: The Mailocalypse Is Upon Us!</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>The Mailocalypse Is Upon Us!</h1>
+                	<p>I&#8217;m currently polishing off the two final features before I start going for
+the Lamson 1.0 release.  I&#8217;ve been using Lamson to make a few little cute applications
+and create one thing for a potential client, and so far I haven&#8217;t had to change much
+since 0.9.3.  It&#8217;s great so far and I hope that Lamson 1.0 will be a fun release.</p>
+
+	<p>The <strong>big</strong> thing that must improve though is handling character encodings in emails.
+After spending a week or more trying to come up with an automated conversion scheme that 
+would honor all the encodings on the planet, I had a realization.</p>
+
+	<h2>Why Isn&#8217;t All Mail UTF-8?</h2>
+
+	<p>Remembering the purpose of Lamson as a <strong>modern</strong> mail server and framework, it finally
+struck me as dumb that I&#8217;m trying to keep around encodings that were invented in the 
+pre-Unicode days.  Every modern system understands and displays UTF-8, and apart from
+some pissy attitudes from the Japanese about the Han unification, there&#8217;s really no reason
+that every email Lamson handles can&#8217;t be &#8220;upgraded&#8221; to UTF-8.</p>
+
+	<p>As I thought about this more I started to like the idea.  Take all mail Lamson handles, and
+upgrade it to utf-8.  Then inside Lamson you know that it&#8217;s future proofed and ready to
+be used by Python no matter what.  Finally when the mail goes out, the conversion for sending
+is simply to encode the email as proper UTF-8 encoding consistently.</p>
+
+	<p>However, I&#8217;m not the type of person to think any random idea I have is instantly valid because
+I thought it up.  Before I make a grand announcement that Lamson only deals with UTF-8 I better
+know that it&#8217;s going to have minimal impact on people using it.  I made a similar decision with
+Mongrel, where I chose <strong>not</strong> to accept clients that didn&#8217;t follow the standard, and it turned
+out to block a ton of security attacks for free.</p>
+
+	<p>What if Lamson&#8217;s required conversion to UTF-8 could not only simplify Lamson mail processing,
+but also prevent spam and security flaws?  I decided to do some basic analysis and find out.</p>
+
+	<h2>This Is The Mailocalypse</h2>
+
+	<p>I&#8217;ve decided that Lamson will <strong>NOT</strong> try to maintain the encodings it is given by a client.
+It will consider all encodings suspect, and attempt to convert them to UTF-8 as a means
+of cleaning and simplifying the mail it receives before it talks to other systems.  Every
+other system you&#8217;d most likely talk to is either UTF-8 capable or even requires it.</p>
+
+	<p>I&#8217;m calling this &#8220;The Mailocalypse&#8221; because it&#8217;s funny, but it will also separate Lamson from
+other systems, in potentially awesome or horrible ways.</p>
+
+	<p>To validate this premise, I created a small Python script that takes a Maildir or mbox and tries to 
+convert every email into a UTF-8 encoding.  It&#8217;s not trying to write the emails, just
+load them and convert every single piece reliably to UTF-8.  It then reports any emails
+that have a problem with the conversion.  After that I ran it on a bunch of mail I had
+and got other people to run it and report their findings.</p>
+
+	<blockquote>
+		<p> <a href="/mailocalypse.py">You can grab the mailocalypse.py script here.</a>  Improvements welcome.</p>
+	</blockquote>
+
+	<p>The data I got from a small sample of the mail (randomly selected) was the following:</p>
+
+<pre class="code">
+all bad spam
+5069 7 0
+263 15 1
+1806 231 1
+2650 69 0
+4509 20 0
+2023 495 1
+3723 74 0
+</pre>
+
+	<blockquote>
+		<p>all is the total number of messages in the mailbox (including bad).  bad is the number that were bad. 
+spam is whether that box was a spam box or not (meaning all messages were classified as spam).</p>
+	</blockquote>
+
+	<p>I also made sure that the characters showed up in web browsers and in various UTF-8 
+mail clients and terminal windows.  Most of the conversion was reliable and very 
+fast for a quick script.</p>
+
+	<p>With the above data, there&#8217;s two things you can notice right away, and which are confirmed with a quick
+R session:</p>
+
+	<ol>
+		<li>Spam fails to convert more frequently than ham messages.  It looks like failure to convert is a 0.03 significant indicator that the message is spam.  I&#8217;d need more data to confirm that.</li>
+		<li>Legit mail (ham) only has a 1.2% chance of failing to convert, and a quick eye-ball sample says those failures mail are mostly spam that wasn&#8217;t classified right.</li>
+	</ol>
+
+	<h2>Potential Problems</h2>
+
+	<p>This analysis shows initially that converting mail to UTF-8 could work, but there are two problems
+I see so far:</p>
+
+	<ol>
+		<li>I may not be doing the best conversion in that script.</li>
+		<li>Encryption and signatures will screw this up.</li>
+	</ol>
+
+	<p>For the first problem I&#8217;m posting the script and asking people to check it out and
+let me know if there&#8217;s problems.  Run it on your stuff and shoot me the ALL/<span class="caps">BAD</span> numbers
+when it&#8217;s done.  Check the code and see if you can improve it.  Whatever you can to show
+that converting to UTF-8 is a good <strong>OR</strong> bad idea.</p>
+
+	<p>A key design decision though will be that you never lose the original email, only that it
+is converted for Lamson so you can work with it in your code without it blowing up.  If the
+mail can&#8217;t convert, then it&#8217;s bad email and should be rejected anyway.  No point trying to
+process it.  For encrypted email or ones with signatures you would just run all the validation
+on the original, or forward the original on, depending on your application.</p>
+
+	<p>For example, a mailing list would still want to convert all mail to UTF-8 for
+processing, posting to web sites, spam filtering, and rejecting potentially bad
+email.  Signed and encrypted email would then just be forwarded on in original form,
+or decoded and validated depending on the how the mailing list works.</p>
+
+	<h2>Advice And Criticism Welcome</h2>
+
+	<p>Take the mailocalypse script (presented below for review) and try it out.  Confirm that
+it works on most of your mail, and send me the results.  Simplest way is to send me
+a message on twitter like:</p>
+
+	<blockquote>
+		<p>@zedshaw <span class="caps">ALL</span> 2340 <span class="caps">BAD</span> 17 spam yes #mailocalypse</p>
+	</blockquote>
+
+	<p>And I&#8217;ll tally the results and do a better analysis.</p>
+
+	<p>You are also encouraged to fill me in on what I&#8217;m missing in the idea.  Realize that <strong>part</strong> 
+of the idea is to eliminate uncommon corner cases and to prove that a situation is common
+using evidence.  Try to follow the same model by running the script on your mail to prove
+that it won&#8217;t convert reliably or devise your own script to demonstrate your thoughts.</p>
+
+	<h2>The Codes</h2>
+
+	<p><a href="/mailocalypse.py">You can grab the mailocalypse.py script here.</a>  Improvements welcome.</p>
+
+<pre class="prettyprint code">
+
+import email
+from email.header import make_header, decode_header
+from string import capwords
+import sys
+import mailbox
+
+ALL_MAIL = 0
+BAD_MAIL = 0
+
+def all_parts(msg):
+    parts = [m for m in msg.walk() if m != msg]
+
+    if not parts:
+        parts = [msg]
+
+    return parts
+
+def collapse_header(header):
+    if header.strip().startswith("=?"):
+        decoded = decode_header(header)
+        converted = (unicode(
+            x[0], encoding=x[1] or 'ascii', errors='replace')
+            for x in decoded)
+        value = u"".join(converted)
+    else:
+        value = unicode(header, errors='replace')
+
+    return value.encode("utf-8")
+
+def convert_header_insanity(header):
+    if header is None: 
+        return header
+    elif type(header) == list:
+        return [collapse_header(h) for h in header]
+    else:
+        return collapse_header(header)
+
+def encode_header(name, val, charset='utf-8'):
+    msg[name] = make_header([(val, charset)]).encode()
+
+def bless_headers(msg):
+    # go through every header and convert it to utf-8
+    headers = {}
+
+    for h in msg.keys():
+        headers[capwords(h, '-')] = convert_header_insanity(msg[h])
+
+    return headers
+
+def dump_headers(headers):
+    for h in headers:
+        print h, headers[h]
+
+def mail_load_cleanse(msg_file):
+    global ALL_MAIL
+    global BAD_MAIL
+
+    msg = email.message_from_file(msg_file)
+    headers = bless_headers(msg)
+
+    # go through every body and convert it to utf-8
+    parts = all_parts(msg)
+    bodies = []
+    for part in parts:
+        guts = part.get_payload(decode=True)
+        if part.get_content_maintype() == "text":
+            charset = part.get_charsets()[0]
+            try:
+                if charset:
+                    uguts = unicode(guts, part.get_charsets()[0])
+                    guts = uguts.encode("utf-8")
+                else:
+                    guts = guts.encode("utf-8")
+            except UnicodeDecodeError, exc:
+                print >> sys.stderr, "CONFLICTED CHARSET:", exc, part.get_charsets()
+                BAD_MAIL += 1
+            except LookupError, exc:
+                print >> sys.stderr, "UNKNOWN CHARSET:", exc, part.get_charsets()
+                BAD_MAIL += 1
+            except Exception, exc:
+                print >> sys.stderr, "WEIRDO ERROR", exc, part.get_charsets()
+                BAD_MAIL += 1
+
+            ALL_MAIL += 1
+
+mb = None
+
+try:
+    mb = mailbox.Maildir(sys.argv[1])
+    len(mb)  # need this to make the maildir try to read the directory and fail
+except OSError:
+    print "NOT A MAILDIR, TRYING MBOX"
+    mb = mailbox.mbox(sys.argv[1])
+
+if not mb:
+    print "NOT A MAILDIR OR MBOX, SORRY"
+
+for key in mb.keys():
+    mail_load_cleanse(mb.get_file(key))
+
+print >> sys.stderr, "ALL", ALL_MAIL
+print >> sys.stderr, "BAD", BAD_MAIL
+
+</pre>
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

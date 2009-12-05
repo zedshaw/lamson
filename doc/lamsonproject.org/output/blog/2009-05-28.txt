@@ -1,0 +1,72 @@
+Title:  0.9-pre2 Up For Testing, Docs Too
+
+First off, my apologies to everyone if your RSS reader went crazy today.
+I include documentation changes in the RSS feed so that people can
+easily track updates to the Lamson docs.  However, that means when I'm
+writing a lot of documentation it hits the feed repeatedly.
+
+The good news though is that you can now get at the 0.9-pre2 release of
+Lamson from the "releases":/releases/ page and you can read the great
+new documentation I've got.
+
+Simply go to the "documentation":/docs/ list and go through.  You'll
+want to check out "how to install Lamson in a
+virtualenv":/docs/lamson_virtual_env.html by Zachary Voase.  You'll
+also want to read through the current draft of the "getting
+started":/docs/getting_started.html as it covers all the nitty gritty
+things you need.
+
+
+h2. Migrating To 0.9
+
+I'm getting the 0.9 pre-releases out so that people can start
+migrating and feeding me problems they encounter.
+
+I'll have a full list of changes and some documentation on
+migrating to 0.9.  The main things that changed are covered
+in the "getting started":/docs/getting_started.html documentation,
+notably how Lamson is configured and how routing works.  Routing
+is the biggest change of all so read through it.
+
+I'll have documentation on exactly how Routing works and
+how to use it too coming soon.
+
+If you started using Lamson at the 0.8.x level and need help
+migrating "contact me":/contact.html and I'll help you out.
+Migration should involve just tagging your state functions with
+the right route decorators.
+
+
+h2. Mailing List Is Dead, Long Live OSB
+
+I really didn't like the way I did the mailinglist example, so
+rather than keep it alive I just killed it and will rewrite it
+after 0.9.  In its place is the _examples/osb_ application which 
+is a One-Shot-Blog.  You send it an email and it makes a blog
+page and index for it.  It's simple enough for everyone to
+comprehend and I'll be able to cover it in documentation easily.
+
+The OSB sample has all the right stuff for you to see how all of
+Lamson's features work, so check it out and use it as the basis
+for your own applications.
+
+You can get it by "downloading the source":/releases/ and looking
+in the examples/osb directory.
+
+
+h2. 0.9 Probably This Weekend
+
+I want to get all the documentation done for the 0.9 release
+and finish the *very* last feature that it needs.  I'm hoping
+to have that in the next few days, at least by Monday.
+
+The only feature remaining for 0.9 is a SQLAlchemy based state
+storage, and maybe a shelf based one.  Lamson now stores its 
+state in an abstract "StateStorage":/docs/api/lamson.routing.StateStorage-class.html class that lets you store state however you need.
+
+Right now all that's implemented is a "MemoryStorage":/docs/api/lamson.routing.MemoryStorage-class.html which actually works well enough
+for most applications that you just start off, and is great for
+unit testing.  But, there needs to be a permanent state store
+support.
+
+

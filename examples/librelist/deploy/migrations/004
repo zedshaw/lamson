@@ -1,0 +1,9 @@
+# migrates the archives to create the json archives as well
+
+pushd ~/deploy/ENV
+easy_install simplejson
+popd
+
+python deploy/migrations/json_convert.py
+
+

@@ -1,0 +1,16 @@
+source deploy/env/$1
+source deploy/lib/migrate
+
+assert_env
+setup
+
+stop $TARGET
+
+backup $TARGET $BACKUP
+
+deploy_code $SOURCE $TARGET/..
+
+migrate $TARGET
+
+start $TARGET
+

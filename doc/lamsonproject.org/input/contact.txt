@@ -1,0 +1,11 @@
+From: Zed
+Title: Getting Help With Lamson
+
+There are "mailing lists":/lists/ available (running Lamson of course) that you can join
+to get help.  Keep in mind that these lists are running Lamson, and since Lamson is still a
+work in progress they might be faulty.
+
+The best way to get help with Lamson is to email me directly.  You can send
+mail to "zedshaw@zedshaw.com":mailto:zedshaw@zedshaw.com to ask for help.
+
+

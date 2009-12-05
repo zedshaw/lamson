@@ -1,0 +1,8 @@
+source deploy/env/$1
+source deploy/lib/migrate
+
+assert_env
+setup
+
+backup $TARGET $BACKUP
+

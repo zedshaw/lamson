@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Writing A Lamson State Storage Backend</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Writing A Lamson State Storage Backend</h1>
+                	<p>Earlier versions of Lamson assumed that you would use SQLAlchemy, and that you
+wouldn&#8217;t mind storing your state in the database using SQLAlchemy.  Well,
+during the 0.9 redesign it became very easy to let you store the state however
+and wherever you want.  In the new Lamson setup there is a bit more work to
+create alternative storage, but Lamson comes with two default stores that you
+can use to get started.</p>
+
+	<h2>The Default MemoryStore</h2>
+
+	<p>When you get started with Lamson you&#8217;ll definitely not want to go through the
+trouble of setting up a custom store.  For your first days of development,
+using the default
+<a href="http://lamsonproject.org/docs/api/lamson.routing.MemoryStorage-class.html">MemoryStorage</a>
+is the way to go.  After you get further in your development you want to switch
+to the
+<a href="http://lamsonproject.org/docs/api/lamson.routing.ShelveStorage-class.html">ShelveStorage</a>
+to store the state in a simple Python
+<a href="http://docs.python.org/library/shelve.html">shelve</a> store.</p>
+
+	<p><code>MemoryStorage</code> keeps the routing state in a simple dict in memory, and doesn&#8217;t
+provide any thread protection.  Its purpose is for developer testing and unit
+test runs where keeping the state between disks is more of a pain than it is
+worth.  Use the <code>MemoryStorage</code> (which is the default) for your development
+runs and for simple servers where the state does need to be maintained (very
+rare). </p>
+
+	<p>Here&#8217;s the code to MemoryStore for you to just look at, it&#8217;s already included in Lamson:</p>
+
+<pre class="code prettyprint">
+class MemoryStorage(StateStorage):
+    """
+    The default simplified storage for the Router to hold the states.  This
+    should only be used in testing, as you'll lose all your contacts and their
+    states if your server shutsdown.  It is also horribly NOT thread safe.
+    """
+    def __init__(self):
+        self.states = {}
+
+    def get(self, module, sender):
+        key = self.key(module, sender)
+        try:
+            return self.states[key]
+        except KeyError:
+            self.set(module, sender, ROUTE_FIRST_STATE)
+            return ROUTE_FIRST_STATE
+
+    def set(self, module, sender, state):
+        key = self.key(module, sender)
+        self.states[key] = state
+
+    def key(self, module, sender):
+        return repr([module, sender])
+
+    def clear(self):
+        self.states.clear()
+</pre>
+
+	<p>As you can see there isn&#8217;t much to implement to make your own storage
+for Lamson to use.</p>
+
+	<blockquote>
+		<p> Keep in mind that this is just the storage <strong>Lamson</strong> needs to operate,
+you probably don&#8217;t want to be accessing this in your own application, 
+and instead probably want to access the store you create yourself.</p>
+	</blockquote>
+
+	<h2>The ShelveStorage</h2>
+
+	<p><code>ShelveStorage</code> is used for your small deployments where you are mostly just
+testing the deployment process or doing a small service.  It will store your
+data between runs, and is probably fast enough for most sites, but you&#8217;ll want
+to ditch it if you ever:</p>
+
+	<ol>
+		<li>Run more than one process that needs the state information.</li>
+		<li>Start to store everything in a database anyway.</li>
+	</ol>
+
+	<p>The code to ShelveStorage (which is <strong>already</strong> part of Lamson) is more complex
+since it must keep the threads happy, but you should read through it to get
+an idea of how a more complex state store would work:</p>
+
+<pre class="code prettyprint">
+class ShelveStorage(MemoryStorage):
+    """
+    Uses Python's shelve to store the state of the Routers to disk rather than
+    in memory like with MemoryStorage.  This will get you going on a small
+    install if you need to persist your states (most likely), but if you 
+    have a database, you'll need to write your own StateStorage that 
+    uses your ORM or database to store.  Consider this an example.
+    """
+    def __init__(self, database_path):
+        """Database path depends on the backing library use by Python's shelve."""
+        self.database_path = database_path
+        self.lock = threading.RLock()
+
+    def get(self, module, sender):
+        """
+        This will lock the internal thread lock, and then retrieve from the
+        shelf whatever module you request.  If the module is not found then it
+        will set (atomically) to ROUTE_FIRST_STATE.
+        """
+        with self.lock:
+            store = shelve.open(self.database_path)
+            try:
+                key = store[self.key(module, sender)]
+            except KeyError:
+                self.set(module, sender, ROUTE_FIRST_STATE)
+                key = ROUTE_FIRST_STATE
+            return key
+
+    def set(self, module, sender, state):
+        """
+        Acquires the self.lock and then sets the requested state in the shelf.
+        """
+        with self.lock:
+            store = shelve.open(self.database_path)
+            store[self.key(module, sender)] = state
+            store.close()
+
+    def clear(self):
+        """
+        Primarily used in the debugging/unit testing process to make sure the
+        states are clear.  In production this could be a bad thing.
+        """
+        with self.lock:
+            store = shelve.open(self.database_path)
+            store.clear()
+            store.close()
+</pre>
+
+	<h2>Using The ShelveStorage</h2>
+
+	<p>You can use <code>ShelveStorage</code> by simply adding this line to your <code>config/boot.py</code> 
+file just before you do anything else with the <code>Router</code>:</p>
+
+<pre class="code prettyprint">
+from lamson.routing import ShelveStorage
+Router.STATE_STORE=ShelveStorage("run/states")
+</pre>
+
+	<p>It actually doesn&#8217;t matter currently when you do it, but it&#8217;s good practice right now.</p>
+
+	<p>After you do that, restart lamson and it will start using the new store.
+Notice that your <strong>tests will not use this</strong>.  It&#8217;s not a good idea to have tests
+use <code>ShelveStorage</code>, but if you want to turn it on for a run to see what
+happens, then you can modify <code>config/testing.py</code> the same way.  You could also
+write a unit test that did this temporarily by putting that line in your test
+case.</p>
+
+	<h2>What To Implement</h2>
+
+	<p>If you want to implement your own then you just have to implement the methods
+in
+<a href="http://lamsonproject.org/docs/api/lamson.routing.StateStorage-class.html">StateStorage</a>
+and make sure it behaves the same as MemoryStorage.  Look at the code to
+ShelveStorage for a moment to see what you need:</p>
+
+<pre class="code prettyprint">
+class StateStorage(object):
+    """
+    The base storage class you need to implement for a custom storage
+    system.
+    """
+    def get(self, module, sender):
+        """
+        You must implement this so that it returns a single string
+        of either the state for this combination of arguments, OR
+        the ROUTE_FIRST_STATE setting.
+        """
+        raise NotImplementedError("You have to implement a StateStorage.get.")
+
+    def set(self, module, sender, state):
+        """
+        Set should take the given parameters and consistently set the state for 
+        that combination such that when StateStorage.get is called it gives back
+        the same setting.
+        """
+        raise NotImplementedError("You have to implement a StateStorage.set.")
+
+    def clear(self):
+        """
+        This should clear ALL states, it is only used in unit testing, so you 
+        can have it raise an exception if you want to make this safer.
+        """
+        raise NotImplementedError("You have to implement a StateStorage.clear for unit testing to work.")
+</pre>
+
+	<p>There really isn&#8217;t much to it, just methods to get and set based on the module
+and sender&#8217;s email address.  Also notice that you don&#8217;t have to make it
+readable in any complete sense, since Lamson doesn&#8217;t do anything other than
+get, set, and clear the state store (and it only clears on reloads and in
+testing).</p>
+
+	<h2>Important Considerations</h2>
+
+	<p>I am purposefully <strong>not</strong> telling you how to exactly implement it because I&#8217;m not
+exactly sure what is needed as of the 0.9 release.  I use the the
+ShelveStorage, but I&#8217;d like to hear what other people have written and then
+start building infrastructure to make that easier.</p>
+
+	<p>There are some important things to consider when you implement your storage
+though:</p>
+
+	<ol>
+		<li>Make sure that the calls to all methods are thread safe, and potentially process safe.</li>
+		<li>If you do thread locking, use the <strong>with</strong> statement and an RLock.</li>
+		<li>If your storage is potentially very slow, then consider a caching scheme inside, but <strong>write that after making it work correctly.</strong></li>
+		<li>Do <strong>NOT</strong> be tempted to store junk in this like it is a &#8220;session&#8221;.  It should be lean and mean and only do state.</li>
+		<li>Make sure you keep the key being used exactly as given.  You can seriously mess up Lamson&#8217;s Router if you start getting fancy.</li>
+	</ol>
+
+	<h2>Attaching It To The Router</h2>
+
+	<p>Your storage backend will then be attached to the lamson.routing.Router in the
+same way as what you did with ShelveStorage.  It really should be that simple
+since the data stored in the state store is very minimal.</p>
+
+	<h2>Other Examples</h2>
+
+	<p>If you want more examples then you can look at the <code>examples/librelist</code> code to see
+how <a href="http://librelist.com/">librelist.com</a> uses <a href="http://www.djangoproject.com/">Django</a>
+to store the state.</p>
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

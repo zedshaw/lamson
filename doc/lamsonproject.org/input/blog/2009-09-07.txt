@@ -1,0 +1,36 @@
+Title: Lamson 1.0pre5 Out
+
+I just pushed Lamson 1.0pre5 to PyPI for your enjoyment:
+
+"PyPI Download":http://pypi.python.org/pypi?:action=files&name=lamson&version=1.0pre5
+
+You can also get it from "releases":/releases/ or by doing the usual
+easy_install.
+
+This is a small bugfix release that only adds one small feature.  If
+you're running with the SMTPReceiver, you can raise a server.SMTPError with
+an error code you want and the SMTPReceiver will return that as the error
+code to the client.
+
+For example, if you do this in your handler:
+
+<pre class="code prettyprint">
+@route(".+")
+def START(message):
+    raise server.SMTPError(550)
+</pre>
+
+Then it will generate a reasonable error message (using lamson.bounce
+messages) and give that to the client.  You can also give a second
+parameter to SMTPError that will be the error message if you don't
+like the automatic ones.
+
+Only warning with this is use it sparingly, as it then ties you always
+running Lamson as an SMTPReceiver, instead of off the QueueReceiver.  It also
+leaks out to malicious clients more information about your server than
+you might want them to know.  In general, it's better to just ignore bad
+messages and save them in an undeliverable queue for later inspection.
+
+Alright, try it out and report bugs to me.  Thanks.
+
+

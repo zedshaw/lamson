@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Lamson's Bounce Detection Algorithm</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Lamson's Bounce Detection Algorithm</h1>
+                	<p>I just finished committing 0.9.6 code for doing bounce detection and analysis
+with Lamson.  It&#8217;s part of the new mailing list example I&#8217;m coding up for the
+0.9.6 release which I&#8217;ll be running on a free mailing list site I&#8217;m going 
+to release soon.  In this blog post I&#8217;d like to go through the bounce detection
+algorithm and get some feedback and samples from people.  So far it works great for
+the samples I have, but I want it to be fairly bullet proof.</p>
+
+	<p>What I have here is a quick description of how Lamson is doing bounce detection, 
+and then how it gives you parsed information to do analysis beyond that.  I&#8217;m hoping
+that people who have to deal with bounces from systems like MS Exchange can possibly
+either provide samples or advice so I can tune the algorithm better.</p>
+
+	<h2>The State of <span class="caps">RFC</span> 3464 And 1893</h2>
+
+	<p>The two big RFCs for bounce handling are <a href="http://www.faqs.org/rfcs/rfc3464.html">RFC3464 &#8211; An Extensible Message Format for Delivery Status Notifications</a>
+and <a href="http://www.faqs.org/rfcs/rfc1893.html">RFC1893 &#8211; Enhanced Mail System Status Codes</a> which
+cover the headers and error messages you&#8217;ll encounter.</p>
+
+	<p>In RFC3464 there&#8217;s various headers that are given which a bounce message should have,
+as well as the double and sometimes triple multipart-mime wrapping you need to do
+to give back the bounced message.  A major pain with this standard is that the headers
+are spread out across the different nested parts, some might be duplicated, and the format
+is <strong>never</strong> respected by the various MTAs out there.</p>
+
+	<p>With RFC1893 you have a large number of status codes, but they are combined in weird ways
+such that you have a primary code with the first digit, a secondary code with the
+second, and then a &#8220;third&#8221; code that&#8217;s the second and third digit combined.  Unlike <span class="caps">HTTP</span>
+error codes where there&#8217;s just a single number mapped to a single status code, in RFC1893
+it&#8217;s this strangely nested first+second+(second+third) thing.</p>
+
+	<p>Adding to this is there&#8217;s a few headers where you can put these status codes, and in 
+various formats.  Here&#8217;s a sample of the <strong>parsed</strong> Diagnostic-Code from a gmail bounce
+message:</p>
+
+<pre class="code prettyprint">
+ 'Diagnostic-Code': [(u'smtp',
+                      u'550-5.1.1',
+                      u"The email account that you tried to reach does...")],
+</pre>
+
+	<p>The end result is that if you want to determine if a message has bounce (not even hard vs. soft)
+then you have to go trolling through nested attachments looking for headers and parsing their values
+on the chance they <strong>might</strong> be important to the bounce.</p>
+
+	<h2>Soft and Hard</h2>
+
+	<p>The general consensus is that if a <strong>primary status code</strong> is greater than 4 then
+the message is a <strong>hard</strong> bounce, anything else is a soft bounce.  Of course there&#8217;s no way
+this is an absolute truth, and I&#8217;m sure there will end up being various complex 
+things people will want to do with a soft vs. a hard bounce.</p>
+
+	<p>Since there&#8217;s no way Lamson could know what you want to base your decisions to honor a 
+soft vs. hard bounce, it simply lets you figure out which type it is, and then analyze
+the information it&#8217;s collected to determine the bounce.</p>
+
+	<h2>Lamson&#8217;s Simplification</h2>
+
+	<p>Lamson already converts the email into a normalized form, so the difficult part of
+parsing out the bounce information is simply trolling through the parts and finding
+all these randomly dispersed bounce headers.  Then it&#8217;s a matter of parsing the values
+into something that can be use for analysis in code.</p>
+
+	<p>To simplify this, Lamson uses a dict of headers and matching regexes to search for in
+the email:</p>
+
+<pre class="code prettyprint">
+BOUNCE_MATCHERS = {
+    'Action': re.compile(r'(failed|delayed|delivered|relayed|expanded)', re.IGNORECASE | re.DOTALL),
+    'Content-Description': 
+        re.compile(r'(Notification|Undelivered Message|Delivery Report)', re.IGNORECASE | re.DOTALL),
+    'Diagnostic-Code': re.compile(r'(.+);\s*([0-9\-\.]+)?\s*(.*)', re.IGNORECASE | re.DOTALL),
+    'Final-Recipient': re.compile(r'(.+);\s*(.*)', re.IGNORECASE | re.DOTALL),
+    'Received': re.compile(r'(.+)', re.IGNORECASE | re.DOTALL),
+    'Remote-Mta': re.compile(r'(.+);\s*(.*)', re.IGNORECASE | re.DOTALL),
+    'Reporting-Mta': re.compile(r'(.+);\s*(.*)', re.IGNORECASE | re.DOTALL),
+    'Status': re.compile(r'([0-9]+)\.([0-9]+)\.([0-9]+)', re.IGNORECASE | re.DOTALL)
+}
+</pre>
+
+	<p>Each of these headers shows up about once, maybe more in the parts of a message
+that has bounced information, and they don&#8217;t show up at all or rarely in regular
+messages.  What Lamson does is just walk through each part, finds the matches, parses
+with the regex, and then produces something like this:</p>
+
+<pre class="code prettyprint">
+{'Action': [(u'failed',)],
+ 'Content-Description': [(u'Notification',),
+                         (u'Undelivered Message',),
+                         (u'Delivery report',)],
+ 'Diagnostic-Code': [(u'smtp',
+                  u'550-5.1.1',
+                  u"The email account that you tried to reach does...")],
+ 'Final-Recipient': [(u'rfc822',
+              u'asdfasdfasdfasdfasdfasdfewrqertrtyrthsfgdfgadfqeadvxzvz@gmail.com')],
+ 'Received': [(u'by mail.zedshaw.com ...',)],
+ 'Remote-Mta': [(u'dns', u'gmail-smtp-in.l.google.com')],
+ 'Reporting-Mta': [(u'dns', u'mail.zedshaw.com')],
+ 'Status': [(u'5', u'1', u'1')]}
+</pre>
+
+	<p>I&#8217;ve abbreviated some of the messages since they get stupidly long, but this shows you the information
+you get now.  Lamson also provides a nice <span class="caps">API</span> through the lamson.bounce.BounceAnalyzer class that
+you&#8217;ll see in a moment.</p>
+
+	<blockquote>
+		<p>If you know of additional headers and formats that show up in bounces, let me know.</p>
+	</blockquote>
+
+	<h2>Bounce Probability</h2>
+
+	<p>Now, we&#8217;ve collected up all the different headers you might find in a bounce package, and we&#8217;ve
+attempted to parse the values into something meaningful.  That means, the more of these headers
+that we find and successfully parse, the more likely the message is a bounce.</p>
+
+	<p>Lamson keeps a score while it&#8217;s finding the above headers, and for each one it finds and parses
+it adds a &#8220;point&#8221;.  It then produces a probability <= 1.0 that the message is a bounce or not.
+The more headers it finds, the closer to 1.0, the higher the chance.  So far it looks like any
+message above 0.3 is most likely a bounce message, with only a few spams that are below that.</p>
+
+	<p>Checking for a bounce then looks like this:</p>
+
+<pre class="code prettyprint">
+    bm = mail.MailRequest(None,None,None, open("tests/bounce.msg").read())
+    assert bm.is_bounce()
+    assert bm.bounce
+    assert bm.bounce.score == 1.0
+    assert bm.bounce.probable()
+</pre>
+
+	<p>Which is from the test suite, and shows you various ways to get information
+about the probability of the message being a bounce.</p>
+
+	<h2>Bounce Header Information</h2>
+
+	<p>Finally, you&#8217;ll need to get at this parsed information to make any
+final decisions about the bounce.  You might want to keep track of
+which MTAs consistently fail and include them in your black lists.
+You might want to tune your retries for different kind of soft
+bounces.</p>
+
+	<p>Whatever you need to do, you have the original raw headers that
+Lamson found, but you also have a higher level <span class="caps">API</span> you can use:</p>
+
+<pre class="code prettyprint">
+if msg.is_bounce():
+    print "-------"
+    print "hard", msg.bounce.is_hard()
+    print "soft", msg.bounce.is_soft()
+    print 'score', msg.bounce.score
+    print 'primary', msg.bounce.primary_status
+    print 'secondary', msg.bounce.secondary_status
+    print 'combined', msg.bounce.combined_status
+    print 'remote_mta', msg.bounce.remote_mta
+    print 'reporting_mta', msg.bounce.reporting_mta
+    print 'final_recipient', msg.bounce.final_recipient
+    print 'diagnostic_codes', msg.bounce.diagnostic_codes
+    print 'action', msg.bounce.action
+</pre>
+
+	<p>This is a simple sample that prints out the various bits of
+information available on a bounce message.  Here&#8217;s a sample
+of the output from the above:</p>
+
+<pre class="code prettyprint">
+hard True
+soft False
+score 1.0
+primary (5, u'Permanent Failure')
+secondary (1, u'Addressing Status')
+combined (11, u'Bad destination mailbox address')
+remote_mta gmail-smtp-in.l.google.com
+reporting_mta mail.zedshaw.com
+final_recipient asdfasdfasdfasdfasdfasdfewrqertrtyrthsfgdfgadfqeadvxzvz@gmail.com
+diagnostic_codes (u'550-5.1.1', u"The email account that you tried...")
+action failed
+</pre>
+
+	<p>This demonstrates how I&#8217;ve pulled out all of the error codes mentioned in 
+RFC1893 and put them into Lamson so that you can get meaningful error
+messages for the various multi-level error codes you&#8217;ll encounter.
+All of these error codes are available in the lamson.bounce module.</p>
+
+	<h2>Comments Or Suggestions</h2>
+
+	<p>That&#8217;s it for the review of Lamson&#8217;s bounce detection.  It&#8217;s in the early
+stages but already showing a lot of promise.  It turned out to be much
+easier than I anticipated, but only after doing the work in lamson.encoding
+to clean up emails.</p>
+
+	<p>If you can think of situations that should be covered, and if you have samples
+of horrible bounce messages, then I&#8217;d love to have them.</p>
+
+	<h2>Mailing Lists Coming Back</h2>
+
+	<p>Tomorrow I&#8217;ll be using this to reimplement the mailing list sample and put 
+it back into the bzr repository, then back online.  I&#8217;ll have a nice
+status update about that tomorrow as I finish it up.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

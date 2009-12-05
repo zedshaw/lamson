@@ -1,0 +1,13 @@
+# migration 002 -- need to grab the old librelist deploy
+# copy the archives and database over
+
+if [ -e ~/deploy/librelist ]
+then
+    logger_info "Restoring the old run queues and data"
+    rsync -av ~/deploy/librelist/run .
+
+    logger_info "Restoring the old archives data"
+    rsync -av ~/deploy/librelist/app/data/archive app/data
+else
+    logger_info "No old librelist deploy, no need to run 002."
+fi

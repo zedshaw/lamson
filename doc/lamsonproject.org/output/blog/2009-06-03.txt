@@ -1,0 +1,43 @@
+Title: Lamson 0.9.1 Out, New Docs
+
+I released Lamson 0.9.1 today so please "grab it and test it":/download.html and shoot me feedback.
+
+The little changes are easier handling of attachments in MailRequest, a
+small tweak to spam_filter, and then a bunch of test enhancements and extra
+gear.  The big change is a redesign to lamson.args so that it infers the
+command line arguments from the lamson.commands function keyword arguments.
+It's mostly an internal change since others can't write their own commands
+(yet).
+
+
+h2. New Documentation
+
+I ran into a bunch of folks who didn't know that Lamson had built-in spam
+filtering, so I wrote a document on "Filtering Spam With
+Lamson":http://lamsonproject.org/docs/filtering_spam.html that tells you how
+to use it.
+
+Lamson's spam filtering support is fairly simplistic, but still useful for
+filtering crap out of your handlers.  It's biggest problem is the current
+implementation requires you to use the (barely documented) "SpamBayes"
+command line tools for things like training.
+
+I've got some instructions to get you started with the most important
+SpamBayes command line tool you'll need for training.
+
+
+h2. ChangeLog
+
+Here's the log of what I did:
+
+* Big code review, cleanup, and test boosting.
+* Modified the MailRequest.body so that it works with attachments.
+* Updated the OSB in preparation for a redesign to make it more interesting.
+* Didn't like the name 'attachments' for getting what's really all the parts of a message.
+* Implemented a method on MailRequest to return all of the attachments in a message reliably.
+* Setup the muttrc to use env to find the lamson command.
+* Updated the commands and utils so that it works with the new lamson.args setup.
+* Refactored lamson.args to use inspect to figure out the required defaults of a command function, thus removing the need for a...
+* Contributed change to muttrc so it uses lamson wherever it is installed, even virtualenv.
+
+

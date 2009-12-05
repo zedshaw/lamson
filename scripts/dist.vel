@@ -1,0 +1,40 @@
+# requires that you have options:  setup, project, website, vesion, and sudo
+
+depends (
+        config ['dist.clean' 'dist.gen.setup'] 
+        install ['dist.config']
+        sdist ['dist.config']
+        release ['dist.sdist']
+)
+
+targets (
+        config 
+            $ python setup.py config
+
+        sdist [
+            $ rm -f MANIFEST
+            $ python setup.py sdist
+        ]
+
+        install [
+           $ %(sudo)s python setup.py install
+           $ %(sudo)s chown -R `whoami` build dist %(project)s.egg-info
+        ]
+
+        clean [
+            $ %(sudo)s rm -rf build dist %(project)s.egg-info
+            $ %(sudo)s rm -f `find . -name "*.pyc"`
+        ]
+
+        gen.setup 
+            gen(input 'scripts/setup.py' output 'setup.py')
+
+        cheese [
+            needs ['dist.sdist']
+            $ python setup.py register bdist_egg upload
+        ]
+
+        release [
+            $ cp dist/%(project)s-%(version)s.tar.gz %(website)s
+        ]
+)

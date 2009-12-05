@@ -1,0 +1,88 @@
+Title: Lamson 1.0pre1 Released
+
+Tonight I'm releasing Lamson 1.0pre1 with all the latest improvements I've made while
+making "librelist.com":http://librelist.com/ and taking feedback from a few people
+using Lamson.  The goal from now on will be to basically squash bugs and write docs, with
+only a rare feature or two as I find them needed on projects.
+
+h2. What's In This Release
+
+This release features really only four major enhancements, and a bunch of little fixes 
+here and there.
+
+# There's now a working mailing list example in examples/librelist.
+# The router now uses the envelope header To (message.To) instead of the headers.
+# There is now very solid bounce detection and analysis.
+# Modules can specify anything as the state key (from, to+from, module+to, etc.)
+
+Here's the important changes from the change log by category:
+
+h3. Enhancements
+
+* 340 Added a version command finally, with some good information.
+* 330 There is now a safe=False option to lamson.queue.Queue to use a modified Maildir that md5 hashes the original hostname used.
+* 321 Routing it more deterministic and a bit quicker.  It now uses the envelope To for routing.
+* 320 Refactored the routing to it is more deterministic and doesn't loop over the functions mulitple times.  Still some work to do though.
+* 314 Bounce information now includes the original messages in easier to access forms.
+* 308 Got bounce handling working and tested.
+* 303 Slight reorg with the way @state_key_generator is implemented.
+* 302 Implemented a means to specify that a module will key off of different parts of a message.
+* 301 Got tired of not seeing errors during test runs so I made an option in the Router to explode on exceptions vs. log them.
+* 300 Bounce routing decorator for doing the actual routing of messages that are bounces.
+* 296 Implemented a bounce analysis method that is simple but seems to work on most bounce mail.
+
+h3. Bug Fixes 
+
+* 329 Found an email that had a nasty header causing an edge case in the parser.
+* 325 Bounce detection was using the wrong email address.
+* 319 Removed the egg dependency on sqlalchemy.
+* 318 Moved the bounce stuff around in order to make it more advanced.
+* 307 Fixed up the @bounce_to decorator so that it returns the next state.
+* 294 Small bug in multipart handling where content types of 'message/' can be multipart too.
+
+h3. Librelist Related
+
+* 323 librelist.com sample is looking good, bounce handling is working, archives are started.
+* 322 Super bounce handling for librelist.com.
+* 306 Got the first cut of the whole app.handlers.admin working, including bounces, but Lamson bounce detection has a flaw.
+* 305 Got the basics of making mailing lists, managing subscribers.
+* 304 Initial commit of the librelist.com sample application.
+
+Also, librelist demonstrates how to integrate Lamson with "Django":http://www.djangoproject.com/ which
+turns out to just require a couple lines of code.  I'll have some documentation on that soon.
+
+
+h3. Docs and Website Related
+
+* 317 Removed references to SQLAlchemy being needed in the docs.
+
+
+h2. Getting This Release
+
+As usual, try to install it using "easy_install":http://peak.telecommunity.com/DevCenter/EasyInstall
+and make sure you do the upgrade:
+
+<pre class="code prettyprint">
+$ sudo easy_install -U lamson
+</pre>
+
+This release does not depend on SQLAlchemy anymore, since you can really use Lamson with any
+data source you can access with Python.  As mentioned above, the librelist sample uses
+Django models.
+
+If you want to download the source you can visit the "releases":/releases/ page and 
+grab it from there.
+
+
+h2. Mailing List Back Online
+
+Finally, the lamson mailing list is now back online, so you can subscribe to it 
+and get help.  Read "the lists page":/lists/ to find out more.
+
+h2. IRC Channel
+
+I'm also more active in the IRC channel #lamson on irc.freenode.org.  Come by 
+if you need help.
+
+Thanks again folks, and shoot me any bugs you find.
+

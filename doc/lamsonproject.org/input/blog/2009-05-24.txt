@@ -1,0 +1,151 @@
+Title: Features For The 0.9 Release (Soon)
+Content-Type: text/html
+
+
+<p>I've been hard at work cooking up the very nice new routing system, and
+I must say it is rather tasty.  I've gone and created a whole new
+routing and state management design that uses decorators right in your
+handler modules to indicate how each state will expect mail addresses.
+</p>
+
+<p>
+For the 0.9 release happening tomorrow I've got a new Router setup,
+spam filtering baked in nice and clean, improved test coverage, and 
+indirect state storage for those who don't like SQLAlchemy.
+</p>
+
+<h2>New Routing Decorators</h2>
+<p>The new routing design is very nice if I do say so myself.  It should
+reduce the amount of Python regex wizardry you need to learn, help set
+reasonable defaults, and put your handlers and routing in one spot so 
+they are easier to maintain.  In addition the new design eliminated many
+files and flaws from the previous design.
+</p>
+
+<p>Here's a quick sample from the unit tests:</p>
+
+<pre class="code prettyprint">
+from lamson.routing import Router, route, route_like
+
+Router.defaults(host="test.com", 
+                action="[a-zA-Z0-9]+",
+                list_name="[a-zA-Z.0-9]+")
+
+
+@route("(list_name)-(action)@(host)")
+def START(message, list_name=None, action=None, host=None):
+    print "START", message, list_name, action, host
+    if action == 'explode':
+        print "EXPLODE!"
+        raise RuntimeError("Exploded on purpose.")
+    return UNKNOWN
+    
+
+@route("(list_name)-(action)@(host)")
+def UNKNOWN(message, list_name=None, action=None, host=None):
+    print "UNKNOWN", message, list_name, action, host
+    return NEXT
+
+
+@route_like(UNKNOWN)
+def NEXT(message, list_name=None, action=None, host=None):
+    print "NEXT", message, list_name, action, host
+    return CONFIRM
+
+@route_like(UNKNOWN)
+def CONFIRM(message, list_name=None, action=None, host=None):
+    print "CONFIRM", message, list_name, action, host
+    return END
+
+@route("(anything)@(host)", anything=".*")
+def END(message, anything=None, host=None):
+    print "END", anything, host
+    return START
+</pre>
+
+<p>
+The formatting on the @route decorator will hopefully simplify the use
+of regular expressions.  Rather the above route for
+"(list_name)-(action)@(host)" gets translated by Lamson into
+'^(?P<list_name>[a-zA-Z.0-9]+)-(?P<action>[a-zA-Z0-9]+)@(?P<host>test.com)$'
+which is a hair pulling monstrosity.  It also is using defaults so that you
+only have to indicate basic formatting of the email and leave the regexes to
+the main configuration file.
+</p>
+
+<p>
+This new setup also has some interesting implications in how you can use it.
+For example, you can register multiple address forms for each state (UNKNOWN, END, etc.)
+so that it can handle similar activity.
+</p>
+
+<h2>Spam Filtering Per State</h2>
+
+<p>
+Now that the routing is nice and generic, I could implement a decorator for
+using SpamBayes to filter spam to your state functions.  If you don't
+want a particular state to receive spam then you just use the @spam_filter
+decorator:
+<p>
+
+<pre class="code prettyprint">
+from lamson.routing import route, route_like
+from lamson.spam import spam_filter
+
+ham_db = "tests/sddb"
+
+@route("(anything)@(host)", anything=".+", host=".+")
+@spam_filter(ham_db, "tests/.hammierc", "run/queue")
+def START(message, **kw):
+    print "Ham message received. Going to END."
+    return END
+
+@route_like(START)
+def END(message, *kw):
+    print "Done."
+</pre>
+
+<p>
+This simply attaches the @spam_filter decorator to START and then when START
+runs it transitions to END.  It's still a little rough since you're having to
+configure the @spam_filter right there, rather than in a config/settings.py file,
+but it works.  Later versions will be much cleaner.
+</p>
+
+<h2>Indirect State Storage</h2>
+<p>
+I've also abstracted away the state storage, which will open the door to
+backends in any kind of storage you want, not just SQLAlchemy.  The only thing you'll 
+need to implement to use a different storage is a simple get/set/clear set of functionality
+and then attach it to the Router class to make it use the new storage.
+</p>
+
+<p>
+Currently the code is using a simple MemoryStorage class to speed up the unit test runs,
+and then I'll implement the SQLAlchemy store and probably a Tokyo Tyrant store too.
+</p>
+
+
+<h2>Higher Test Coverage</h2>
+<p>
+I also worked on getting the unit test coverage up as high as I could.  Since Lamson is a
+server with nasty OS level things like sockets and daemons, it is difficult to fully test
+in just simple unit tests.  It's at about 85% right now with only the daemon and server
+commands not being tested.
+</p>
+
+<p>
+Finally, this new design gets rid of the old class based handlers, the Conversation style
+of Finite State Machine handlers, and quite a bit of code that was design cruft from
+my previous iterations.  It should be much cleaner and meaner, and will have a nicer
+experience for developers.
+</p>
+
+<h2>Hold On Though</h2>
+
+<p>The code in the bzr branch is still in a state of flux, so feel free to grab it and look, but
+you probably don't want to actually do anything with it.  I should have all the samples
+converted to the new style and then I'll do a 0.9 release.  It should happen tomorrow (May 25th).</p>
+
+<p>I'll have another blog post and some documentation for the new stuff tomorrow and all next week.</p>
+

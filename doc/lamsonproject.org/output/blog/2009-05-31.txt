@@ -1,0 +1,24 @@
+Title:  Lamson 0.9 Later Today
+
+I have been working hard on the documentation and scrubbing the code for Lamson and the 0.9 release
+coming out soon.  The only things I feel I need to do before an official 0.9 release are:
+
+# Clean up the one-shot-blog demo application a bit more.
+# Write a small set of instructions on writing your own "StateStorage.":http://lamsonproject.org/docs/api/lamson.routing.StateStorage-class.html
+# Do a last final code review to check for any obvious problems.
+
+Once I do that I'll make 0.9 official.  If you're using 0.8.x right now, or just playing with
+Lamson, please go grab the "0.9 pre-release":/releases/ and make sure it works.
+
+There is one bug in that 0.9-pre3 release where the router won't properly route of the form:
+
+<pre>
+To: "First Last" <route.address@host.com>
+</pre>
+
+This is fairly rare, since someone would have to craft an email like this, and it would just
+be ignored anyway.  *That bug is fixed in the current 0.9 source.*
+
+Please shoot me any bugs you find and I'll work them into the 0.9 release.
+
+

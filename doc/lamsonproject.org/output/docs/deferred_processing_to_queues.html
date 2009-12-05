@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Deferred Processing To Queues</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Deferred Processing To Queues</h1>
+                	<p>As of the 0.9.2 release there is preliminary support for deferring handling of
+a mail message to a queue for another process to deal with in a separate
+handler.  This support is rough at this time, but still useful and not too
+difficult to configure.  As the feature gets more use it will improve and
+hopefully turn into a generic &#8220;defer to queue&#8221; system in Lamson.</p>
+
+	<p>What is meant by &#8220;defer to queue&#8221; is simply that you take messages your state
+function receives and you dump them into a maildir queue.  You then have
+another separate process read from this queue and do the real work.
+Potentially you could have many processes deal with this work, and they could
+even be on multiple computers.</p>
+
+	<h2>A More Concrete Example</h2>
+
+	<p>Imagine that you have a blog posting system and you want to update a big &#8220;front
+page index&#8221; that shows recent posts by your users.  However, you don&#8217;t want to
+generate this index on <strong>every</strong> blog post users make, since that could involve
+expensive computation and hold up other threads that need to deal with more
+urgent email.</p>
+
+	<p>The solution is to do the minimum quick processing you can in your <span class="caps">POSTING</span>
+state function, and then use the
+<a href="http://lamsonproject.org/docs/api/lamson.queue.Queue-class.html">lamson.queue.Queue</a>
+to queue up messages meant for &#8220;front page indexing&#8221;.  Here&#8217;s how that code
+might go:</p>
+
+<pre class="code prettyprint">
+@route("(post_name)@osb\\.(host)")
+def POSTING(message, post_name=None, host=None):
+    # do the regular posting to blog thing
+    name, address = parseaddr(message['from'])
+    post.post(post_name, address, message)
+    msg = view.respond('page_ready.msg', locals())
+    relay.deliver(msg)
+
+    # drop the message off into the 'posts' queue for later
+    index_q = queue.Queue("run/posts")
+    index_q.push(message)
+
+    return POSTING
+</pre>
+
+	<p>You can see that you just drop it into the queue with <code>push(message)</code> and it&#8217;s
+done.  What you don&#8217;t see is how this then gets picked up by another process to
+actually do somehing with this email.</p>
+
+	<h2>Configuring A config/queue.py</h2>
+
+	<p>In Lamson you are given control over how your software boots, which gives you
+the ability to configure extra services how you need.  By default the <code>lamson
+gen</code> command just outputs a basic <code>config/boot.py</code> and <code>config/testing.py</code> file
+so you can get working, and these will work for most development purposes.</p>
+
+	<p>In this tutorial you get to write a new boot configuration and tell Lamson how
+to use it.  We&#8217;ll be copying the original boot file over first:</p>
+
+<pre class="code">
+$ cp config/boot.py config/queue.py
+</pre>
+
+	<p>Next you want to edit this file so that instead of running an
+<a href="http://lamsonproject.org/docs/api/lamson.server.SMTPReceiver-class.html">SMTPReceiver</a>
+it will use a
+<a href="http://lamsonproject.org/docs/api/lamson.server.QueueReceiver-class.html">QueueReceiver</a>
+configured to pull out of the <code>run/posts</code> queue you are using in your <code>POSTING</code>
+handler.</p>
+
+<pre class="code prettyprint">
+...
+# where to listen for incoming messages
+settings.receiver = QueueReceiver(settings.queue_config['queue'],
+                                  settings.queue_config['sleep'])
+
+settings.database = configure_database(settings.database_config, also_create=False)
+
+Router.defaults(**settings.router_defaults)
+# NOTE: this is using a different handlers variable in settings
+Router.load(settings.queue_handlers)
+Router.RELOAD=True
+...
+</pre>
+
+	<p>I&#8217;ve removed the code above the &#8230; and below it since it&#8217;s the same in the two
+files.  Notice that you have a <code>QueueReceiver</code> now, and that you are telling
+the
+<a href="http://lamsonproject.org/docs/api/lamson.routing.RoutingBase-class.html">Router</a>
+that it will use <code>settings.queue_handlers</code> for the list of handlers to load and
+run.</p>
+
+	<p>You now add these two lines to your <code>config/settings.py</code>:</p>
+
+<pre class="code prettyprint">
+...
+# this is for when you run the config.queue boot
+queue_config = {'queue': 'run/posts', 'sleep': 10}
+
+queue_handlers = ['app.handlers.index']
+</pre>
+
+	<p>The <code>queue_config</code> variable is read by the <code>config/queue.py</code> file for the
+<code>QueueReceiver</code> and the <code>queue_handlers</code> is fed to the <code>Router</code> as described
+above.</p>
+
+	<h2>Writing The Index Handler</h2>
+
+	<p>You now have to write a new handler that is in <code>app/handlers/index.py</code> so that
+this <code>config.queue</code> boot setup will load it and run it whenever a message hits
+the <code>run/queue</code>.  Here&#8217;s the code:</p>
+
+<pre class="code prettyprint">
+from lamson import queue
+from lamson.routing import route, stateless
+import logging
+
+@route("(post_name)@osb\\.(host)")
+@stateless
+def START(message, post_name=None, host=None):
+    logging.debug("Got message from %s", message['from'])
+</pre>
+
+	<p>This simple demonstration will just log what messages it receives so you can
+make sure it is working.</p>
+
+	<p>There are two points to notice about this handler.  First, it is marked
+<code>stateless</code> because it will run independent of the regular Lamson server, and
+you don&#8217;t want its parallel operations to interfere with your normal server&#8217;s
+state operations.  Second, it uses a <code>Router.defaults</code> named <code>post_name</code> that
+you would add to your <code>config.settings.router_defaults</code>.</p>
+
+	<p>Once you have all this slightly complicated setup done you are ready to test
+it.</p>
+
+	<blockquote>
+		<p>Also note that the examples in the <a href="/releases/">source releases</a> have code
+that does a deferred queue similar to this.  Go look there for more code to
+steal.</p>
+	</blockquote>
+
+	<h2>Running Your Queue Receiver</h2>
+
+	<p>Run your logger and lamson server like normal:</p>
+
+<pre class="code">
+$ lamson log
+$ lamson start
+</pre>
+
+	<p>Next, go look in your logs and make sure it works by running your unit
+tests:</p>
+
+<pre class="code">
+$ nosetests
+................
+----------------------------------------------------------------------
+Ran 16 tests in 1.346s
+
+OK
+</pre>
+
+	<p>Your logs should look normal, but now you should see some files in the
+<code>run/posts/new</code> directory:</p>
+
+<pre class="code">
+$ ls run/posts/new/
+1244080328.M408474P3147Q4.mycomputer.local
+</pre>
+
+	<p>That&#8217;s the results of your <code>POSTING</code> handler putting the messages it receives
+into your <code>run/posts</code> maildir queue.</p>
+
+	<p>Finally, you&#8217;ll want to run your queue receiver:</p>
+
+<pre class="code">
+$ lamson start -boot config.queue -pid run/queue.pid
+</pre>
+
+	<p>If you&#8217;re running the code given above then you should see this in the
+<code>logs/lamson.log</code> file:</p>
+
+<pre class="code">
+...
+DEBUG:root:Sleeping for 10 seconds...
+DEBUG:root:Pulled message with key:
+'1244080328.M408474P3147Q4.zed-shaws-macbook.local' off
+DEBUG:root:Message received from Peer: 'run/posts', From:
+'sender-1244080328.22@sender.com', to To
+['test.blog.1244080328@osb.test.com'].
+DEBUG:root:Got message from sender-1244080328.22@sender.com
+DEBUG:root:Message to test.blog.1244080328@osb.test.com was handled by
+app.handlers.index.START
+</pre>
+
+	<p>Which means your queue receiver is running.  You could <strong>in theory</strong> run as many
+of these as you wanted, as long as their handlers are stateless.</p>
+
+	<p>When you&#8217;re done you can stop the whole setup with the following command:</p>
+
+<pre class="code">
+$ lamson stop -ALL run
+Stopping processes with the following PID files:
+['run/log.pid', 'run/queue.pid', 'run/smtp.pid']
+Attempting to stop lamson at pid 3092
+Attempting to stop lamson at pid 3157
+Attempting to stop lamson at pid 3096
+</pre>
+
+	<h2>Further Advanced Usage</h2>
+
+	<p>This configuration is debatable whether it is very usable or not, but it works
+and will improve as the project continues.  To give you some ideas of what you
+can do with it:</p>
+
+	<ol>
+		<li>Defer activity to other machines or processes.</li>
+		<li>Receive messages from other mail systems that know maildir.</li>
+		<li>Deliver messages to other maildir aware systems.</li>
+		<li>Process messages from a web application, and possibly even generic work.</li>
+	</ol>
+
+	<p>It might also be possible to actually make your state functions transition to
+the queue handler states by simply having the function return the
+<code>module.FUNCTION</code> that should be next.  Take care with this though as it means
+your end user&#8217;s actions are effectively blocked for that event until the next
+run of the queue receiver.</p>
+
+	<h2>Call For Suggestions</h2>
+
+	<p>Feel free to offer suggestions in improving this setup (or even better code).</p>
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

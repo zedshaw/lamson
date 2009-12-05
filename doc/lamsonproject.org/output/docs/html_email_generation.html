@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: HTML Email Generation</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>HTML Email Generation</h1>
+                	<p><span class="caps">HTML</span> Email is apparently the killer feature for everyone who uses email.
+The first, second, and third question I get asked when I tell people
+about Lamson is, &#8220;Does it do <span class="caps">HTML</span> email?!&#8221;  Yes it does, and hopefully
+in a very nice clean way that&#8217;ll make blasting out all that great
+marketing material your users <strong>love</strong> easier than ever.</p>
+
+	<blockquote>
+		<p>The fourth question is whether Lamson handles bounces.  <a href="/docs/bounce_detection.html">Yes it does.</a></p>
+	</blockquote>
+
+	<h2>A Few Tips About <span class="caps">HTML</span> Email</h2>
+
+	<p>First, you <strong>must</strong> educate your marketing people that your user&#8217;s <a href="http://myinboxisnota.tv/">Inbox is not a TV.</a>
+I actually run <a href="http://myinboxisnota.tv/">myinboxisnota.tv</a> just to make a point that people who
+do marketing have the wrong idea of people&#8217;s Inbox experience.  It&#8217;s your job as the hacker to
+educate them and make sure that they know users actually mostly hate <span class="caps">HTML</span> email, and that sending
+them an <span class="caps">HTML</span> email is nothing like sending them a commercial on TV.</p>
+
+	<p>The next tip is a technical one related to how you have to craft your <span class="caps">HTML</span>.  Lamson&#8217;s
+<a href="http://lamsonproject.org/docs/api/lamson.html-module.html">lamson.html</a> <span class="caps">API</span> actually
+helps you get this right, but you need to understand it in order to appreciate what 
+it does for you.</p>
+
+	<p>The rule when crafting your <span class="caps">HTML</span> is that you need to code for browsers of circa 1995
+with no ability to use <code>style</code> tags or <code>script</code> tags.  Most of the various <span class="caps">HTML</span> viewing
+clients strip or disable these making them useless.  This means you have to put all
+<span class="caps">CSS</span> stylings inline into your <span class="caps">HTML</span>, and you have to rely on &#8220;taboo&#8221; tags like <code>center</code>
+and <code>table</code> for your layout.</p>
+
+	<h2>The Structure Of HtmlMail</h2>
+
+	<p>The <a href="http://lamsonproject.org/docs/api/lamson.html.HtmlMail-class.html">lamson.html.HtmlMail</a> class
+is responsible for generating all your <span class="caps">HTML</span> emails.  How it works is you give construct one
+with an &#8220;outer template&#8221; and a <a href="http://sandbox.pocoo.org/clevercss/">CleverCSS</a> template as your
+<span class="caps">CSS</span> stylesheet.  This builds a generator that you then hand an internal version of your email
+to generate the content for each user.</p>
+
+	<p>This combination of outer template+CleverCSS and inner markdown content means that you can 
+use the markdown content also as your text version, since markdown actually looks half-decent
+as a text format.</p>
+
+	<p>Here&#8217;s a simple example that shows this process in action:</p>
+
+<pre class="code prettyprint">
+generator = html.HtmlMail("style.css", "html_test.html", {})
+
+resp = generator.respond({}, "content.markdown",
+                       From="zedshaw@zedshaw.com",
+                       To="zedshaw@zedshaw.com",
+                       Subject="Test of an HTML mail.",
+                       Body="content.markdown")
+</pre>
+
+	<p>First, we make a generator passing in the CleverCSS stylesheet <code>style.css</code>,
+and the Jinja2 <span class="caps">HTML</span> template <code>html_test.html</code>.  Then we call <code>HtmlMail.respond</code>
+to craft a <a href="http://lamsonproject.org/docs/api/lamson.mail.MailResponse-class.html">lamson.mail.MailResponse</a>
+that you can then hand to <a href="http://lamsonproject.org/docs/api/lamson.server.Relay-class.html">lamson.server.Relay</a>
+for delivery.</p>
+
+	<p>There&#8217;s also a couple of tricks in the above email.  First, notice that the 
+second parameter is &#8220;content.markdown&#8221;, but that we also pass in the Body=&#8220;content.markdown&#8221;.
+This little convenience tells the HtmlMail object that you want to reuse the 
+raw <code>content.markdown</code> file as the text/plain version of the email.</p>
+
+	<p>Finally, once you make the generator you can keep calling <code>respond</code> to spit out
+each message you want.</p>
+
+	<h2>The <span class="caps">HTML</span> <span class="caps">CSS</span> Conversion</h2>
+
+	<p>None of the above code shows you what is the nicest part of this <span class="caps">API</span>.  The lamson.html
+<span class="caps">API</span> will actually take plain <span class="caps">HTML</span> and your CleverCSS and insert the <code>style</code> attributes
+into it for you.  Let&#8217;s look at an example from the unit test (that&#8217;s disgusting).
+First we have the CleverCSS template:</p>
+
+<pre class="code prettyprint">
+body:
+    margin: 10
+    padding: 20
+    background: green - 30
+    color: blue
+
+    h1:
+        font-size: 3em
+    h2:
+        font-size: 2em
+        color: yellow
+
+    h3:
+        font-size: 1em
+
+    p:
+        padding: 0.3em
+        background: red
+
+h2:
+    color: yellow
+
+#bright:
+    background: black
+    color: white
+
+.dull:
+    background: gray
+    color: black
+</pre>
+
+	<p>Then we have the raw original HTML:</p>
+
+<pre class="code prettyprint">
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;{{ title }}&lt;/title&gt;
+    &lt;/head&gt;
+
+    &lt;body style="background: magenta"&gt;
+        &lt;h1 class="bright"&gt;{{ title }}&lt;/h1&gt;
+
+        {{ content }}
+
+        &lt;h3 id="dull"&gt;All done.&lt;/h3&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+	<p>Notice this is a template too, and that {{ content }} is your <code>content.markdown</code> file
+from the earlier discussion.</p>
+
+	<p>Now when you run this (including the content.markdown not shown here), Lamson produces
+this:</p>
+
+<pre class="code prettyprint">
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style="background: magenta; margin: 10; padding: 20; background: #006200; color: blue"&gt;
+&lt;h1 class="bright" style="font-size: 3em; background: black; color: white"&gt;&lt;/h1&gt;
+&lt;h1 style="font-size: 3em"&gt;Hello&lt;/h1&gt;
+&lt;p style="padding: 0.3em; background: red"&gt;I would &lt;em&gt;love&lt;/em&gt; for you to tell me what is going on here joe.  NOW!&lt;/p&gt;
+&lt;h2 style="font-size: 2em; color: yellow; color: yellow"&gt;Alright&lt;/h2&gt;
+&lt;p style="padding: 0.3em; background: red"&gt;This is the best I can come up with.&lt;/p&gt;
+&lt;p style="padding: 0.3em; background: red"&gt;Zed&lt;/p&gt;
+&lt;h3 id="dull" style="font-size: 1em; background: gray; color: black"&gt;All done.&lt;/h3&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+	<p>Which, if you code for a Web 2.0 company is probably making your eyes bleed Dijon mustard, but it
+works.  Lamson has walked your <span class="caps">HTML</span> and inserted all the style tags it could, including
+keeping any you already had there.</p>
+
+	<h2>Conclusion</h2>
+
+	<p>With Lamson <span class="caps">HTML</span> email <span class="caps">API</span> you should be able to blast out all the wonderful <span class="caps">HTML</span> you need
+to prop up your sales needs for years to come.  It does the best it can to make it easy
+to still work in a modern web methodology, but produce the nasty <span class="caps">HTML</span> that has the highest
+chance of working in most email clients.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

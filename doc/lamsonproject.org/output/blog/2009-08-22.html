@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Lamson 1.0pre4 Out, Lots Of Docs Done, 100% Coverage</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Lamson 1.0pre4 Out, Lots Of Docs Done, 100% Coverage</h1>
+                	<p>I happy to announce probably one of the last few releases before
+I officially put the 1.0 stamp on Lamson.  This last 1% of the things
+I want to do takes a while, but it really puts a good shine on the 
+project.</p>
+
+	<p>What I&#8217;ve got in 1.0pre4 is <a href="http://lamsonproject.org/docs/">tons of docs</a>
+and 100% test coverage.  Most of the features that were added are
+nice-to-haves that I&#8217;ve found useful while developing my various sites.</p>
+
+	<h2>Getting The Release</h2>
+
+	<p>As usual, <code>sudo easy_install lamson</code> is your friend.  If you want
+to use the <span class="caps">HTML</span> generation features, then you&#8217;ll want to also install:</p>
+
+<pre class="code">
+BeautifulSoup
+CleverCSS
+markdown2
+</pre>
+
+	<p>For completeness, here&#8217;s the remaining packages I have installed in most
+of the virtualenvs for my applications:</p>
+
+<pre class="code">
+ipython
+mock
+nose
+Jinja2
+lockfile
+pydns
+spambayes
+chardet
+lxml
+python_daemon
+pytyrant
+</pre>
+
+	<p>You can also grab <a href="/releases/">source releases</a> and <a href="/download.html">download instructions</a>
+from this site if PyPI is failing you.</p>
+
+	<h2>100% Test Coverage</h2>
+
+	<p>First, I&#8217;ve managed to get the test coverage for Lamson up to 100%:</p>
+
+<pre class="code">
+Name                    Stmts   Exec  Cover   Missing
+-----------------------------------------------------
+lamson                      0      0   100%   
+lamson.args               124    124   100%   
+lamson.bounce              91     91   100%   
+lamson.commands           176    176   100%   
+lamson.confirm             57     57   100%   
+lamson.encoding           238    238   100%   
+lamson.handlers             0      0   100%   
+lamson.handlers.log         4      4   100%   
+lamson.handlers.queue       6      6   100%   
+lamson.html                62     62   100%   
+lamson.mail               140    140   100%   
+lamson.queue               74     74   100%   
+lamson.routing            218    218   100%   
+lamson.server              80     80   100%   
+lamson.spam                80     80   100%   
+lamson.utils               56     56   100%   
+lamson.version              1      1   100%   
+lamson.view                22     22   100%   
+-----------------------------------------------------
+TOTAL                    1429   1429   100%   
+-----------------------------------------------------
+Ran 156 tests in 16.305s
+</pre>
+
+	<p>It&#8217;s mostly a vanity thing, but doing this did uncover a couple of
+minor little bugs here and there, and it makes people feel better
+trusting Lamson.</p>
+
+	<h2>Docs, Docs, Docs</h2>
+
+	<p>I firmly believe that a good software project has <strong>both</strong> <a href="http://lamsonproject.org/docs/api/lamson-module.html">API</a>
+style documentation and guided documentation.  That&#8217;s why I spent almost this whole 
+time working on documenting all the parts of Lamson people need and making sure the generated
+docs were complete.</p>
+
+	<p>What I&#8217;ve done is reorganized the documentation section so that you can find
+topic by their categories, and then documented most of the features people
+need to use daily.  Here&#8217;s some highlights:</p>
+
+	<ul>
+		<li><a href="http://lamsonproject.org/docs/unit_testing.html">Unit Testing</a></li>
+		<li><a href="http://lamsonproject.org/docs/confirmations.html">Confirmations</a></li>
+		<li><a href="http://lamsonproject.org/docs/filtering_spam.html">Filtering Spam</a></li>
+		<li><a href="http://lamsonproject.org/docs/bounce_detection.html">Bounce Detection</a></li>
+		<li><a href="http://lamsonproject.org/docs/html_email_generation.html"><span class="caps">HTML</span> Email Generation</a></li>
+		<li><a href="http://lamsonproject.org/docs/unicode_encoding_and_decoding.html">Unicode Encoding/Decoding</a></li>
+		<li><a href="http://lamsonproject.org/docs/hooking_into_django.html">Hooking Into Django</a></li>
+		<li><a href="http://lamsonproject.org/docs/">Tons more&#8230;</a></li>
+	</ul>
+
+	<p>I especially like how the <span class="caps">HTML</span> Email generation came out as a feature, but I really
+like the <a href="http://lamsonproject.org/docs/bounce_detection.html">Bounce Detection</a> 
+documentation the most.</p>
+
+	<h2>New Confirmation <span class="caps">API</span></h2>
+
+	<p>This release has a few little bug fixes, but mostly it has a solidified feature for 
+doing <a href="http://lamsonproject.org/docs/confirmations.html">Confirmations</a> easily.</p>
+
+	<h2>HTML/Text Dual Email</h2>
+
+	<p>Previously the <a href="http://lamsonproject.org/docs/html_email_generation.html"><span class="caps">HTML</span> Email Generation</a>
+feature could only generate <span class="caps">HTML</span> email reliably, but I managed to track down 
+a bug that lets you now craft dual email.  I even went a step further and made it easy
+to simply use your markdown content templates as your text/plain alternative
+when you send out <span class="caps">HTML</span> Email.</p>
+
+	<h2>Multiple Recipient Routing</h2>
+
+	<p>There was no way to avoid this, so I just implemented it.  Now when a message is for
+multiple recipients (in the envelope) Lamson will route the message to each
+address.  That means if it is destined for multiple people, then Lamson will
+effectively try to match each of those people and run them through your handlers
+separately.</p>
+
+	<p>I was worried this would cause problems, but so far it&#8217;s working fine.  If you see
+that it can be used as a <span class="caps">DOS</span> attack, then I&#8217;ll work on a way to limit the number
+of recipients that Lamson will allow (similar to how you can restrict the size
+of messages off a Queue).</p>
+
+	<h2>Test And Report</h2>
+
+	<p>As usual, please test this out, review the documentation, and report back to me
+any problems you find.</p>
+
+	<p>I&#8217;ll be in #lamson on irc.freenode.org more, and will probably install a <span class="caps">IRC</span>
+bot to notify when I post new code to the repository.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Frequently Asked Questions</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Frequently Asked Questions</h1>
+                	<p>If a question is missing you can <a href="mailto:lamson@librelist.com">email the lamson@librelist.com mailing
+list</a> about it and I&#8217;ll answer.</p>
+
+	<h2> What is Lamson?</h2>
+
+	<p>Lamson is a pure Python <span class="caps">SMTP</span> server designed to create robust and complex mail
+applications in the style of modern web frameworks such as Django. Unlike
+traditional <span class="caps">SMTP</span> servers like Postfix or Sendmail, Lamson has all the features
+of a web application stack (<span class="caps">ORM</span>, templates, routing, handlers, state machines,
+Python) without needing to configure alias files, run newaliases, or juggle
+tons of tiny fragile processes. Lamson also plays well with other web
+frameworks and Python libraries.</p>
+
+	<h2>Where does the name &#8220;Lamson&#8221; come from?</h2>
+
+	<p>&#8220;Lamson Tubes&#8221; is a colloquial name for Pneumatic Tubes which were used last
+century to deliver mail, packages, and hazardous material to the corporate
+world.  They are still in use today.</p>
+
+	<h2>What kind of applications do you envision being built on top of Lamson?</h2>
+
+	<p>Why, spam of course (like I could stop that). As well as spam fighters,
+greylisters, &#8220;campaign management&#8221; applications, mail firewalls, mime strippers
+(for those Exchange file shares), help desk support applications, games,
+mailing lists ('cause everyone loves writing those), and even <span class="caps">SMTP</span> portions of
+just about any web site.</p>
+
+	<p>A few examples of applications that are actually written using Lamson (with
+source included in the <a href="/releases/">source releases</a></p>
+
+	<ul>
+		<li><a href="http://oneshotblog.com/">OneShotBlog</a></li>
+		<li><a href="http://librelist.com/">Librelist</a></li>
+		<li><a href="http://myinboxisnota.tv/">MyInboxIsNotA.TV</a></li>
+	</ul>
+
+	<p>With many more to come.</p>
+
+	<h2>How do I install lamson on a Debian or CentOS server?</h2>
+
+	<p>Debian and CentOS are notorious for being dinosaurs.  Both distributions of
+Linux suffer from the false rationale that older software is more stable and
+secure.  The reality is that the stability or security of a piece of software
+is not a function of its age, and in many cases the newer versions of software
+will typically fix many stability and performance problems.  Despite this fact,
+these two variants of Linux are notorious for back-porting patches from later
+versions to older versions rather than just using the newer version.</p>
+
+	<p>In order to help people who need to run a modern piece of software on their
+antiquated operating systems, I&#8217;ve written an extensive document on <a href="/docs/deploying_lamson.html">how to
+Deploy Lamson</a> that tells you how to do it in a way
+that should work reliably on most Unix platforms, even if they have an older
+version of Python.</p>
+
+	<h2>Is there a mailing list?</h2>
+
+	<p>Yes, and it&#8217;s written in Lamson.  You can send an email to <a href="mailto:lamson@librelist.com">lamson@librelist.com</a>
+and you&#8217;ll be able to join.  The code for this mailing list system is also included in the <a href="/releases/">source releases</a>
+so you can learn from it.</p>
+
+	<h2>Is there an <span class="caps">IRC</span> channel?</h2>
+
+	<p>Yes, and it has relatively low traffic.  You can join #librelist on irc.freenode.org.</p>
+
+	<h2> How do I report a BUG/Feature/Question in Lamson?</h2>
+
+	<p>Currently the best place to report a Lamson bug is to the <a href="mailto:lamson@librelist.com">lamson@librelist.com</a>
+mailing list.  If you don&#8217;t want to subscribe to the list to just report a bug, then you can
+<a href="/contact.html">contact me</a> directly to report it.</p>
+
+	<h2> How do I work on Lamson?</h2>
+
+	<p>I currently do all the work on Lamson myself.  I don&#8217;t want to discourage contributions, but I&#8217;ve
+found that when a project is small and just getting started it&#8217;s best to keep it under the control
+of one person.</p>
+
+	<p>If you find bugs, then please report them to the <a href="mailto:lamson@librelist.com">lamson@librelist.com</a> mailing 
+list to <a href="/contact.html">to me directly</a> and I&#8217;ll fix them up.</p>
+
+	<h2>How do I try out (install) Lamson? </h2>
+
+	<p>Best way to do it is to have
+<a href="http://peak.telecommunity.com/DevCenter/EasyInstall">easy_install</a>  and simply
+do:</p>
+
+<pre class="code">
+$ sudo easy_install lamson
+</pre>
+
+	<p>Then you&#8217;ll get it installed and can play with it.  Refer to the <a href="/docs/getting_started.html">getting
+started</a> documentation for more information.</p>
+
+	<h2> How can I get the code to Lamson?</h2>
+
+	<p>Lamson lives on Launchpad at <a href="https://launchpad.net/lamson">https://launchpad.net/lamson</a> where you can get the code via:</p>
+
+<pre class="code">
+bzr branch lp:lamson
+</pre>
+
+	<p>Bazaar may ask you to login, but it should still give you the source.</p>
+
+	<p>Refer to the <a href="/download.html">download instructions</a> for more information.</p>
+
+	<h2>What features are planned for the 1.0 release?</h2>
+
+	<p>I try to make &#8220;1.0&#8221; what most other people would consider 80% complete.  This
+lets people get it and work with it, and then I can refine it for the 2.0
+release with 100% of features people actually use.</p>
+
+	<p>With this in mind, I&#8217;m planning on the 1.0 release to be based on the sample
+applications and my own applications and include the smallest set of features.</p>
+
+	<p>The most important part of the 1.0 release will be good documentation and bug
+free high quality code.</p>
+
+	<h2> What are Lamson&#8217;s current features?</h2>
+
+	<p>Lamson is currently running a handful of sites and is almost ready for a 1.0 release.
+It has these high level features:</p>
+
+	<ul>
+		<li>Very good bounce detection and analysis.</li>
+		<li>Spam blocking.</li>
+		<li>Get an application going quickly with the &#8220;lamson gen&#8221; command.</li>
+		<li>Full set of <a href="/docs/lamson_commands.html">self-documented commands</a> for managing and developing a lamson application.</li>
+		<li>Lots of <a href="/docs/">documentation</a> with more to come.</li>
+		<li>Sample applications for you to base your work on.</li>
+		<li>Handle mail for arbitrary hosts and addresses using simple regex routing.</li>
+		<li>Process requests including full access to Python&#8217;s complete <span class="caps">MIME</span> email libraries.</li>
+		<li>Absolutely awesome full conversion to Unicode including complete cleaning of incoming mail.</li>
+		<li>Routing requests in a standard web application framework style based on addresses.</li>
+		<li>Processing mail messages (requests) in either simple generic handlers, or in more complex and robust state machines.</li>
+		<li>Use any Python database storage you want.</li>
+		<li>Use of Jinja2 or Mako templates, with Jinja2 as the default.</li>
+		<li>Craft and send plain text or <span class="caps">HTML</span> email including attachments, with a great <span class="caps">HTML</span> mail generation <span class="caps">API</span> that even &#8220;knits&#8221; in CleverCSS.</li>
+		<li>Unit test helpers for having a conversation, checking spelling, etc.</li>
+		<li>Defer processing to Maildir queues for offline handling of bigger tasks.</li>
+		<li>Extensive logging and development tools for debugging your email applications.</li>
+		<li>Mutt configurations to fake out mutt so that it talks to your server.</li>
+		<li>100% code coverage in the unit tests.</li>
+	</ul>
+
+	<h2>Isn&#8217;t Postfix/Sendmail/Exim Faster?</h2>
+
+	<p>That is a tough question to answer actually.  If all you need to do is receive
+and deliver email then a well established traditional email server like Postfix
+or Exim (please don&#8217;t use Sendmail) is the way to go.  Hands down these servers
+are the fastest and the best at this job.</p>
+
+	<p>However, if you need to actually do something smart with your email, like
+manage many mailing lists or handle support requests, then these servers are
+definitely slower. </p>
+
+	<p>The reason is they require that you configure them to take messages they&#8217;ve
+already received and hand them to a separate process like a Perl, Python, or
+Ruby script.  This separate process then has to parse the message <strong>again</strong>, do
+its job without stepping on any other processes that might be running (that
+means locks), and then send response messages back to the server for even more
+<span class="caps">SMTP</span> parsing.</p>
+
+	<p>With the triple and sometimes quadruple <span class="caps">MIME</span> parsing, the heavy weight
+processes, the difficult to manage locking, and the additional configuration
+headaches, there&#8217;s no way traditional mail servers beat Lamson in speed.</p>
+
+	<p>Lamson only processes a message once, maybe twice if you defer to a queue.
+Once the message is parsed you get full access to Python immediately, without
+spawning a separate process.  Even if you defer to a queue, the Lamson dequeue
+server stays resident and processes the queue without forking.  You can even
+run many dequeue servers on mulitple machines processing a shared Maildir if
+you need the extra processing.</p>
+
+	<p>In the end, threads and function calls beats processes and pipes.</p>
+
+	<h2> Why not use Sendmail&#8217;s Milter?</h2>
+
+	<p>Sendmail has a protocol named &#8220;Milter&#8221; that lets you write a mail processing
+server that acts as a sort of &#8220;slave&#8221; to the sendmail process.  This protocol
+is supported by at least Postfix as well, maybe other servers.</p>
+
+	<p>Feel free to go try Milter.  When you&#8217;re done trying to figure out the protocol
+from the dense C code, configure the m4 macros, find a decent milter protocol
+library that doesn&#8217;t involve installing sendmail, and debugging the final
+setup, then you can come back and have it easy with Lamson.</p>
+
+	<h2> Why does Lamson send messages to a relay host?</h2>
+
+	<p>Lamson doesn&#8217;t have to deliver to a relay host, but it is a smarter more
+practical use of the technology. </p>
+
+	<p>Lamson is written in Python and does actually run slower than the established
+mail servers.  In addition, Lamson is hopefully doing something more than just
+routing email around to people.  It is probably processing messages, crafting
+replies, querying databases, hitting <span class="caps">REST</span> interfaces, and all the other things
+you&#8217;d want to do with a modern application.  This takes time and resources and
+are probably more valuable operations than just simple delivery.</p>
+
+	<p>For this reason, you want to use a dumb workhorse like Postfix to do your
+actual delivery, and reserve the smart processing that has value for Lamson.</p>
+
+	<h2>What about security?!  Shouldn&#8217;t Lamson be 20 processes?</h2>
+
+	<p>Have you ever asked why other mail servers are a bundle of a billion processes?
+Why have one server receiving mail, another routing it, and another handing it
+to users?</p>
+
+	<p>The answer is back in the 1970&#8217;s most mail was delivered to Unix users in their
+home directories or similar files that required special access rights to
+modify.  Also in the 1970&#8217;s special ports like 25 for <span class="caps">SMTP</span> required root
+access, which in the tiny Internet of the time meant that the server could be
+&#8220;trusted&#8221;.  These two realities of the time meant that to receive and deliver
+mail at least some part of the system had to run as root.  To keep things safe,
+modern mail systems reduce the amount of time spent as the root user by
+separating their functionality into different processes.</p>
+
+	<p>However, if you never have to deliver to a user, and all you ever do is process
+mail and talk to other servers like <span class="caps">RDBMS</span>, then why do you need all this
+privilege separation?  Sites run just fine with systems running as one or two
+processes without the complexity of some illogical privilege separation getting
+in their way.</p>
+
+	<p>To put this into perspective, imagine that you were writing a Django
+application and you were required to have a separate process for the <span class="caps">HTTP</span>
+layers, the view layer, the model layer, the <span class="caps">HTTP</span> responses, and the <span class="caps">RDBMS</span>
+access layers?  Each one required a different user, a different configuration
+file, and you needed another process just to keep them all sane.  All of this
+just so that if someone hacks into your <span class="caps">HTTP</span> server as root they supposedly
+can&#8217;t cause any damage.</p>
+
+	<p>Yet, they are on your server as root after all.</p>
+
+	<p>In practice, you can run Lamson as a separate root process, and then use
+another &#8220;dequeue server&#8221; to do the real processing, if you feel you need that
+security.</p>
+
+	<p>But, consider delaying that decision until you absolutely need it, because the
+security benefits aren&#8217;t worth the development and deployment hassles.</p>
+
+	<h2>How come nobody thought of this before?</h2>
+
+	<p>I don&#8217;t know why, since it did seem kind of simple.  There&#8217;s at least one other
+project written in Perl called <a href="http://smtpd.develooper.com/">qpsmtpd</a> that does
+something similar, and there may be more.  If you know others feel free to
+<a href="/contact.html">contact me</a> and let me know.</p>
+
+	<h2>Isn&#8217;t [Insert Random Java Mail Server] actually the first mail &#8220;framework&#8221;?</h2>
+
+	<p>I get this quite frequently when I make the claim that Lamson is the first
+email framework, and it may be true that there was a framework out there before
+Lamson.  The internet is a big place, so anything is possible.  However, I
+looked really hard and I couldn&#8217;t find a single <strong>modern</strong> mail framework.  All
+that existed were servers I could use to build a framework.</p>
+
+	<p>You see, around 2003 or 2004 the concept of &#8220;framework&#8221; changed.  Before then
+all you needed was a server with an extension <span class="caps">API</span> named so that it rhymed with
+&#8220;Servlet&#8221;.  As long as your server provided a way to drop a class into the
+processing queue and let a programmer handle the request you could call that a
+framework.</p>
+
+	<p>The usual end result for these <strong>servers</strong> is that you could use them to build a
+framework if you wanted, but what you&#8217;d get is affectionately called a
+&#8220;frankenstack&#8221;.  You&#8217;d grab an <span class="caps">ORM</span> from here, a template system from there,
+maybe a workflow engine, write a Maven or Ant script to manage it, and wire it
+all together with some lame secret sauce code you think gives you a competitive
+edge.</p>
+
+	<p>Then along came the modern frameworks like Django and Rails that included
+everything you needed in a bundle that you could use right away.  They had <span class="caps">ORM</span>,
+templating, routing, higher level request processing, email support, <span class="caps">REST</span>
+support, and anything else you might need for the 80% of your application you
+don&#8217;t care about.</p>
+
+	<p>Some people prefer less of these defaults, some people more, but nearly
+everyone who has to get a project done prefers more than just an extension <span class="caps">API</span>
+so they can build their own framework.</p>
+
+	<p>Today if you try to claim <a href="http://james.apache.org/">Apache James</a> is a
+framework you&#8217;d be wrong.  I could <strong>build</strong> a framework with it, but I could
+just as easily build that same framework with Python, Ruby, sendmail and even
+postfix.  James and friends are just servers, not frameworks.  In fact, my
+experience with James and similar Java mail servers is they are much harder to
+use than aliases+pipes in Postfix.</p>
+
+	<p>I now advocate that if your framework doesn&#8217;t at least support data, views, and
+high level logic as first class entities then it&#8217;s just a server.  You don&#8217;t
+have to use <span class="caps">ORM</span>, any particular templating, or Finite State Machines like
+Lamson does.  You don&#8217;t even have to settle on only one way to do data, views,
+and logic.</p>
+
+	<p>You <strong>must</strong> at least support data, views, and logic out of the box so your user
+doesn&#8217;t have to go shopping at &#8220;APIs-R-Us&#8221; just to use your gear.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

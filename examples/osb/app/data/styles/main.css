@@ -1,0 +1,138 @@
+div.wrapper {
+    font-family:Helvetica,Arial,sans-serif;
+    left:100px;
+    margin:0 auto;
+    padding-top:20px;
+    position:relative;
+    width:770px;
+}
+h1 a {
+    color:#222222;
+    float:left;
+    font-size:60px;
+    margin-top: 40px;
+    font-weight:bold;
+    letter-spacing:-2px;
+    padding:5px 5px 5px 0;
+    text-decoration:none;
+    text-transform:uppercase;
+    width:600px;
+    word-spacing:5px;
+}
+h1 span {
+    color:#1C6191;
+    font-weight:bold;
+}
+div.header {
+    height:150px;
+}
+div.header ul {
+    float:right;
+}
+div.header ul li {
+    background-color:#222222;
+    margin-bottom:5px;
+    text-align:right;
+}
+div.header ul li a {
+    color:#EEEEEE;
+    display:block;
+    font-size:30px;
+    padding:5px;
+    text-decoration:none;
+}
+div.header ul li a:hover {
+    background-color:#FFFFFF;
+    color:#1C6191;
+}
+ul.notifications {
+    left:-200px;
+    position:absolute;
+    width:190px;
+    z-index:10;
+}
+ul.notifications li {
+    background-color:#222222;
+    color:#AAAAAA;
+    margin-bottom:5px;
+    overflow: hidden;
+    padding:5px;
+}
+
+ul.notifications li div h3 {
+    color:#EEEEEE;
+    margin-bottom:10px;
+}
+ul.notifications li div p {
+    padding-left:10px;
+    padding-right:10px;
+}
+ul.notifications li div p {
+    font-size:13px;
+    line-height:14px;
+}
+ul.notifications li div p a {
+    color:#FFFFFF;
+    font-weight:bold;
+    text-decoration:none;
+}
+ul.notifications li div p a:hover {
+    text-decoration:underline;
+}
+ul.notifications li.footer div p {
+    color:#EEEEEE;
+    font-size:14px;
+    line-height:17px;
+}
+div.content {
+    clear:both;
+}
+div.post {
+    border-top:5px solid #EEEEEE;
+    padding-bottom:20px;
+    padding-top:10px;
+}
+div.post p a {
+    color:#000000;
+    font-weight:bold;
+    text-decoration:none;
+}
+div.post p a:hover {
+    text-decoration:underline;
+}
+div.post pre.code {
+    background-color:#EEEEEE;
+    display:block;
+    font-family:"Courier New",Courier,mono;
+    font-size:14px;
+    line-height:17px;
+    margin:15px;
+    overflow:auto;
+    padding:5px;
+    position:inherit;
+    width:700px;
+}
+div.post h2 {
+    display:block;
+    font-size:35px;
+    letter-spacing:1px;
+    text-decoration:none;
+    text-transform:lowercase;
+}
+div.post h2 a {
+    color:#1C6191;
+    display:block;
+    font-size:35px;
+    letter-spacing:1px;
+    text-decoration:none;
+    text-transform:lowercase;
+}
+div.post h2 a:hover {
+    background-color:#222222;
+    color:#EEEEEE;
+}
+div.post p {
+    font-size:14px;
+    line-height:18px;
+    padding:15px 25px 5px;
+}

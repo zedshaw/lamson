@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Lamson 1.0pre2, HTML Email, Standalone</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Lamson 1.0pre2, HTML Email, Standalone</h1>
+                	<p>Lamson 1.0pre2 features two features that might signal the end of the beginning or
+the beginning of the end, depending on your perspective: <span class="caps">HTML</span> Email and Lamson Standalone.
+<span class="caps">HTML</span> Email support comes from a new module 
+<a href="http://lamsonproject.org/docs/api/lamson.html-module.html">lamson.html</a> that gives a nice template
+method to send out <span class="caps">HTML</span> to victims&#8230;uh&#8230;customers.  Lamson Standalone will be a way
+to run Lamson as your customized email server instead of another server like Postfix.</p>
+
+	<p>Both of these features will be done for Lamson 1.0, but are currently just getting started
+as of 1.0pre2.  Once they&#8217;re done that will be the last two requested features people
+had before 1.0.</p>
+
+	<h2>Getting This Release</h2>
+
+	<p>As usual, you can get this <a href="/releases/">release from /releases</a> or if you are too lazy to
+read that page then do this:</p>
+
+<pre class="code prettyprint">
+$ sudo easy_install -U lamson
+</pre>
+
+	<p>In addition, if you want play with the new features you&#8217;ll need to install these (optional)
+Python libraries:</p>
+
+<pre class="code prettyprint">
+$ sudo easy_install -U pydns
+$ sudo easy_install -U beautifulsoup
+$ sudo easy_install -U markdown2
+$ sudo easy_install -U clevercss
+</pre>
+
+	<p>I&#8217;ll decide if I should make these mandatory or optional with the next release based on
+people&#8217;s feedback.</p>
+
+	<h2>Lamson Standalone</h2>
+
+	<p>Quite a few people have asked for a way to install Lamson as their primary email server.
+Usually they want it for just their own email on a machine just for them where installing
+something like Postfix is overkill or just too hard.  This is entirely possible
+with Lamson, but it&#8217;s kind of not the right use for it since simple delivery of mail is
+much better handled and implemented by an older server like Postfix.</p>
+
+	<p>Rather than resist giving people a way to setup Lamson as their primary mail server, I&#8217;ve
+decided to start making it possible for them.  By the next release (1.0pre3) you&#8217;ll be able
+to run Lamson as your only email server for small installations handling mail for one person.</p>
+
+	<p>I&#8217;ll also include a <a href="/videos/">screen cast</a> showing people how to use the standalone functionality
+to build a <strong>Personal Mail Management Server</strong> to filter and control their mail without any
+other mail server.  I&#8217;m going to treat this as a first project for most people wanting to get
+started using Lamson for their email.</p>
+
+	<p>As of 1.0pre2, the functionality that&#8217;s available is code in the <a href="http://lamsonproject.org/docs/api/lamson.server.Relay-class.html">lamson.server.Relay</a> 
+that will use <a href="http://pydns.sourceforge.net/">PyDNS</a> to query up the MX host for 
+recipient addresses.  It&#8217;s fairly primitive right now, but you use it by creating
+a Relay with the host explicitly None:</p>
+
+<pre class="code prettyprint">
+relay = server.Relay(host=None, port=25, debug=1)
+</pre>
+
+	<p>Once you do this the Relay will lookup the hosts rather than trying to send through a relay 
+host.</p>
+
+	<p>Don&#8217;t go crazy with this yet, since it has to be tested with various kind of nasty email
+addressing out there, and it needs to have a way to generate a bounce when it has an error.</p>
+
+	<h2><span class="caps">HTML</span> Email</h2>
+
+	<p>Well, I broke down and implemented my idea for making <span class="caps">HTML</span> Email easy as hell to generate.
+In the past I didn&#8217;t want to include simple <span class="caps">HTML</span> support because, well, <span class="caps">HTML</span> Email is
+annoying as hell and I didn&#8217;t want to deal with the support headaches.  I knew once I threw
+<span class="caps">HTML</span> generation into Lamson I&#8217;d have an army of marketing people using Lamson poorly to
+generate their marketing materials.  I also think that <span class="caps">HTML</span> formatting in email doesn&#8217;t work
+as a customer development strategy.</p>
+
+	<p>Yet, every time I tell someone about Lamson, the very first, second, third, and 300th thing they
+ask is if it does <span class="caps">HTML</span> Email.  Over and over and over this was the most important feature, above
+spam blocking, filtering, building applications, intelligent state management, or anything else
+that Lamson supports.</p>
+
+	<p>Well, if the people want <span class="caps">HTML</span> email generation, then the people will get it.  I introduce
+you to <a href="http://lamsonproject.org/docs/api/lamson.html-module.html">lamson.html</a> which
+makes it trivial to produce <span class="caps">HTML</span> in your email and doing it in a nice clean way using
+<a href="http://sandbox.pocoo.org/clevercss/">CleverCSS</a> and <a href="http://jinja.pocoo.org/2/">Jinja2</a>
+templates.</p>
+
+	<p>Let&#8217;s start with the simplest little example that will send out a disgusting html template:</p>
+
+<pre class="code prettyprint">
+import sys
+from lamson import html, server
+from config import testing
+
+relay = server.Relay(host=None, port=25, debug=1)
+hs = html.HtmlMail("style.css", "html_test.html")
+
+title = "Test Message HTML"
+
+msg = hs.respond(locals(), "content.markdown", From=sys.argv[1], 
+                 To=sys.argv[2], Subject="Test %(title)s")
+
+relay.deliver(msg)
+</pre>
+
+	<p>You could run this right out of the Lamson source tree like this:</p>
+
+<pre class="code prettyprint">
+export PYTHONPATH=tests
+python sender.py thedude@thedude.com victim@gmail.com
+</pre>
+
+	<p>The result would look like this in victim&#8217;s email:</p>
+
+	<p><img src="html_email_in_gmail.png" alt="" /></p>
+
+	<h2>How lamson.html.HtmlMail Works</h2>
+
+	<p>The rationale behind the HtmlMail class is that you&#8217;ll typically have a template you
+want to send, some <span class="caps">CSS</span>, and then body content that you&#8217;ll plug into the template
+as a slug for each person.  What HtmlMail does is let you setup the template as <span class="caps">HTML</span>
+with Jinja2, and then specify your <span class="caps">CSS</span> using CleverCSS (which is way easier).</p>
+
+	<p>When you go to send, you generate a <a href="http://daringfireball.net/projects/markdown/">Markdown</a>
+template as the body.  This lets you write the actual body of your <span class="caps">HTML</span> mail the same
+way you would a regular email, but still let&#8217;s you get a good <span class="caps">HTML</span> output using the
+HTML/<span class="caps">CSS</span> templates.  With markdown regular folks can write the marketing copy for
+your spam while keeping the design separated.</p>
+
+	<p>HtmlMail then glues this all together by doing the following:</p>
+
+	<ol>
+		<li>Parses your CleverCSS template (after running it through Jinja2).</li>
+		<li>Runs your content markdown through Jinja2 and <a href="http://code.google.com/p/python-markdown2/">markdown2</a> just like all your other Lamson templates.</li>
+		<li>Injects your <span class="caps">CSS</span> <strong>into</strong> your <span class="caps">HTML</span> tags so that you get your styles even though many clients rip out the <strong>style</strong> tags from your <span class="caps">HTML</span>.  See the output sample below.</li>
+		<li>Knits your generated content into your <span class="caps">HTML</span> template as the {{content}} variable.</li>
+	</ol>
+
+	<p>The end result is that these two lines of code from the above sample:</p>
+
+<pre class="code prettyprint">
+...
+hs = html.HtmlMail("style.css", "html_test.html")
+
+...
+msg = hs.respond(locals(), "content.markdown", From=sys.argv[1], 
+                 To=sys.argv[2], Subject="Test %(title)s")
+</pre>
+
+	<p>Will let you blast out well formatted <span class="caps">HTML</span> emails that have a high probability
+of displaying in most mail clients.</p>
+
+	<h2>How The <span class="caps">HTML</span> And <span class="caps">CSS</span> Looks</h2>
+
+	<p>Here&#8217;s what each of the files in the above sample look like.  First the <code>style.css</code>:</p>
+
+<pre class="code prettyprint">
+body:
+    margin: 10
+    padding: 20
+    background: green - 30
+    color: blue
+
+    h1:
+        font-size: 3em
+    h2:
+        font-size: 2em
+        color: yellow
+
+    h2:
+        font-size: 1em
+
+    p:
+        padding: 0.3em
+        background: red
+
+h2:
+    color: yellow
+
+#bright:
+    background: black
+    color: white
+
+.dull:
+    background: gray
+    color: black
+</pre>
+
+	<p>Notice that <a href="http://sandbox.pocoo.org/clevercss/">CleverCSS</a> supports quite a few
+very cool features, like calling functions, nesting, variables, and calculations.</p>
+
+	<p>Next you have the outer template <code>html_template.html</code> that wraps your content markdown template.  Notice
+that there&#8217;s no <strong>style</strong> tag where the above CleverCSS is placed.  That gets done 
+later by lamson.html.HtmlMail.</p>
+
+<pre class="code prettyprint">
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;{{ title }}&lt;/title&gt;
+    &lt;/head&gt;
+
+    &lt;body style="background: magenta"&gt;
+        &lt;h1 class="bright"&gt;{{ title }}&lt;/h1&gt;
+
+        {{ content }}
+
+        &lt;h2 id="dull"&gt;All done.&lt;/h2&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+	<p>Finally, you have the <code>content.markdown</code> file that has your basic markdown formatted email:</p>
+
+<pre class="code">
+Hello
+=====
+
+I would *love* for you to tell me what is going on here joe.  NOW!
+
+Alright
+-------
+
+This is the best I can come up with.
+
+Zed
+</pre>
+
+	<p>You can use any format you want by changing a setting when you construct your HtmlMail object,
+but markdown seems to be the closest to what people would send as plain text for their email.
+In fact, I&#8217;d like to find a way to send the raw markdown as the plaintext version of each <span class="caps">HTML</span>
+email that goes out.</p>
+
+	<p>With the above three components, you then get the following output:</p>
+
+<pre class="code prettyprint">
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Test Message HTML&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style="margin: 10; padding: 20; background: #006200; color: blue"&gt;
+&lt;h1 class="bright" style="background: black; color: white"&gt;Test Message HTML&lt;/h1&gt;
+&lt;h1 style="font-size: 3em"&gt;Hello&lt;/h1&gt;
+&lt;p style="padding: 0.3em; background: red"&gt;I would &lt;em&gt;love&lt;/em&gt; for you to tell me what is going on here joe.  NOW!&lt;/p&gt;
+&lt;h2 style="color: yellow"&gt;Alright&lt;/h2&gt;
+&lt;p style="padding: 0.3em; background: red"&gt;This is the best I can come up with.&lt;/p&gt;
+&lt;p style="padding: 0.3em; background: red"&gt;Zed&lt;/p&gt;
+&lt;h2 id="dull" style="background: gray; color: black"&gt;All done.&lt;/h2&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+	<p>Like magic HtmlMail has taken your CleverCSS file and merged it into the tags of your <span class="caps">HTML</span> to
+style it, making it work in most clients without forcing you to do it manually.  It does this by
+walking the <span class="caps">CSS</span> and generated <span class="caps">HTML</span> with <a href="http://www.crummy.com/software/BeautifulSoup/">BeautifulSoup</a>
+and setting the <strong>style</strong> attribute as it goes.</p>
+
+	<h2>Librelist <span class="caps">JSON</span> Archives</h2>
+
+	<p>There&#8217;s been a ton of work on <a href="http://librelist.com/">librelist.com</a> to make it
+work better, but the big feature is a complete <span class="caps">JSON</span> dump of the mail archives
+and a new <a href="http://librelist.com/browser/">Archive Browser</a> for reading the
+archives.</p>
+
+	<p>The browser is just a fast one day hack I did to prove that the <span class="caps">JSON</span>
+archive format was good.  It uses <a href="http://jqueryui.com/">JQuery UI</a> to build
+the interface, and has <strong>no servers side software other than Nginx.</strong>  Yes, you
+read that right, there is no Django behind this, just a pure <a href="http://nginx.net/">Nginx</a>
+setup serving files and directory indexes.</p>
+
+	<p>The real meat of this setup is the Lamson server on librelist and an Nginx module.  </p>
+
+	<p>First, the librelist server generates a <span class="caps">JSON</span> version of each archived email which
+you <a href="http://librelist.com/archives/lamson/2009/07/30/json/1248947932.M724307P15430Q6.09c5769d5b9f3d575cefc2ccb51877ec.json">can see here</a> with your browser.  This <span class="caps">JSON</span> actually loads as an 
+object in JavaScript, so you have code like this:</p>
+
+<pre class="code prettyprint">
+function appendMessage(msg) {
+    display = '&lt;div id="message"&gt;&lt;div id="header"&gt;' +
+        '&lt;div&gt;' + msg.headers['Date'] + '&lt;/div&gt;' +
+        '&lt;div id="addressing"&gt;' + msg.headers['From'] + '&lt;/div&gt;' +
+        '&lt;div id="subject"&gt;' + msg.headers['Subject'] + '&lt;/div&gt;' +
+        '&lt;/div&gt;&lt;div id="body"&gt;&lt;pre&gt;' +
+        summarize(msg) +
+        '&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;'
+
+        $("#messages").append(display);
+}
+</pre>
+
+	<p>Second, there&#8217;s a tiny modification to Nginx&#8217;s
+<a href="http://wiki.nginx.org/NginxHttpAutoindexModule">autoindex</a> I made so that
+it will generate a <a href="http://librelist.com/archives/lamson/2009/07/"><span class="caps">JSON</span> version of the index instead of HTML</a>
+so that you can &#8220;browse&#8221; the stored <span class="caps">JSON</span> files via JavaScript:</p>
+
+<pre class="code prettyprint">
+function loadDay(date) {
+    if(window.MAILING_LIST) {
+        $.getJSON("/archives/" + window.MAILING_LIST + date + "/json/", {},
+        function(data) {
+            $("#messages").empty();
+            base = data[0]
+            msgs = data[1]
+            for(i in msgs) {
+                fetchMessage(base + msgs[i])
+            }
+        });
+    } else {
+        $("#messages").html("&lt;h2&gt;Now pick a list to look at for that day.&lt;/h2&gt;");
+    }
+}
+</pre>
+
+	<p>With those two components I can export a <span class="caps">JSON</span> version of the mailing list archives without
+having to run a large web framework.</p>
+
+	<h2>ChangeLog</h2>
+
+	<p>For those who are interested, here&#8217;s the Bazaar logs from this release, separated into
+changes to Lamson and changes to the included librelist.com sample.</p>
+
+	<h2>Lamson Changes</h2>
+
+	<ul>
+		<li>Cleanup and tuning of the html code.</li>
+		<li>Documenting the HtmlMail <span class="caps">API</span>.</li>
+		<li>New <span class="caps">HTML</span> email generation with CleverCSS support and merging the <span class="caps">CSS</span> into the <span class="caps">HTML</span> results.</li>
+		<li>Additional tests for the new MX query style of Relay.</li>
+		<li>Implemented a feature to let the relay do its own delivery, rather than needing a smart host.  Requires PyDNS.</li>
+		<li>Cleaned up the build so that it removes junk from the examples.</li>
+		<li>Fixed up the lamson default help command so that it is more succinct.</li>
+		<li>Properly skips spam filtering if the spam databse doesn&#8217;t exist.</li>
+		<li>Made the spam filter not barf if there&#8217;s no spam db, which helps when testing.</li>
+		<li>Now don&#8217;t bother storing the <span class="caps">START</span> state since it&#8217;s the default.</li>
+		<li>Cleaned up mail some more and deprecated the MailRequest.msg and MailResponse.msg to be replaced with .base (since that&#8217;s what it is).</li>
+		<li>Added a simple method to copy the attachments of a MailRequest to a MailResponse.</li>
+		<li>Got decent attachment copying implemented, mail api needs a bit of cleanup.</li>
+		<li>Return an empty string when trying to encode a none.</li>
+		<li>Minor bug in the safequeue, added logging so you can track oversize.</li>
+		<li>Getting the headers right for replies to work, removed the first message.</li>
+		<li>Added options to Queue and QueueReceiver to limit the size of incoming mail.</li>
+		<li>Added a version command finally, with some good information.</li>
+	</ul>
+
+	<h2>librelist.com Changes</h2>
+
+	<ul>
+		<li>Force the permissions to be correct for serving up the archives.</li>
+		<li>Make sure that bounces are always saved for later.</li>
+		<li>Json convert script can&#8217;t go there.</li>
+		<li>Need to install simplejson to make the json work on librelist.</li>
+		<li>Prevent loop back of messages from lamson to itself, and stop messages that should not be considered lists like unbounce and noreply.</li>
+		<li>Implements a json version of the mailing list archives in addition to the regular <span class="caps">MIME</span> encoded ones.</li>
+		<li>Update of changes from the live server for setting up the spam system.</li>
+		<li>Migration to install the spam database on deployment.</li>
+		<li>Added spam filtering to the admin handler where it counts.</li>
+		<li>Confirmations are removed after they are verified.</li>
+		<li>Template for bad list name help.</li>
+		<li>Tweaked the formatting for the bad list name helper, and made sure that it returns to <span class="caps">START</span>.</li>
+		<li>Now giving out an error message for people who get the name format wrong.</li>
+		<li>Added additional headers needed for achives, and try to maintain the date and message-id headers.</li>
+		<li>Production and staging deployment scripts setup and a migration to make those work.</li>
+		<li>Implemented a simple bash based deployment setup for automating librelist deploys and migrations.</li>
+		<li>Nope, can&#8217;t add the &#8211; yet without some regex wizardry.</li>
+		<li>Small change to allow &#8211; in the mailing list names.</li>
+		<li>Updated the messages librelist sends out for readability.</li>
+	</ul>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

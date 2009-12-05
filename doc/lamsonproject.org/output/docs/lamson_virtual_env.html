@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Installing Lamson Into Virtualenv With Pip</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Installing Lamson Into Virtualenv With Pip</h1>
+                
+The best way to install Lamson in a virtualenv is using the <a href="http://pip.openplans.org/">pip
+tool</a> to install it. This will automatically fetch
+the code from bazaar, install it inside the virtualenv and fetch any missing
+dependencies.
+
+	<p>First, if you haven&#8217;t already, you&#8217;ll need to install pip. Make sure 
+you&#8217;ve activated the virtualenv:</p>
+
+<pre class="code">
+. bin/activate
+</pre>
+
+	<p>from the root of the virtualenv, and then run:</p>
+
+<pre class="code">
+easy_install -U pip
+</pre>
+
+	<p>If you have bazaar installed on your machine, then just do:</p>
+
+<pre class="code">
+pip install -e bzr+http://bazaar.launchpad.net/~zedshaw/lamson/development/#egg lamson
+</pre>
+
+	<p>This&#8217;ll install the development version of lamson into a src/lamson 
+directory (src/ will be created if it doesn&#8217;t exist). It will also 
+install all of Lamson&#8217;s dependencies into the virtualenv. If you 
+want to update to the latest development version of Lamson, run:</p>
+
+<pre class="code">
+cd src/lamson
+bzr pull
+</pre>
+
+	<p>This will fetch the latest bazaar tip from Launchpad.</p>
+
+	<p>If you don&#8217;t have bazaar installed and don&#8217;t want to install it, you 
+can grab the latest release of Lamson like this:</p>
+
+<pre class="code">
+pip install -F http://launchpad.net/lamson/trunk/0.9-pre2/+download/lamson-0.9-pre2.tar.gz
+</pre>
+
+	<p>Remember though that if you do install it like this you&#8217;ll need to 
+manually update it by visiting Launchpad, finding the latest tarball 
+<span class="caps">URL</span> and `pip install`ing it.</p>
+
+	<h2>Credits</h2>
+
+	<p>These instructions were donated to Lamson by <a href="http://disturbyte.github.com">Zachary
+Voase</a> but <a href="/contact.html">contact me</a> for
+suggested improvements.</p>
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

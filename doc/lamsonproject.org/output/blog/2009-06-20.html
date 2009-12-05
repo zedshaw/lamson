@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Lamson 0.9.4 With Unicode Super Powers</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Lamson 0.9.4 With Unicode Super Powers</h1>
+                	<p>Lamson 0.9.4 is out and it&#8217;s sporting a completely rewritten and meticulously 
+crafted encoding system.  With the new <a href="http://lamsonproject.org/docs/api/lamson.encoding-module.html">lamson.encoding</a> code Lamson can now decode nearly any nasty horrible encoded spam
+or mail you hand it, turn it into pristine nice Python unicode strings, and
+then output sweet clean ascii or utf-8 in a consistent way.</p>
+
+	<p>The purpose of this new encoding system is to make sure that Lamson
+is giving your handlers the best input it can, based on the assumption
+that the world is evil and Lamson will be handed utter garbage.</p>
+
+	<p>In order to pull this off, Lamson actually attempts to decode everything
+it gets, and uses <a href="http://chardet.feedparser.org/">chardet</a> to guess whenever
+it can&#8217;t.  It goes far enough to make sure that 99.9% of legit mail gets through,
+and the rest is usually spam.  However, Lamson is so good at this conversion
+now that it even does it properly on about 99% of spam, even more.</p>
+
+	<p>It doesn&#8217;t matter what character encoding is used, if there&#8217;s a mix of encodings
+or even if something lies about the encoding or doesn&#8217;t give one.  Lamson can
+figure this out and convert it anyway, and the rest is junk.</p>
+
+	<p>You can look at this <a href="/lamson_vs_spam.png">image of a spam inbox</a> and 
+<a href="/lamson_vs_spam_2.png">this image of a spam inbox</a> where you can see a
+screen session showing this off.  This is a split screen with a Mutt on top
+showing badly formatted spam, and then a Mutt on the bottom with the
+results of Lamson&#8217;s cleansing.  This is just running in iTerm, but looks
+the same in most unicode enabled terminals and clients.</p>
+
+	<p>The interesting side effect of Lamson&#8217;s decoding is that it undoes almost all 
+of the spam obfuscation techniques quickly and consistently.</p>
+
+	<h2>There Will Be Bugs</h2>
+
+	<p>I&#8217;ve thrashed the hell out of this code and made sure that I really took
+the time to get it right.  I&#8217;ve ran it on thousands and thousands of real and
+spam mail and tested the crap out of it with unit tests and fuzzing.</p>
+
+	<p>Still, this is new code handling email so there will be bugs in it.  If
+you run into an email that you think should parse correctly, send it to
+me and I&#8217;ll look at it.</p>
+
+	<h2>How It Works</h2>
+
+	<p>All Lamson does is completely parse every header and figure out how to decode it,
+but it assumes that the client is a liar.  If the string decodes without errors
+then Lamson is happy, but if it blows up then Lamson uses chardet to figure out
+what the contents really are encoded as.  If chardet can&#8217;t figure it out, or if
+it&#8217;s still busted, then Lamson rejects that mail (which happens less than a fraction
+of a percent of the time to real email).</p>
+
+	<p>Once this decoding process is finished Lamson has converted the email completely
+into Python unicode only.  You can work with it in a modern way without worrying
+about the original codecs, and you can set your headers and attachments without
+worrying about setting the codecs because Lamson will use the same tech to get
+the encoding right.</p>
+
+	<p>When Lamson writes an email, it assumes that your text can be encoded as either
+plain <span class="caps">ASCII</span> (as most headers are), or UTF-8.  If it can&#8217;t, then your text 
+probably can&#8217;t be processed by Lamson anyway.  Lamson will favor <span class="caps">ASCII</span> first since
+it&#8217;s easier, and then use UTF-8 for anything that can&#8217;t be <span class="caps">ASCII</span>.</p>
+
+	<blockquote>
+		<p>During this conversion process anything that&#8217;s <strong>not</strong> text is treated as raw binary
+and just decoded as-is.</p>
+	</blockquote>
+
+	<p>By doing this Lamson produces nice clean email that can be easily processed and
+passed around, and which you can review and debug easier.  It also turns Lamson
+into a &#8220;modernizing&#8221; agent since it is producing the email it wants to see.</p>
+
+	<h2>Getting This Release</h2>
+
+	<p>I had some issues pushing this release to PyPI, so let me know if it barfs on you.</p>
+
+	<p>Otherwise, you can hit the <a href="/download.html">download</a> section and grab the 
+gear.</p>
+
+	<h2>The New &#8220;Cleanse&#8221; Command</h2>
+
+	<p>In order to make it easier for people to try this new cleansing system on real
+email I&#8217;ve written a quick <code>lamson cleanse</code> command.  What this command will do is
+take a mbox or Maildir, and run it through the washing machine, writing the results
+to a different maildir.  When it&#8217;s done you can go look at the reasons why some
+mail failed, how many failures, and you can actually open that maildir mail and
+look at it with your client.</p>
+
+	<p>Try it out and report any errors you find.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

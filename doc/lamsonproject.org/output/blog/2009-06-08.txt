@@ -1,0 +1,25 @@
+Title:  A Screencast And Docs On Deploying Lamson And OneShotBlog
+
+I just finished writing some new documentation on "Deploying Lamson and OneShotBlog":/docs/deploying_lamson.html that
+shows you how to install Lamson and all required software into a completely clean Python 2.6 and virtualenv configuration.
+The instructions take you from nothing to a running "oneshotblog.com":http://oneshotblog.com/ installation that you can 
+play with and hack on.  The process of doing Lamson deployments is still a little too rough for me, but these instructions
+should get people started.
+
+I also created the first screencast "teaching you how to do the same deployment":/videos/ but stopping at installing
+"oneshotblog.com":http://oneshotblog.com to keep things short.  It is basically me talking and typing into a terminal 
+window to 12 minutes showing you how to do it.  You can also "download the video":http://www.archive.org/details/Lamsonproject.orgDeployLamsonInAVirtualenv
+from "archive.org":http://archive.org/ to get a better viewing experience.
+
+
+Being my first screencast I can say that it is very tedious.  I'll be working on various strategies to make the
+process more streamlined and easier since having to take a whole day for each one will drive me insane.
+
+If you have suggestions on making the video better, "let me know":/contact.html and also if you know of tools to
+help clean up video.  One thing I know right away needs to improve is the sound quality.  An apartment in NYC is just
+too damn noisy for this kind of thing.
+
+Enjoy, and don't forget that I'll be "presenting Lamson at the NYLUG Python workshop tomorrow June 9th at 6:00pm":http://nylug.org/pipermail/nylug-announce/2009-June/000795.html
+so come on down if you want to get your Lamson working.
+
+

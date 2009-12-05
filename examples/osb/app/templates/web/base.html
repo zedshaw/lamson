@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    {% block header %}
+	<link rel="stylesheet" type="text/css" href="/styles/reset.css" />
+    <link rel="stylesheet" type="text/css" href="/styles/main.css" />
+    {% endblock %}
+
+    {% block title %}
+    <title>OneShotBlog(TM): Latest Posts</title>
+    {% endblock %}
+</head>
+
+<body>
+	<div class="wrapper">
+		<div class="header">
+            <h1>
+                {% block display_title %}
+                <a href="/index.html">One. Sh<span>o</span>t. Blog.</a>
+                {% endblock %}
+            </h1>
+			<ul>
+				<li><a href="/index.html">latest</a></li>
+				<li><a href="/about.html">about</a></li>
+				<li><a href="/help.html">help</a></li>
+			</ul>
+		</div>
+		<ul class="notifications">
+            {% block notifications %}
+			<li>
+				<div>
+                    <h3>About OneShotBlog(TM)</h3>
+                    <p>An example project for <a href="http://lamsonproject.org">Lamson</a>.</p>
+				</div>
+                </li>
+            {% endblock %}
+			<li class="footer">
+				<div>
+					<p>Software Copyright (C) 2009 Zed Shaw. Posts Copyright by their owners, sue them.</p>
+				</div>
+			</li>
+		</ul>
+        <div class="content">
+            {% block content %}
+            {% endblock %}
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+source deploy/lib/migrate
+
+cd webapp
+
+python manage.py syncdb
+python manage.py migrate
+
+cd ../
+
+

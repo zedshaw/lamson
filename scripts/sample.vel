@@ -1,0 +1,10 @@
+targets(
+        commands [
+            $ echo noop > /dev/null
+            log "Testing out the commands and stuff."
+            given "True"
+            py 'print "hi!"'
+            $ rm -f setup.py
+            gen (from 'scripts/setup.py' to 'setup.py')
+        ]
+)

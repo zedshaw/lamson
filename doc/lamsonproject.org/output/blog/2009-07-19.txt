@@ -1,0 +1,51 @@
+Title:  I Blame Bounces For The Delay
+
+I was going to release Lamson 0.9.6 much earlier than this, but as I worked on
+the bounce detection feature, I realized that if I just wrote that and a few
+other cleanups and features, I'd actually have a *1.0pre1* candidate on my
+hands instead of a 0.9.6 release.
+
+Instead of releasing 0.9.6, I continued to work on "librelist.com":http://librelist.com/
+and got the software smart as hell.  While working on librelist.com I managed
+to improve Lamson to the point where I'll be comfortable releasing a 1.0pre1
+tomorrow.
+
+h2. What's librelist.com?
+
+If you go "librelist.com":http://librelist.com/ you can read about it, although
+the site is still rough and being written.  It actually does function however,
+including basic archives.
+
+For people too lazy to click on the link:  librelist.com is just a free mailing
+list service for open source projects, similar to freenode.org with IRC.
+The primary purpose is to give open source projects a mailing list they can use that has:
+
+* The code available (it's in the Lamson source).
+* No logins, signups, bundled services, captchas, tracking cookies, or other crap getting in your way.
+* No ads on your emails, ever.
+* Full access to your archives using rsync.
+* Easy and smart signup process.
+* Spam blocking and bounce protection galore (although spam is off right now).
+
+h2. Try The Lists
+
+I'll have an announcement tomorrow laying out the big things you'll get, but for now
+if you want to track Lamson and participate, as well as test the librelist.com
+code, then try subscribing to "lamson@librelist.com":mailto:lamson@librelist.com
+and saying hello.
+
+If you're interested in librelist.com development, then subscribe to "meta@librelist.com":mailto:meta@librelist.com
+and I'll be sending out announcements related to librelist there.
+
+h2. The Lamson 1.0pre1 Plan
+
+I haven't needed to touch Lamson much over the last few days, apart from some surgery
+on the Python Maildir class to add a safety feature.  The code currently in bzr is
+also very stable and has been sped up a bit.  I'm looking to basically spend tomorrow
+auditing the code and writing docs with the goal of pushing out a release in the evening.
+
+The goal then will be to make it solid and not add many more features so that I can get a 1.0
+release out for real by the end of July.
+
+See you tomorrow!
+

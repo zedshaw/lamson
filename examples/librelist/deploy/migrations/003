@@ -1,0 +1,10 @@
+tar -xjvf ~/deploy/data/spamdb.tar.bz2
+
+sb_mboxtrain.py -d run/spamdb -f -g mbox ; rm mbox
+sb_mboxtrain.py -d run/spamdb -f -g spam ; rm spam
+sb_mboxtrain.py -d run/spamdb -f -g spam-db ; rm spam-db
+sb_mboxtrain.py -d run/spamdb -f -g spam-mbox ; rm spam-mbox
+
+echo "SPAM = {'db': 'run/spamdb', 'rc': 'run/spamrc', 'queue': 'run/spam'}" >> config/settings.py
+
+

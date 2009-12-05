@@ -1,0 +1,35 @@
+Title: Lamson Releases
+
+You can get the Lamson source in various ways:
+
+* Download it from "the Launchpad project page":https://launchpad.net/lamson/+download
+* Use "Bazaar":http://bazaar-vcs.org/ to get the code with *bzr branch lp:lamson*
+
+And don't forget you can install it with easy_install as well:
+
+<pre class="code">
+sudo easy_install --upgrade lamson
+</pre>
+
+bq. If easy_install doesn't work, try without --upgrade, and if that doesn't work then
+look in your site-packages directory and delete all the versions of Lamson you find.
+
+
+h2. Releases
+
+You can get the 1.0pre6 release source from the this site as well:
+
+"1.0pre6 release tar.gz":/releases/lamson-1.0pre6.tar.gz
+
+"1.0pre6 release Python Egg":/releases/lamson-1.0pre6-py2.5.egg
+
+This version has been tested, but it is a fairly big change from the 0.8.x series.  You should be able
+to migrate your code to 1.0pre6 quickly, but you'll want to read through the documentation, and I hope you had
+tests for everything.
+
+
+h2. Examples
+
+You can get the One-Shot-Blog example by grabbing the above source, untarring it, and then look in example/osb.
+
+

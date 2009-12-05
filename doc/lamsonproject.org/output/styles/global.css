@@ -1,0 +1,326 @@
+/* ZED @override http://lamsonproject.com/styles/global.css */
+
+@import url('reset.css');
+
+body{
+	background-color: #efefef;
+	font-family: "Lucida Grande", Lucida, Verdana, sans-serif;
+	font-size: 12px;
+	height: 100%;
+}
+
+h1{
+	font-family: "Lucida Grande", Lucida, Verdana, sans-serif;
+	font-size: 22px;
+    margin-bottom: 10px;
+}
+
+h2, h3, h4, h5, h6{
+	padding: 0px !important;
+	font-family: Georgia, "Times New Roman", Times, serif;
+    padding-top: 1em;
+    margin-bottom: 10px;
+}
+
+h2{
+	padding: 0px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 18px; font-weight: normal; margin-bottom: 10px;
+}
+
+pre.padded{
+	margin-bottom: 16px;
+}
+
+p{
+	line-height: 20px;
+	font-size: 12px;
+}
+
+p.lightened{
+	color: #666;
+}
+
+p.padded{
+	margin-bottom: 16px;
+}
+
+
+
+div#content_centered{
+	width: 890px;
+	margin: 0 auto;
+}
+
+/* @group Header */
+
+div#header{
+	width: 100%;
+	clear: both;
+	height: 110px;
+	position: relative;
+}
+
+div#header img#logo{
+	position: absolute;
+	top: 22px;
+}
+
+div#header ul#header_menu{
+	list-style: none;
+	display: inline;
+	padding: 0;
+	margin: 0;
+	position: absolute;
+	top: 44px;
+	right: 34px;
+}
+
+div#header ul#header_menu li{
+	float: left;
+	padding: 3px 20px 3px 0px;
+	display: inline;
+}
+	
+	ul#header_menu li a{
+		text-decoration: underline;
+		padding: 6px 8px 6px 8px;
+		color: #333;
+	}
+	
+    ul#header_menu li a:hover{
+        color:#fff;
+        text-decoration: none;
+        background-color: #0099ff;
+    }
+    
+    ul#header_menu li a.selected{
+        color:#fff;
+        text-decoration: none;
+        background-color: #0099ff;
+    }
+
+/* @end */
+
+/* @group Masthead */
+
+div#masthead{
+	width: 100%;
+	background-color: #fff;
+	margin-bottom: 36px;
+	clear: both;
+}
+
+div#masthead h2{
+	font-size: 19px;
+	color: #333;
+}
+
+div#masthead p{
+	font-family: "Lucida Grande", Lucida, Verdana, sans-serif;
+	line-height: 18px;
+}
+
+div#masthead div.content{
+	padding: 16px;
+}
+
+div#masthead div.features{
+	float: right;
+	width: 338px;
+	margin-bottom: 30px;
+	margin-left: 30px;
+	margin-right: 44px;
+	background-color: #ccc;
+	min-height: 178px;
+	padding: 16px;
+	position: relative;
+	top: -10px;
+}
+
+div#masthead div.features ul{
+	list-style-type: square;
+	margin-left: 16px;
+}
+
+div#masthead div.features ul li{
+	margin-bottom: 10px;
+	position: relative;
+}
+
+div#masthead a#getstarted{
+	position: absolute;
+	bottom: 0px;
+	right: 10px;
+	background-color: #666;
+	color: #fff;
+	padding: 4px 8px 4px 8px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	text-decoration: none;
+}
+
+div#masthead a#getstarted:hover{
+	background-color: #0099ff;
+}
+
+/* @end */
+
+/* @group Columns */
+
+div#column_left{
+	margin-right: 36px;
+	float: left;
+	width: 240px;
+	height: 100%;
+}
+
+div#main_content{
+	width: 614px;
+	float: right;
+}
+
+/* @end */
+
+/* @group Sidebar */
+
+/* @group Sidebar Item */
+
+div#column_left div.sidebar_item{
+	padding: 6px;
+	background-color: #fff;
+}
+
+div#column_left div.sidebar_item h3{
+	font-size: 16px;
+	margin: 0px 0px 4px 0px;
+}
+
+div#column_left div.sidebar_item p{
+	font-size: 11px;
+	line-height: 14px;
+}
+
+/* @end */
+
+div#column_left ul.sidebar_menu{
+	margin-bottom: 36px;
+}
+
+div#column_left ul.sidebar_menu li{
+	display: block;
+}
+
+div#column_left ul.sidebar_menu li div.color{
+	width: 3px;
+	float: left;
+	height: 100%;
+	position: relative;
+	display: inline;
+}
+
+div#column_left ul.sidebar_menu li div.item a{
+	text-decoration: none;
+	background-color: #ccc;
+	font-size: 12px;
+	color: #333;
+	display: block;
+	padding: 7px 0px 9px 16px;
+	width: 224px;
+}
+
+div#column_left ul.sidebar_menu li div.item a:hover{
+	background-color: #aaa;
+	color: #fff
+}
+
+div#column_left ul.sidebar_menu li div.item{
+	background-color: #ccc;
+    height: 28px;
+	width: 100%;
+	margin-bottom: 1px;
+	zoom: 1 !important;
+}
+
+/* @end */
+
+/* @group Content */
+
+div#main_content p{
+	margin-bottom: 10px;
+}
+
+div#main_content blockquote{
+	margin: 4px 0px 10px 0px;
+	padding: 4px 0px 4px 10px;
+	line-height: 20px;
+	border-left: 3px solid #1d7872;
+	text-indent: 0px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 13px;
+	font-weight: normal;
+}
+
+div#main_content pre.code{
+	border-left: 3px solid #666;
+	background-color: #333;
+	padding: 8px;
+	color: #fff;
+	font-family: "Courier New", Courier, mono;
+	margin-bottom: 10px;
+}
+
+div#main_content code{
+	color: #000;
+	font-weight: bold;
+	font-family: "Courier New", Courier, mono;
+}
+
+div#main_content ul{
+	list-style-type: square;
+	padding-left: 14px;
+	margin-left: 10px;
+	line-height: 18px;
+	margin-bottom: 16px;
+}
+
+div#main_content ul li{
+	padding-bottom: 4px;
+}
+
+div#main_content ol{
+	padding-left: 14px;
+	margin-left: 10px;
+	line-height: 18px;
+	margin-bottom: 16px;
+	list-style-type: decimal-leading-zero;
+}
+
+div#main_content ol li{
+	padding-bottom: 4px;
+}
+
+/* @end */
+
+/* @group Footer */
+
+div#footer{
+	text-align: right;
+	padding-top: 40px;
+	clear: both;
+}
+
+div#footer div.footer_content{
+	background-color: #fff;
+	padding: 16px;
+	padding-bottom: 40px;
+	color: #999;
+	line-height: 20px;
+}
+
+div#footer div.footer_content a{
+	color: #666;
+}
+
+
+
+/* @end */

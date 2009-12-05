@@ -1,0 +1,88 @@
+Title: Lamson 0.9 Is Out, Find My Bugs!
+
+
+I just pushed Lamson 0.9 up to PyPI for everyone to grab and break.  This release 
+features a complete redesign of the routing, state handling, templating, and a full 
+set of very complete documentation.  Everyone who was using 0.8.x series should be able 
+to migrate to this version with some work, but it won't be terribly painful (assuming
+you have unit tests).
+
+h2. Getting 0.9
+
+Easiest way to install is with "easy_install":http://peak.telecommunity.com/DevCenter/EasyInstall
+straight from PyPI:
+
+<pre class="code">
+sudo easy_install lamson
+</pre>
+
+There's also instructions on "installing to a virtualenv":/docs/lamson_virtual_env.html
+for those who like that.
+
+Best thing to do is read the "Getting Started":/docs/getting_started.html instructions
+and when you're done with at least the 30 second introduction you'll have your Lamson.
+
+Try to go through the whole document if you can and send me feedback.  
+
+
+h2. Big Changes
+
+The biggest change is that the routing mechanism and internals are totally different. 
+Now instead of putting all your routes into the config/settings.py as a big array, 
+you just put them on each state function as a decorator.  To help you debug these
+fancy routes there's also a new @lamson routes@ command that will dump them in 
+their final state.
+
+The biggest impact of the new design is the old school "BlahHandler" classes are
+gone.  Later versions of Lamson might bring back the ability to use a class as a
+handler.
+
+After that comes the removal of depending on SQLAlchemy for state storage.  You
+can now "write your own state storage":/docs/writing_a_state_storage.html and
+store things however you need to whatever you need.  There is currently a simple
+storage for storing in memory and for using a Python shelve dict.
+
+Next there was a change to how Lamson boots up and configures itself giving you
+more control over what it uses, and giving your handlers better access to your 
+gear.  This change also let's you use better unit tests that don't require a
+running lamson server, as well as giving you the old "integration test" style
+tests that hit your real server.
+
+There's also tentative support for PyEnchant spell checking of your templates,
+and a new @lamson spell@ command to help you use it.  See the "getting started":/docs/getting_started.html
+document for how to configure that, but be warned that PyEnchant is kind of a
+mean install.
+
+Finally, I switched to Jinja2 templates by default, but you can use Mako fairly easily
+by altering a configuration variable in the boot.py.
+
+h2. Look At All The Shiny Docs
+
+In addition to redesigning the guts of Lamson so that it's easier to work on and use,
+I also spent a lot of time cranking out good documentation so people can get started
+using it.  Take a look in the "documentation":/docs section and have a gander
+at the "API documentation":/docs/api/ that is generated from the source documentation.
+
+h2. New Example: One-Shot-Blog
+
+In the source distribution "you can grab here":/releases/ there's an example 
+of doing a simple blog that uses just email to manage the blogger's posts.
+The example replaces the mailing list example (for now) as it is simpler and 
+doesn't use a database.
+
+h2. Please Break It
+
+The 0.9 release is the result of a lot of work, but I want people to break it and
+criticize it to death.  The goal is to have people beat up this basic functionality,
+producing a series of 0.9.x releases, and then when everything is tight doing a 1.0
+release.
+
+h2. Thanks Everyone
+
+I'd like to thank everyone on Twitter, Hacker News, and yes, even Reddit for
+their comments both good and bad.  It helped me make good decisions knowing 
+what people wanted, so keep the feedback coming.
+
+Thanks also to those who donated documentation, praise, or other help directly 
+to the project.
+

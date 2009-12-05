@@ -1,0 +1,10 @@
+include *.py
+include *.vel
+include LICENSE
+include README
+recursive-include examples *
+recursive-include doc *
+recursive-include bin *
+recursive-include lamson *
+recursive-include scripts *
+recursive-include tests *

@@ -1,0 +1,14 @@
+title: Lamson Project Site Launched
+
+Today I launched the Lamson Project site at
+"lamsonproject.org":http://lamsonproject.org/ and started filling in the
+content.  Lamson is really turning into a fun and useful project, and hopefully
+the site will get other people interested in it and using it.
+
+I took the design from one of the many free web design sites and reused the same Python blog script that I use on "my own site":http://zedshaw.com/ so getting this up and running was cake.
+
+Subscribe to the "RSS feed":/feed.xml and I'll soon be doing a blog post announcing mailing lists and other email services that I'll host on lamsonproject.org as well as new documentation and code drops.
+
+If you browse around you'll find some useful documentation, but nothing complete just yet.  I'm still writing most of it.
+
+

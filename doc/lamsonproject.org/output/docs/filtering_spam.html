@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Filtering Spam With Lamson</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Filtering Spam With Lamson</h1>
+                	<p>Lamson supports initial use of the
+<a href="http://spambayes.sourceforge.net/">SpamBayes</a> spam filter library for filtering
+spam.  What Lamson provides is a set of easy to use decorators that you attach
+to your state functions which indicate that you want spam filtered.  It also
+uses the default SpamBayes configuration files and database formats as you
+configure, so if you have an existing SpamBayes setup you should be able to use
+it right away.</p>
+
+	<h2>Using lamson.spam</h2>
+
+	<p>Lamson gives you a simple decorator to place on any state functions that should
+block spam.  Typically you do <strong>not</strong> want spam filtering on your entire
+application, since that would prevent legitimate registrations and put too much
+burden on your system.  It&#8217;s better to put spam filtering on the &#8220;insider&#8221;
+parts, and to have confirmation emails on &#8220;outsider&#8221; pieces.</p>
+
+	<p>Instead, what you want is to indicate that your &#8220;choke points&#8221; are filtering
+spam using
+<a href="http://lamsonproject.org/docs/api/lamson.spam.spam_filter-class.html">lamson.spam.spam_filter</a>
+so that when a spam is received they are put into a &#8220;spam black hole&#8221;.</p>
+
+	<p>Here&#8217;s an trivial example where the user is in the <span class="caps">POSTING</span> state, and you want
+everything to work like normal, but if they spam then you flip them into a
+<span class="caps">SPAMMING</span> state.</p>
+
+<pre class="code prettyprint">
+@route(".+")
+def SPAMMING(message):
+    # the spam black hole
+    pass
+
+@route("(anything)@(host)", anything=".+", host=".+")
+@spam_filter("run/spamdb", "run/.hammierc", "run/spam", next_state=SPAMMING)
+def POSTING(message, **kw):
+    print "Ham message received."
+    ... 
+</pre>
+
+	<p>The line to look at is obviously the <code>spam_filter</code> line, which tells Lamson that you will:</p>
+
+	<ol>
+		<li>Use the SpamBayes training database <code>run/spamdb</code> for the detection.</li>
+		<li>Use the SpamBayes <code>run/.hammierc</code> file for your config (optional and ignored if it is not there).</li>
+		<li>Use <code>run/spam</code> as the dumping ground for anything classified as spam.</li>
+		<li>The next_state to transition to if they send a spam message.  <strong>This is optional, but very helpful.</strong></li>
+	</ol>
+
+	<p>With this, the <code>spam_filter</code> then wraps your state function, and every message
+is fed to SpamBayes.  If SpamBayes says it&#8217;s spam then Lamson will dump it into
+your <code>run/spam</code> and transition to <span class="caps">SPAMMING</span> *without running your <span class="caps">POSTING</span>
+state*.</p>
+
+	<p>Once you are in this new <code>SPAMMING</code> state (or any state you like) you can do
+whatever you want.  You can leave them there, or you can have an external tool
+that let&#8217;s you un-block someone.  Pretty much any spam handling scheme you want
+is available.</p>
+
+	<p>Since your spam is placed into a queue you can inspect it later and check for
+any accidentally miscategorized mail, then use the SpamBayes tools to retrain
+for the misdetection.</p>
+
+	<blockquote>
+		<p> Lamson only classifies mail that is marked as actual spam by looking at
+the 'X-Spambayes-Classification&#8217; header and seeing if it starts with 'spam&#8217;.
+If it is 'unsure&#8217; or 'ham&#8217; it will let it through.</p>
+	</blockquote>
+
+	<h2>Effectiveness</h2>
+
+	<p><a href="http://zedshaw.com/">I&#8217;ve</a> been running a variant of this since the middle of
+May 2009 and it works great.   The code I run is a custom version that fits the
+weirdness of my email setup but the principles are the same.  I&#8217;m currently
+using the above spam filtering, some gray listing, and a few other tricks to
+block most of my incoming spam.</p>
+
+	<p>With all the spam block measures I&#8217;ve managed to cut down my spam to about 2-3
+a day out of about 100-200 I receive.  The majority of the &#8220;spam&#8221; that gets
+through is actually email that&#8217;s classified as &#8220;unsure&#8221; which I then use to
+retrain SpamBayes to make it stronger.</p>
+
+	<p>However, that&#8217;s my personal server, so in the case of a Lamson application
+you&#8217;ll want to be careful that your spam blocking activities don&#8217;t prevent too
+much legitimate use.</p>
+
+	<h2>Changing What &#8220;Spam&#8221; Means</h2>
+
+	<p>You can also change how spam is determined by sub-classing
+<a href="http://lamsonproject.org/docs/api/lamson.spam.spam_filter-class.html">lamson.spam.spam_filter</a>
+and doing your own implementation of the <code>spam</code> method.</p>
+
+	<h2>Using SpamBayes</h2>
+
+	<p>An important point about SpamBayes is that it comes with all the command line
+tools you need to configure and train your database using a corpus of spam you
+might have.  All Lamson needs to do is read this database to determine if it is
+spam or not.</p>
+
+	<p>With mutt, I save the message to &#8220;=spam&#8221;, which places the spam in Mail/spam
+along with all of the others.  Then I run this command:</p>
+
+<pre class="code">
+sb_mboxtrain.py -s ~/Mail/spam -d run/spamdb
+</pre>
+
+	<p>This goes through the spam mailbox, and any emails that SpamBayes has <strong>not</strong>
+already classified get used for training.</p>
+
+	<p>SpamBayes comes with other commands you can <a href="http://spambayes.sourceforge.net/docs.html">read
+about</a> on their site (if you can
+find it).</p>
+
+	<h2>Autotraining</h2>
+
+	<p>Lamson doesn&#8217;t support &#8220;autotraining&#8221; directly, since it&#8217;s not clear in each
+situation what is obviously spam.  In my personal setup I know that any email
+not for registered users is obviously spam, so I can autotrain those.</p>
+
+	<p>If you want to implement autotraining for a part of your application, then look
+at the <span class="caps">API</span> for
+<a href="http://lamsonproject.org/docs/api/lamson.spam.Filter-class.html">lamson.spam.Filter</a>
+and simply use it in the right state function.</p>
+
+	<h2>Configuration</h2>
+
+	<p>Finally, the above sample code is not the best way to configure the spam filter.
+It&#8217;s better to put the configuration in <code>config/settings.py</code> and simply reference
+it from there.</p>
+
+	<p>In your <code>config/settings.py</code> put this:</p>
+
+<pre class="code prettyprint">
+SPAM = {'db': 'run/spamdb', 'rc': 'run/spamrc', 'queue': 'run/spam'}
+</pre>
+
+	<p>Then change your handler code to be this:</p>
+
+<pre class="code prettyprint">
+from config.settings import SPAM
+
+@spam_filter(SPAM['db'], SPAM['rc'], SPAM['queue'], next_state=SPAMMING)
+def START(message, ...):
+   # this is the better way to do your config
+</pre>
+
+	<p>With that you can then change up the configuration as needed in 
+your deployments without having to change your code.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

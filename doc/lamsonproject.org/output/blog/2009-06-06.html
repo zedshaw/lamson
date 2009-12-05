@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Lamson 0.9.3 Is Out And Sexy As Hell</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Lamson 0.9.3 Is Out And Sexy As Hell</h1>
+                	<p>This release is the result of me working on my little
+<a href="http://oneshotblog.com/">oneshotblog.com</a> project while tweaking and refining
+Lamson as I go.  The end result is 0.9.3 didn&#8217;t have a lot of big code changes,
+but all the tiny little changes add up to a very nice release.  The highlights
+of this release are more secure server runs, better character encoding handling
+for headers, various cleanups in how mail is queued, and fixes for Python 2.6
+support.</p>
+
+	<p>My plan is to keep using this release, improving what is there currently and
+only adding minimal features, and just making what is there tighter.  The goal
+is to <strong>have a 1.0 release out</strong> once I&#8217;ve used it on
+<a href="http://oneshotblog.com/">oneshotblog.com</a> and the new <a href="/lists/">lamsonproject.org
+mailing lists</a> application.</p>
+
+	<h2>Getting It (As Usual)</h2>
+
+	<p>All you need to do to get lamson is read the <a href="/download.html">download instruction</a>
+and then go through the <a href="/docs/getting_started.html">getting started</a> to try it out.</p>
+
+	<p>The <strong>docs may be out of date with this release</strong>, but I&#8217;m going through docs tomorrow.</p>
+
+	<h2><span class="caps">NYLUG</span> Python Workshop Tuesday June 09 6:00PM-8:00PM</h2>
+
+	<p>I&#8217;ll be presenting Lamson at the <a href="http://nylug.org/pipermail/nylug-announce/2009-June/000795.html"><span class="caps">NYLUG</span> Python Workshop Tuesday June 09 6:00PM-8:00PM</a>
+and helping people get started with it.  If you wanted to try it but didn&#8217;t want
+to waste the time then come down and I&#8217;ll hook you up.</p>
+
+	<h2>OneShotBlog Sample Is Live</h2>
+
+	<p>Lamson includes the source to the <a href="http://oneshotblog.com/">oneshotblog.com</a> project
+in the <code>examples/osb</code> directory.  You can <a href="/releases/">grab the source tar.gz</a>
+and look in there fore the source.  You should also try out the sample site to help
+test out Lamson, especially if you use a weird character set (since that&#8217;s the biggest
+weakness currently).</p>
+
+	<p>This release of <span class="caps">OSB</span> features a bunch of bug fixes, tons of tests that improve the code
+coverage, the ability to comment on a post by sending an email, decent spam filtering
+of the comments, ability to flag a comment as spam, and lots of little tweaks.  It 
+uses <strong>all</strong> of the features Lamson has right now.</p>
+
+	<p>It still has some work to do, and I want to add the ability to send pictures and source
+code (with syntax highlight).</p>
+
+	<h2>The ChangeLog</h2>
+
+	<p>The change log for this release is (with the big ones bold):</p>
+
+	<ul>
+		<li>Cleaned up some stray printing and logging.</li>
+		<li>Now prints a nicer message if args get a bad argument.</li>
+		<li><strong>Managed to get a file object out of the maildir which removes the need to reconvert from a message.</strong></li>
+		<li>A few minor test suite tweaks to get coverage on the most recent features.</li>
+		<li><strong>Implemented a reorg of how the servers are started so that they can bind port 25 and then drop priv to a safer user.</strong></li>
+		<li><strong>Initial support for an undeliverable queue and a forwarding handler that you can run in a queue receiver to deliver unhandled mail to the relay.  Needs tests.</strong></li>
+		<li>Using the new Router.UNDELIVERABLE_QUEUE feature to have bad mail go to a queue.</li>
+		<li>Fixed the queue_command so that it prints what queue it is working with.</li>
+		<li>Added a setting for the Router to tell it to dump undeliverable mail to a queue.</li>
+		<li><strong>First cut at semi-automated header encoding conversion.</strong></li>
+		<li>Initial support for sort-of-automated header decoding/encoding on MailRequest.</li>
+		<li>Found a bug in clear_queue which made it not able to clear alternate queues.</li>
+		<li>Small changes to fix a non-idiomatic has_key usage.</li>
+		<li>Tweaked testing so that it resets the Router state when you do a client.begin() in unit tests.</li>
+		<li>Tweaked the boot vs. test logging setup to make it nicer for both situations.</li>
+		<li><strong>Since the Router is the primary code loading mechanism, it now uses its own separate logger that you can redirect to stderr to see loading errors during dev.</strong></li>
+		<li><strong>Created a disconnected set of config testing gear so that it can test without relying on any examples.   Also configures the logger using a config file and cleans up test output.</strong></li>
+		<li><strong>Added a feature to the routes command to print out how each matching regex will match a given test address.</strong></li>
+		<li>Added an exception handler for loading and reloading handlers so that you can see which ones are broke during development.</li>
+		<li>Added a -test feature to lamson routes that let&#8217;s you test an address to see what routes it matches.</li>
+		<li><strong>Updated for Python 2.6 so the tests will run, not sure why they pass in Python 2.5 actually.</strong></li>
+		<li>Modification to the mail parsing so that it forces 'ascii&#8217; encoding to keep email.message_from happy in Python 2.6</li>
+	</ul>
+
+	<h2>Using The Drop Privilege</h2>
+
+	<p>Lamson can now drop privilege after binding port 25.  Previously it was too difficult
+to make the python-daemonize library do it correctly, but after I reorganized some code 
+I was able to do the privilege drop manually to implement it.  What this means is you can
+run your email server and <strong>stop being root</strong> right after you bind port 25.</p>
+
+	<p>To do this, you&#8217;ll just run your server with:</p>
+
+<pre class="code">
+$ sudo lamson start -uid 500 -gid 500
+$ cd ..
+$ sudo chown -R someuser.someuser yourapp
+</pre>
+
+	<p>You technically don&#8217;t have to fix the permissions, but if you use <a href="/docs/deferred_processing_to_queues.html">queue receivers</a>
+then you&#8217;ll need to change the permissions back.  Lamson still creates a few files as root before 
+dropping to your given <span class="caps">UID</span> and <span class="caps">GID</span>, but hopefully it will stop doing this soon.</p>
+
+	<p>Obviously, you might want to know what your <span class="caps">UID</span> and <span class="caps">GID</span> is, but it&#8217;s important that you know
+what <strong>Python</strong> thinks it is:</p>
+
+<pre class="code prettyprint">
+Python 2.5.1 (r251:54863, Jan 13 2009, 10:26:13) 
+[GCC 4.0.1 (Apple Inc. build 5465)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import os
+>>> os.getgid()
+500
+>>> os.getuid()
+500
+>>> 
+</pre>
+
+	<p>There&#8217;s other ways to find it out, but that&#8217;s the Python way.</p>
+
+	<h2>Using lamson routes</h2>
+
+	<p>The <code>lamson routes</code> command has improved a bit so that you can inspect your routing and 
+test out an email address to see how it would be sorted.  Here&#8217;s a sample run:</p>
+
+<pre class="code">
+osb $ lamson routes -test test.blog@oneshotblog.com
+2009-06-07 02:33:31,678 - root - INFO - Database configured to use sqlite:///app/data/main.db URL.
+Routing ORDER:  [... lots of regex here ...]
+Routing TABLE: 
+---
+... each regex and what state functions it maps ..
+---
+'^post-confirm-(?P<id_number>[a-z0-9]+)@(?P<host>oneshotblog\\.com)$':  app.handlers.post.CONFIRMING  
+---
+
+TEST address 'test.blog@oneshotblog.com' matches:
+  '^(?P<post_name>[a-zA-Z0-9][a-zA-Z0-9.]+)@(?P<host>oneshotblog\\.com)$' app.handlers.index.POSTING
+  -  {'host': 'oneshotblog.com', 'post_name': 'test.blog'}
+  '^(?P<post_name>[a-zA-Z0-9][a-zA-Z0-9.]+)@(?P<host>oneshotblog\\.com)$' app.handlers.post.START
+  -  {'host': 'oneshotblog.com', 'post_name': 'test.blog'}
+  '^(?P<post_name>[a-zA-Z0-9][a-zA-Z0-9.]+)@(?P<host>oneshotblog\\.com)$' app.handlers.post.POSTING
+  -  {'host': 'oneshotblog.com', 'post_name': 'test.blog'}
+osb $ 
+</pre>
+
+	<p>If you&#8217;re working with Lamson this is incredibly helpful, because it tells you what
+routes you have, what functions they call, and then it&#8217;ll take an email address and
+tell you all the routes that match it.</p>
+
+	<p>The output needs to be cleaned up, but for debugging this is nice.</p>
+
+	<h2>The lamson web Command</h2>
+
+	<p>While working on <a href="http://oneshotblog.com/">oneshotblog.com</a> I kept having to 
+open up the site that it generates, so I just threw a dirt simple <span class="caps">HTTP</span> server
+into Lamson.   Here&#8217;s a sample of running it:</p>
+
+<pre class="code">
+~ $ cd projects/lamson/examples/osb/
+osb $ lamson web -basedir app/data/
+Starting server on 127.0.0.1:8888 out of directory 'app/data/'
+localhost - - [06/Jun/2009 12:31:11] "GET / HTTP/1.1" 200 -
+localhost - - [06/Jun/2009 12:31:11] "GET /styles/reset.css HTTP/1.1" 200 -
+localhost - - [06/Jun/2009 12:31:11] "GET /styles/main.css HTTP/1.1" 200 -
+localhost - - [06/Jun/2009 12:31:18] code 404, message File not found
+</pre>
+
+	<p>It just stays there running and printing to the console, so I just use
+<a href="http://www.gnu.org/software/screen/screen.html"><span class="caps">GNU</span> screen</a> and leave it
+running in one of the windows.</p>
+
+	<h2>As Usual Test And Report</h2>
+
+	<p>Test this release out, and shoot me feedback.  I&#8217;m hanging on irc.freenode.org
+again in the #lamson room, so just stop in if you need help.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

@@ -1,0 +1,56 @@
+Title: Installing Lamson Into Virtualenv With Pip
+
+
+The best way to install Lamson in a virtualenv is using the "pip
+tool":http://pip.openplans.org/ to install it. This will automatically fetch
+the code from bazaar, install it inside the virtualenv and fetch any missing
+dependencies.
+
+First, if you haven't already, you'll need to install pip. Make sure 
+you've activated the virtualenv:
+
+<pre class="code">
+. bin/activate
+</pre>
+
+from the root of the virtualenv, and then run:
+
+<pre class="code">
+easy_install -U pip
+</pre>
+
+If you have bazaar installed on your machine, then just do:
+
+<pre class="code">
+pip install -e bzr+http://bazaar.launchpad.net/~zedshaw/lamson/development/#egg lamson
+</pre>
+
+This'll install the development version of lamson into a src/lamson 
+directory (src/ will be created if it doesn't exist). It will also 
+install all of Lamson's dependencies into the virtualenv. If you 
+want to update to the latest development version of Lamson, run:
+
+<pre class="code">
+cd src/lamson
+bzr pull
+</pre>
+
+This will fetch the latest bazaar tip from Launchpad.
+
+If you don't have bazaar installed and don't want to install it, you 
+can grab the latest release of Lamson like this:
+
+<pre class="code">
+pip install -F http://launchpad.net/lamson/trunk/0.9-pre2/+download/lamson-0.9-pre2.tar.gz
+</pre>
+
+Remember though that if you do install it like this you'll need to 
+manually update it by visiting Launchpad, finding the latest tarball 
+URL and `pip install`ing it.
+
+
+h2. Credits
+
+These instructions were donated to Lamson by "Zachary
+Voase":http://disturbyte.github.com but "contact me":/contact.html for
+suggested improvements.

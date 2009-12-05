@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Primary vs. Secondary Registration</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Primary vs. Secondary Registration</h1>
+                	<p>When you design a Lamson application the question of &#8220;registration&#8221; comes up
+almost immediately.  The question is one of how you find out who a person is so
+that you can interact with them.  In the web world this involves a form of some
+kind asking for a login and password at a minimum.  Some sites even go so far
+as to require a sign-up process <strong>before</strong> they let you see anything about the
+site, or even their marketing material.</p>
+
+	<p>On the web this kind of registration is what I like to call &#8220;Primary
+Registration&#8221;.  It comes from the concept of primary vs. secondary data, or
+primary vs. secondary analysis.  In the world of measurement a primary source
+is one that you gathered the information from directly, usually by giving them
+a questionaire.  A secondary source is one that you gathered in some indirect
+way, either by evaluating past research in a new way, data mining, or simply
+unobtrusive data collection.</p>
+
+	<p>With a web site you <strong>must</strong> have a primary registration system.  There is no
+implied identity in a browser that is consistent for a user, so you need to ask
+them for some information and associate their stateless browser to a cookie or
+similar tracking mechanism.  You have to do this for each session you start
+with them, and to register them if your service requires some kind of password
+protection.</p>
+
+	<p>In the world of the web primary registration is just how things are done.</p>
+
+	<h2>Secondary Registration</h2>
+
+	<p>Lamson give you the ability to do <strong>Secondary Registration</strong> where the act of
+interacting with your service <strong>is</strong> the registration.  A typical primary
+registrationg process will ask for a user&#8217;s email address to identify the user,
+but in Lamson the user actively gives your service their email address to start
+playing.  Their first message to your service actually has all the information
+you need to sign them up and give them their first taste of your service.</p>
+
+	<p>In fact, a user&#8217;s identity is so baked into the email protocols that your
+Lamson server has almost the inverse problem:  it&#8217;s too easy to fake an
+identity, so you need to confirm their subscription and important actions.
+This confirmation is traditionally nothing more than a reply asking them to
+reply with some random number in the address.  If you get a reply to this
+auto-generated email address then you assume they are real.</p>
+
+	<blockquote>
+		<p>This &#8220;random number confirmation handshake&#8221; is important because <span class="caps">SMTP</span>
+allows anyone with an internet connection to lie about who they are and craft a
+fake email claiming to be someone else.  The confirmation assures you that the
+supposed sender has at least received an email in their inbox and that it had
+the random number you generated in the reply address.  A determined hacker
+could also get past that, but if you have that situation you are dealing with
+more problems than just confirmations.</p>
+	</blockquote>
+
+	<p>Once you do though you are fairly assured that they are identified <strong>and</strong> using
+your service.  It ends up being the most low effort entry to your service you
+could possibly devise without making the service unsafe.</p>
+
+	<h2>Comparing Two Designs</h2>
+
+	<p>When you sit down to build a Lamson application you may still think about
+registration in the primary way, but a secondary registration is typically more
+natural for an email service.  To illustrate the point, let&#8217;s say you are
+creating an online game using Lamson, and you want people to register for the
+game.</p>
+
+	<p>With a primary registration you would approach the problem by making your game
+open only to registered users.  If they send an email to your game you send a
+single reply pointing them at the web page they can use to sign up.  You also
+then take every email and pass it through a filter that checks that the user is
+registered in your subscription database.  This is mostly how you would do it
+in a web application.</p>
+
+	<blockquote>
+		<p>Maybe there is a legitimate reason to force a user to a web page to give a
+password and other information before using the service.  If that&#8217;s the case,
+then go for it, but consider trying to make the <strong>entry</strong> to your service a
+secondary registration that then asks them to do a full registration to get
+more features.</p>
+	</blockquote>
+
+	<p>With a secondary registration system, you are using Lamson&#8217;s ability to track
+the state of every user to know whether they are registered or not.  When your
+game receives their first email, it would transition to an <code>UNKNOWN</code> state and
+reply with a confirmation email.  Once they reply to the confirm email you
+transition from <code>UNKNOWN</code> to the rest of the game since they are now
+registered.  Every interaction after that will simply know they are registered
+because they are in the right state.</p>
+
+	<p>This has a big impact on your game&#8217;s design because now you do <strong>not</strong> need to
+check the database on every received email to confirm their identity.  Their
+email address and their state in your state&#8217;s storage tells you that
+implicitly.</p>
+
+	<p>You can also extend this to other requirements for your system.  You can use
+their known state to transition them from free to paid quality services, to
+suspended states, to pause them after a bounce, and back to normal activity.</p>
+
+	<h2>Invite Only Systems</h2>
+
+	<p>An invite only system can also use the secondary registration technique by
+having the inviter&#8217;s invitation request create a record for the invitee that&#8217;s
+in the right start state.  When the inviter tells you to invite their friend,
+you create a state for the friend that says <code>INVITED</code> and use the invite as a
+sort of implied confirmation email.  When the invitee replies to this invite
+email, you transition them to the rest of the system as they&#8217;ve now registered.</p>
+
+	<p>Another way to think of an invite only system in Lamson is as a 3rd-party
+confirmation.  Rather than the target user (the invitee) prompting a
+confirmation, it is their friend sending the invite (the inviter) who triggers
+the confirmation process on behalf of their buddy.</p>
+
+	<p>An additional bonus with Lamson is that the state of the invitee is known, so
+if the inviter tries to send them again, or if someone else does, then you know
+they already were sent an invite.  You can just ignore the request and
+avoid spamming people.  You can also run reports to find out your
+conversion rates by simply looking for everyone in the various states and
+counting.</p>
+
+	<h2>Security And Design Issues</h2>
+
+	<p>Doing these kind of secondary registrations and implied identity does come with
+an extra security penalty.  Unless your system is incorporating <span class="caps">S-MIME</span> or <span class="caps">GPG</span>
+you won&#8217;t have a solid way to identify the sender.  You don&#8217;t have this on most
+other internet services either so it&#8217;s not much of a loss.  At least with email
+you have a higher assurance that this is a real person.</p>
+
+	<p>When you design your service it&#8217;s a good idea to:</p>
+
+	<ol>
+		<li>Either make everything the user does non-destructive,</li>
+		<li>Send confirmations for anything desctructive,</li>
+		<li>Or bounce them to a web site for more complex interactions and security.</li>
+	</ol>
+
+	<p>You should also make any confirmations you send easily replied to, but have a
+good random number in them that you remember for later.  In fact, if you use
+the &#8220;lamson.confirm&#8221; <span class="caps">API</span> you get all of this for free and done the right way.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

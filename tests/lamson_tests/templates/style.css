@@ -1,0 +1,30 @@
+body:
+    margin: 10
+    padding: 20
+    background: green - 30
+    color: blue
+
+    h1:
+        font-size: 3em
+    h2:
+        font-size: 2em
+        color: yellow
+
+    h3:
+        font-size: 1em
+
+    p:
+        padding: 0.3em
+        background: red
+
+h2:
+    color: yellow
+
+#bright:
+    background: black
+    color: white
+
+.dull:
+    background: gray
+    color: black
+

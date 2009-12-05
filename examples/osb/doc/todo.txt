@@ -1,0 +1,4 @@
+Use jinja template inheritance.
+Create an anonymize conversion for the published emails, route them through lamson.
+Create an address they can forward spam to.
+Add a this is spam link to the pages and use web server logs to train and remove.

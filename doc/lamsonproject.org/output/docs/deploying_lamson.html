@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Deploying Lamson Level 1</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Deploying Lamson Level 1</h1>
+                	<p>These instructions will teach you how to setup a completely clean Python 2.6
+installation, a virtualenv with lamson, and all the gear needed to run the
+<a href="http://oneshotblog.com/">oneshotblog.com</a> software on your machine.</p>
+
+	<p>You can then <a href="/docs/deploying_oneshotblog.html">read how to install oneshotblog</a>
+for yourself.</p>
+
+	<p>Most of these instructions could be easily turned into an automated script,
+which may happen in the future.  For now it is meant to teach you about the
+typically dirty details involved in setting up a system for the first time.  It
+also tries to avoid various problems with different operating systems, so let
+me know how it works for you.</p>
+
+	<h2>A Warning</h2>
+
+	<p>Deploying server software is a notoriously nasty process, especially the first
+10 or 20 times.  Most operating systems do their best to enforce completely
+arbitrary restrictions on your file layouts and configurations, and every
+system has different arbitrary restrictions.</p>
+
+	<p>When you go through these instructions, make sure you stay awake and be ready
+to delve into why a particular step might not work on your system.  There&#8217;s a
+good chance you missed something or that there&#8217;s something just slightly
+different about your system that makes the step not work.</p>
+
+	<p>For example, in the parts of this document where I setup
+<a href="http://oneshotblog.com/">oneshotblog.com</a> I ran into a problem with
+<a href="http://spambayes.sourceforge.net/">SpamBayes</a> dying because it couldn&#8217;t iterate
+a bsddb.  Problem is this works just fine in the exact same setup on a CentOS
+machine and was only dying on a MacOSX machine that I later tested.  For
+whatever reason, the exact same setup can&#8217;t run SpamBayes on <span class="caps">OSX</span>, even though
+it can run with the stock Python 2.5 in <span class="caps">OSX</span>.</p>
+
+	<p>To solve the problem I just had to show you how to disable SpamBayes in the
+oneshotblog.com code so you could test it.  That&#8217;s just how deployment goes.
+You get on a machine and start setting things up and then 2/3 of the way
+through the configuration you find out that something doesn&#8217;t work.</p>
+
+	<p>Only choices are to work around the problem (like I did) or try to figure out
+why your machine is different and fix it.</p>
+
+	<h2>Step 0: Setup A Workplace</h2>
+
+	<p>You&#8217;ll want a directory to do this in so that you don&#8217;t screw up your machine.
+Here&#8217;s what I did:</p>
+
+<pre class="code">
+$ mkdir deploy
+$ cd deploy
+$ export DEPLOY=$PWD
+</pre>
+
+	<p>That last bit is so you can refer to this deployment directory with $<span class="caps">DEPLOY</span>
+(which I&#8217;ll be using in the instructions from now on).</p>
+
+	<h2>Step 1: Get Python</h2>
+
+	<p>Many operating systems have old versions of Python, and even though Lamson
+works with 2.6 or 2.5, you&#8217;ll probably want to get 2.6 for your deployment.  If
+your OS has 2.6 available then go ahead and install it.</p>
+
+	<p>If it doesn&#8217;t have the right Python version, then here&#8217;s how you can install it
+from source and use it as your default Python.  To do this, just punch in these
+commands:</p>
+
+<pre class="code">
+$ mkdir source
+$ cd source
+$ wget http://www.python.org/ftp/python/2.6.2/Python-2.6.2.tgz
+$ tar -xvf Python-2.6.2.tgz
+$ cd Python-2.6.2
+$ ./configure --prefix=$DEPLOY
+$ make
+$ make install
+</pre>
+
+	<p>After this you will have a bunch of new directories in $DEPLOY:</p>
+
+<pre class="code">
+$ ls $DEPLOY
+bin     include lib     share   source
+</pre>
+
+	<p>Finally, you just have to put this new bin directory into your $PATH:</p>
+
+<pre class="code">
+$ export PATH=$DEPLOY/bin:$PATH
+</pre>
+
+	<p>... then you just try it out to make sure that you have the right one:</p>
+
+<pre class="code">
+Python-2.6.2 $ which python
+$DEPLOY/deploy/bin/python
+
+Python-2.6.2 $ python 
+Python 2.6.2 (r262:71600, Jun  8 2009, 00:44:56) 
+[GCC 4.0.1 (Apple Inc. build 5490)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> ^D
+</pre>
+
+	<p>That&#8217;s it, you&#8217;ll now be able to use this Python when you need to run your
+Lamson server, and setup a virtualenv (coming next) so that you&#8217;re walled off
+from the rest of the system.</p>
+
+	<blockquote>
+		<p> Operating system fanatics will scoff at putting the python install in this
+directory, so if you want you can just install it to the default /usr/local on
+your system and deal with all the various clashes and conflicts you&#8217;ll have,
+especially if you are on an MacOSX machine.</p>
+	</blockquote>
+
+	<h2>Step 2: Install VirtualEnv</h2>
+
+	<p>Now we need to create a &#8220;virtual environment&#8221; to install all your software.  To
+do this we&#8217;ll need easy_install installed to your $<span class="caps">DEPLOY</span> directory:</p>
+
+<pre class="code">
+$ cd $DEPLOY/source
+$ wget http://peak.telecommunity.com/dist/ez_setup.py
+$ python ez_setup.py 
+$ which easy_install
+$DEPLOY/bin/easy_install
+</pre>
+
+	<p>As you can see, you now have a clean install of easy_install in your fresh
+$DEPLOY/bin directory for you to use.  Now you need to install <code>virtualenv</code>:</p>
+
+<pre class="code">
+$ easy_install --prefix $DEPLOY virtualenv
+$ which virtualenv
+$DEPLOY/bin/virtualenv
+</pre>
+
+	<blockquote>
+		<p>Make sure you use <code>--prefix $DEPLOY</code> above or you&#8217;ll install things into
+the default system setup even though easy_install is clearly and obviously
+running from a Python in a totally different location so easy_install should
+know that.</p>
+	</blockquote>
+
+	<h2>Step 3: Create Your VirtualEnv</h2>
+
+	<p>With that you are ready to setup your virtual environment which will house your
+Lamson setup and fill it with the gear you need.</p>
+
+	<p>First up is getting your virtualenv created and activated:</p>
+
+<pre class="code">
+$ cd $DEPLOY
+$ virtualenv LAMSON
+New python executable in LAMSON/bin/python
+Installing setuptools............done.
+$ cd LAMSON
+$ . bin/activate
+</pre>
+
+	<p>That&#8217;s pretty simple, and it tells you clearly that you are using the <span class="caps">LAMSON</span>
+virtualenv.  It prepends that to your currently prompt, so your prompt may look
+different.</p>
+
+	<p>After that we can use easy_install to install our packages to this <span class="caps">LAMSON</span>
+virtual env.  Keep in mind that these packages will be in $DEPLOY/<span class="caps">LAMSON</span>, so
+they won&#8217;t infect your regular $<span class="caps">DEPLOY</span> setup.</p>
+
+<pre class="code">
+$ cd $DEPLOY/LAMSON
+$ easy_install lamson
+</pre>
+
+	<p>After that, you have lamson installed and ready to go, and you can install
+anything you want, but there is one catch:</p>
+
+	<blockquote>
+		<p>You <strong>MUST</strong> be in the $DEPLOY/<span class="caps">LAMSON</span> directory or easy_install barfs
+complaining that the package is not there.</p>
+	</blockquote>
+
+	<h2>Step 4: Making Sure It Works</h2>
+
+	<p>All of this setup is pointless if you can&#8217;t get back to it later, so exit your
+terminal completely and start a new one so you can do this:</p>
+
+<pre class="code">
+$ cd projects/lamson/deploy/
+$ export DEPLOY=$PWD
+$ export PATH=$DEPLOY/bin:$PATH
+$ cd $DEPLOY/LAMSON
+$ . bin/activate
+(LAMSON) $ which python
+$DEPLOY/deploy/LAMSON/bin/python
+(LAMSON) $ which easy_install
+$DEPLOY/deploy/LAMSON/bin/easy_install
+(LAMSON) $ which lamson
+$DEPLOY/deploy/LAMSON/bin/lamson
+(LAMSON) $ cd $DEPLOY
+(LAMSON) $ lamson help
+</pre>
+
+	<p>If you can do all that, then you know you&#8217;ve got the setup going, now you just
+need a little shell script to kick this all into gear automatically:</p>
+
+<pre class="code prettyprint">
+#!/bin/sh
+
+export DEPLOY=$PWD
+export PATH=$DEPLOY/bin:$PATH
+cd $1
+source bin/activate
+cd $DEPLOY
+</pre>
+
+	<p>To use this script, you just do this:</p>
+
+<pre class="code">
+$ cd projects/lamson/deploy
+$ . activate LAMSON
+</pre>
+
+	<p>With that you have a fully ready to go setup that&#8217;s not using your normal
+system&#8217;s Python at all, has Python 2.6 installed, a fully virtualenv, and the
+start of your lamson setup.</p>
+
+	<h2>Conclusion</h2>
+
+	<p>Your next step is to try and setup <a href="http://oneshotblog.com/">oneshotblog</a> using
+the <a href="/docs/deploying_oneshotblog.html">instructions I&#8217;ve written</a> to follow
+these instructions.</p>
+
+	<p>This document is very fresh, so send me feedback on your experience with
+running through it.  Make sure you tell me what system you are on and that you
+ran each command exactly when you do.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

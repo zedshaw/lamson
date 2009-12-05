@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Lamson Project Documentation</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Lamson Project Documentation</h1>
+                	<p>This is the Lamson documentation, organized into categories from &#8220;newbie&#8221; to &#8220;expert&#8221;.  You should
+also check out the <a href="/videos/">screen casts</a> available which might help you if you&#8217;re the more mediated 
+type.</p>
+
+	<p>The documentation is only updated after major releases, and it may not have the best information.
+If you are following the docs and they&#8217;re wrong, then <a href="mailto:lamson@librelist.com">send an email to lamson@librelist.com</a>
+and report it.</p>
+
+	<p>Finally, every document is also uploaded with it&#8217;s text version.</p>
+
+	<h2>Initial Concepts</h2>
+
+	<ul>
+		<li><a href="/docs/faq.html">Frequently Asked Question</a> &#8212; Questions people have asked about Lamson.</li>
+		<li><a href="/docs/getting_started.html">Getting Started</a> &#8212; A fast tour of getting Lamson going and doing something with it.</li>
+		<li><a href="/docs/lamson_commands.html">Lamson Commands</a> &#8212; All of the commands Lamson supports.  You can get at this with <code>lamson -help</code>.</li>
+		<li><a href="/docs/introduction_to_finite_state_machines.html">Introduction To Finite State Machines</a> &#8212; Important to understand the simplified version of Finite State Machines Lamson uses.</li>
+	</ul>
+
+	<h2>Advanced Concepts</h2>
+
+	<ul>
+		<li><a href="/docs/deferred_processing_to_queues.html">Deferred Processing To Queues</a> &#8212; Very handy way of processing mail.</li>
+		<li><a href="/docs/writing_a_state_storage.html">Writing A Custom State Store</a> &#8212; You&#8217;ll need this if you want to store state in the database.</li>
+		<li><a href="/docs/primary_vs_secondary_registration.html">Primary Vs. Secondary Registration</a> &#8212; The concept of doing registration in Lamson, where contacting the service the first time is the registration.</li>
+		<li><a href="/docs/hooking_into_django.html">Hooking Into Django</a> &#8212; Shows you how to get access to a Django <span class="caps">ORM</span> model.</li>
+	</ul>
+
+	<h2>Deployment</h2>
+
+	<ul>
+		<li><a href="/docs/lamson_virtual_env.html">Deploying Lamson Level 0 With Virtualenv And Pip</a> &#8212; Quick instructions for setting up your Lamson in a virtualenv for your first simple  deployment.</li>
+		<li><a href="/docs/deploying_lamson.html">Deploying Lamson Level 1</a> &#8212; This is for when you&#8217;re getting more serious about deployment.  Involves building a completely separate virtualenv+python for Lamson and shows deploying oneshotblog in it.</li>
+		<li><a href="/docs/deploying_lamson_level_2.html">Deploying Lamson Level 2</a> &#8212; At this level of deployment you are running multiple sites on the same server using a virtualhost setup, and you have each application installed under its own user.</li>
+	</ul>
+
+	<h2>Deployment: Examples</h2>
+
+	<ul>
+		<li><a href="/docs/deploying_oneshotblog.html">Deploying OneShotBlog</a></li>
+	</ul>
+
+	<h2>Specific Features</h2>
+
+	<ul>
+		<li><a href="/docs/unit_testing.html">Unit Testing</a> &#8212; Lamson has a few simple things to help write better mail specific unit tests.</li>
+		<li><a href="/docs/confirmations.html">Confirmations</a> &#8212; Confirming a user so that you validate they are an actual email address.</li>
+		<li><a href="/docs/filtering_spam.html">Filtering Spam</a> &#8212; How to use Lamson&#8217;s spam blocking features.  It&#8217;s easy to use, but a bit hairy to setup.</li>
+		<li><a href="/docs/bounce_detection.html">Bounce Detection</a> &#8212; Using Lamson&#8217;s bounce message parser to handle bounces.</li>
+		<li><a href="/docs/unicode_encoding_and_decoding.html">Unicode Encoding And Decoding</a> &#8212; How Lamson decodes the nastiest email into Unicode, and then converts Unicode back into a clean email for sending.</li>
+		<li><a href="/docs/html_email_generation.html"><span class="caps">HTML</span> Email Generation</a> &#8212; Using Lamson&#8217;s <span class="caps">HTML</span> email generation library to send out <span class="caps">HTML</span> to annoy everyone with.</li>
+	</ul>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

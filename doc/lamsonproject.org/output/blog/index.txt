@@ -1,0 +1,6 @@
+From: Zed A. Shaw
+Title: Lamson Project Blog
+Content-Type: text/blog
+Item-Template: input/blog/template.html
+
+

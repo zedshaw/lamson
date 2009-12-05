@@ -1,0 +1,47 @@
+Title: Lamson Project Documentation
+
+This is the Lamson documentation, organized into categories from "newbie" to "expert".  You should
+also check out the "screen casts":/videos/ available which might help you if you're the more mediated 
+type.
+
+The documentation is only updated after major releases, and it may not have the best information.
+If you are following the docs and they're wrong, then "send an email to lamson@librelist.com":mailto:lamson@librelist.com
+and report it.
+
+Finally, every document is also uploaded with it's text version.
+
+
+h2. Initial Concepts
+
+* "Frequently Asked Question":/docs/faq.html -- Questions people have asked about Lamson.
+* "Getting Started":/docs/getting_started.html -- A fast tour of getting Lamson going and doing something with it.
+* "Lamson Commands":/docs/lamson_commands.html -- All of the commands Lamson supports.  You can get at this with @lamson -help@.
+* "Introduction To Finite State Machines":/docs/introduction_to_finite_state_machines.html -- Important to understand the simplified version of Finite State Machines Lamson uses.
+
+h2. Advanced Concepts
+
+* "Deferred Processing To Queues":/docs/deferred_processing_to_queues.html -- Very handy way of processing mail.
+* "Writing A Custom State Store":/docs/writing_a_state_storage.html -- You'll need this if you want to store state in the database.
+* "Primary Vs. Secondary Registration":/docs/primary_vs_secondary_registration.html -- The concept of doing registration in Lamson, where contacting the service the first time is the registration.
+* "Hooking Into Django":/docs/hooking_into_django.html -- Shows you how to get access to a Django ORM model.
+
+
+h2. Deployment
+
+* "Deploying Lamson Level 0 With Virtualenv And Pip":/docs/lamson_virtual_env.html -- Quick instructions for setting up your Lamson in a virtualenv for your first simple  deployment.
+* "Deploying Lamson Level 1":/docs/deploying_lamson.html -- This is for when you're getting more serious about deployment.  Involves building a completely separate virtualenv+python for Lamson and shows deploying oneshotblog in it.
+* "Deploying Lamson Level 2":/docs/deploying_lamson_level_2.html -- At this level of deployment you are running multiple sites on the same server using a virtualhost setup, and you have each application installed under its own user.
+
+h2. Deployment: Examples
+
+* "Deploying OneShotBlog":/docs/deploying_oneshotblog.html
+
+h2. Specific Features
+
+* "Unit Testing":/docs/unit_testing.html -- Lamson has a few simple things to help write better mail specific unit tests.
+* "Confirmations":/docs/confirmations.html -- Confirming a user so that you validate they are an actual email address.
+* "Filtering Spam":/docs/filtering_spam.html -- How to use Lamson's spam blocking features.  It's easy to use, but a bit hairy to setup.
+* "Bounce Detection":/docs/bounce_detection.html -- Using Lamson's bounce message parser to handle bounces.
+* "Unicode Encoding And Decoding":/docs/unicode_encoding_and_decoding.html -- How Lamson decodes the nastiest email into Unicode, and then converts Unicode back into a clean email for sending.
+* "HTML Email Generation":/docs/html_email_generation.html -- Using Lamson's HTML email generation library to send out HTML to annoy everyone with.
+

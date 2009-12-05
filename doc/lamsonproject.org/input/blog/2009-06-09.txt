@@ -1,0 +1,11 @@
+Title: Lamson At NYLUG Python Workshop Today @ 6:00PM
+
+Just a quick reminder that I'll be presenting "Lamson":http://lamsonproject.org/ to the 
+NYLUG Python Workshop today at 6:00PM.  The event is at
+the NY Public Library Hudson Park Branch, 66 Leroy St., NY NY 10014
+in NYC and you can "find out more here.":http://nylug.org/pipermail/nylug-announce/2009-June/000795.html
+
+I'll be showing people how to set up Lamson, get it installed,
+do cool stuff with it, and then just answering questions and helping
+people work with it.
+

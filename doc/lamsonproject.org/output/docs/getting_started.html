@@ -1,0 +1,848 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Getting Started With Lamson</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Getting Started With Lamson</h1>
+                	<p>Lamson is designed to work like modern web application frameworks like Django, TurboGears,
+<span class="caps">ASP</span>.<span class="caps">NET</span>, Ruby on Rails, and whatever <span class="caps">PHP</span> is using these days.  At every design decision 
+Lamson tries to emulate terminology and features found in these frameworks.  This Getting Started
+document will help you get through that terminology, get you started running your first
+lamson application, and walk you through the code you should read.</p>
+
+	<p>In total it should take you about 30 minutes to an hour to complete.  If you just want
+to try Lamson, at least go through the 30 <strong>second</strong> introduction given first.</p>
+
+	<h2>The 30 Second Introduction</h2>
+
+	<p>If you have Python and <a href="http://peak.telecommunity.com/DevCenter/EasyInstall">easy_install</a> already, then try this out:</p>
+
+<pre class="code">
+$ easy_install lamson
+$ lamson gen -project mymailserver
+$ cd mymailserver
+$ lamson start
+$ lamson log
+$ nosetests
+$ lamson help -for send
+$ lamson send -sender me@mydomain.com -to test@test.com \
+        -subject "My test." -body "Hi there." -port 8823
+$ less logs/lamson.log
+$ mutt -F muttrc
+</pre>
+
+	<p>You now have a working base Lamson setup ready for you to work on with the following installed:</p>
+
+	<ul>
+		<li>Lamson and all dependencies (Jinja2, nosetests)</li>
+		<li>Code for your project in mymailserver.  Look in app/handlers and config/settings.py.</li>
+		<li>Two initial tests that verify your server is not an open relay and forwards mail in tests/handlers/open_relay_tests.py.</li>
+		<li>A &#8220;logger&#8221; server running on port 8825 that dumps all of its mail into the run/queue maildir.</li>
+		<li>A config script for mutt (muttrc) that you can use to inspect the run/queue <strong>and</strong> also send mail using Lamson&#8217;s <strong>send</strong> command.</li>
+	</ul>
+
+	<p>When you&#8217;re in mutt during the above test run, try sending an email.  The
+included muttrc is configured to use the run/queue as the mail queue, and to
+use the <code>lamson sendmail</code> command to deliver the mail.  This tricks mutt into
+interacting directly with your running Lamson server, so you can test the thing
+with a real mail client and see how it will work without having to actually
+deploy the server.</p>
+
+	<p>Finally, if you wanted to stop all of above you would do:</p>
+
+<pre class="code">
+$ lamson stop -ALL run
+</pre>
+
+	<p>Which tells Lamson to stop all processes that have a .pid file in the <code>run</code> directory.</p>
+
+	<h2>Important Terminology</h2>
+
+	<p>If you are an old <span class="caps">SMTP</span> guru and/or you&#8217;ve never written a web application with
+a modern web framework, then some of the terminology used in Lamson may seem
+confusing.  Other terms may just confuse you or scare you because they sound
+complicated.  I tried my best to make the concepts used in Lamson
+understandable and the code that implements them easy to read.  In fact, you
+could probably read the code to Lamson in an evening and understand how
+everything works.</p>
+
+	<p>Experience has taught me that nobody reads the code, even if it is
+small.  Therefore, here are the most important concepts you should know to get
+a grasp of Lamson and how it works.</p>
+
+	<ul>
+		<li><acronym title="Model View Controller">MVC</acronym> &#8212; Model View Controller is a design methodology used in web application frameworks where the data (model), presentation (view), and logic (controller) layers of the application are strictly separated.</li>
+		<li><acronym title="Finite State Machine">FSM</acronym> &#8212; Lamson uses the concept of a Finite State Machine to control how handlers execute.  Each time it runs it will perform an action based on what it is send <strong>and</strong> what it was doing last.  <span class="caps">FSM</span> in computer science class are overly complex, but in Lamson they are as easy to use as a <code>return</code> statement.</li>
+		<li>Template &#8212; Lamson generates the bodies of its messages using Templates, which are text files that have parts that get replaced with variables you pass in.  Templates are converted to their final form with a process called <strong>rendering</strong>.</li>
+		<li>Relay &#8212; The <strong>relay</strong> for a Lamson server is where Lamson delivers its messages.  Usually the Relay is a smart tougher server that&#8217;s not as smart, but very good at delivering mail.  Lamson can also be run as a Relay for testing purposes.</li>
+		<li>Receiver &#8212; Lamson typically runs as the Receiver of email.  If you are familiar with a web application setup, then Lamson is the inverse.  Instead of Lamson runing &#8220;behind&#8221; an Apache or Nginx server, Lamson runs &#8220;in front&#8221; of an <span class="caps">SMTP</span> server like Postfix.  It listens on port 25, handles the mail it should, and forwards the rest to the Relay.  This makes Lamson much more of a Proxy or filter server.</li>
+		<li>Queue &#8212; Lamson can also do all of its processing off a queue.  In this setup you would have your normal mail server dump all mail to a maildir queue, and then tell Lamson to process messages out of there.  This can be combined with the usual Receiver+Relay configuration for processing messages that might take a long time.</li>
+		<li>Maildir &#8212; A standard created for the qmail project with stores mail in a directory such that you can access the mail atomically and store it on a shared disk without conflicts or locking.</li>
+	</ul>
+
+	<h2>Managing Your Server</h2>
+
+	<p>Your Lamson application is now running inside the Lamson Python server.  This is a very simple server based on Python&#8217;s
+<a href="http://docs.python.org/library/smtpd.html">smtpd</a> and <a href="http://docs.python.org/library/asyncore.html">asyncore</a> libraries.</p>
+
+	<blockquote>
+		<p>If you want to know more about how it operates, take a look at the <code>lamson/server.py</code> file in the source distribution.</p>
+	</blockquote>
+
+	<p>You&#8217;ll need to use a few Lamson commands to manage the server.  You already experienced them in the 
+30 second introduction, and you can review <a href="/docs/lamson_commands.html">them all</a> or see them
+by using the <code>lamson help</code> command.</p>
+
+	<p>Right now you have Lamson running on port 8823 and a &#8220;Lamson logger&#8221; running on 8825.  This means that
+your lamson server (port 8823) will forward its messages to the logger (port 8825) thinking it&#8217;s your
+real relay server.  The truth is the logger just logs its messages to logs/logger.log and dumps it into
+run/queue so you can inspect the results.</p>
+
+	<p>Before we learn how to manage them and what they do, open up the
+<code>config/settings.py</code> file and take a look:</p>
+
+<pre class="code prettyprint">
+from app.model import table
+import logging
+
+relay_config = {'host': 'localhost', 'port': 8825}
+
+receiver_config = {'host': 'localhost', 'port': 8823}
+
+database_config = {
+    "metadata" : table.metadata,
+    "url" : 'sqlite:///app/data/main.db',
+    "log_level" : logging.DEBUG
+}
+
+handlers = ['app.handlers.sample']
+
+router_defaults = {'host': 'test\\.com'}
+
+template_config = {'dir': 'app', 'module': 'templates'}
+</pre>
+
+	<p>Your file probably has some comments telling you what these do, but it&#8217;s important to understand
+how they work.</p>
+
+	<p>First, this file is just plain old Python variables.  It is loaded by one of
+two other files in your config directory:  <code>config/boot.py</code> or
+<code>config/testing.py</code>.  The <code>config/boot.py</code> file is started whenever you use the
+<code>lamson start</code> command and its job is to read the <code>config/settings.py</code> and
+start all the services you need, then assign them as variables back to
+<code>config.settings</code> so your handlers can get at them.  The <code>config/testing.py</code> is
+almost the same, except it configures <code>config.settings</code> so that your unit tests
+can run without any problems.  Typically this means setting the spell checker
+and <strong>not</strong> starting the real server.</p>
+
+	<blockquote>
+		<p> Lamson can load any boot script you like, see <a href="/docs/deferred_processing_to_queues.html">Deferred Processing To
+Queues</a> for an example of using this
+to make a queue processor.</p>
+	</blockquote>
+
+	<p>The important thing to understand about this setup (where a boot file reads settings.py and
+then configures <code>config.settings</code>) that it makes it easy for you to change Lamson&#8217;s operations
+or start additional services you need and configure them.  For the most part you won&#8217;t need
+to touch <code>boot.py</code> or <code>testing.py</code> until you need to add some new service, change the template
+library you want to use, setup a different database <span class="caps">ORM</span>, etc.  Until then just ignore it.</p>
+
+	<h2>settings.py Variables</h2>
+
+	<p>The <code>receiver_config</code> variable is used by the <em>lamson start</em> command to figure out where to listen
+for incoming <span class="caps">SMTP</span> connections.  In a real installation this would be port <strong>25</strong> on your external
+IP address.  It&#8217;s where the internet talks to your server.</p>
+
+	<p>The <code>relay_config</code> setting is used by Lamson to figure out where to forward message replies (responses)
+for real delivery.  Normally this would be a &#8220;smart host&#8221; running a more established server
+like <a href="http://www.postfix.org/">Postfix</a> or <a href="http://www.exim.org/">Exim</a> to do the grunt work
+of delivering to the final recipients.</p>
+
+	<p>The <code>handlers</code> variable lists the modules (not files) of the handlers you want to load.  
+Simply put them here and they&#8217;ll be loaded, even the <a href="http://lamsonproject.org/docs/api/lamson.handlers-module.html">lamson.handlers</a> 
+modules will work here too.</p>
+
+	<p>The <code>router_defaults</code> are for the <a href="http://lamsonproject.org/docs/api/lamson.routing.RoutingBase-class.html">lamson.routing.Router</a> 
+class and configure the default 
+routing regular expressions you plan on using.  Typically you&#8217;ll at least configure the 
+<code>host</code> regular expression since that is used in every route and shouldn&#8217;t change too often.</p>
+
+	<p>Finally, <code>template_config</code> contains the configuration values for the templating system you&#8217;ll
+be using.  Lamson supports either Mako or Jinja2, but defaults to Jinja2.</p>
+
+	<h2>Looking At config/boot.py</h2>
+
+	<p>Programmers need to know how everything works before they trust it, so let&#8217;s look at the <em>config/boot.py</em>
+file and see how these variables are used:</p>
+
+<pre class="code prettyprint">
+from config import settings
+from lamson.routing import Router
+from lamson.server import Relay, SMTPReceiver
+from lamson.utils import configure_database
+from lamson import view
+import logging
+import logging.config
+import jinja2
+
+# configure logging to go to a log file
+logging.config.fileConfig("config/logging.conf")
+
+# the relay host to actually send the final message to
+settings.relay = Relay(host=settings.relay_config['host'], 
+                       port=settings.relay_config['port'], debug=1)
+
+# where to listen for incoming messages
+settings.receiver = SMTPReceiver(settings.receiver_config['host'],
+                                 settings.receiver_config['port'])
+
+settings.database = configure_database(settings.database_config, also_create=False)
+
+Router.defaults(**settings.router_defaults)
+Router.load(settings.handlers)
+Router.RELOAD=True
+
+view.LOADER = jinja2.Environment(
+    loader=jinja2.PackageLoader(settings.template_config['dir'], 
+                                settings.template_config['module']))
+
+</pre>
+
+	<blockquote>
+		<p>Don&#8217;t be afraid that you see this much Python, you normally wouldn&#8217;t touch this file
+unless it were to add your own services or to make a new version for a different configuration.
+For the most part, you can just edit the <code>config/settings.py</code> and go.</p>
+	</blockquote>
+
+	<p>First you&#8217;ll see that <code>config/boot.py</code> sets up logging using the <code>config/logging.conf</code>
+file, which you can change to reconfigure how you want logs to be created.</p>
+
+	<p>Then it starts assigning variables to the config.settings module that it
+has imported at the top.  This is important because after <code>config.boot</code> runs
+your lamson code and handlers will have access to all these services.  You
+can get directly to the relay, receiver, database and anything else you need
+by simply doing:</p>
+
+<pre class="code prettyprint">
+from config import settings
+</pre>
+
+	<p>After that <code>config.boot</code> sets up the <code>settings.relay</code>, <code>settings.receiver</code>,
+and <code>settings.database</code>.  These three are used heavily in your own Lamson code,
+so knowing how to change them if you need to helps you later.</p>
+
+	<p>After this we configure the <code>lamson.routing.Router</code> to have your defaults,
+load up your handlers, and turn on <span class="caps">RELOAD</span>.  Setting <code>Router.RELOAD=True</code> 
+tell the Router to reload all the handlers for each request.  Very handy when you
+are doing development since you don&#8217;t need to reload the server so often.</p>
+
+	<blockquote>
+		<p> If you deploy to production, then you&#8217;ll want to set this to False since it&#8217;s
+a performance hit.</p>
+	</blockquote>
+
+	<p>Finally, the <code>config.boot</code> does the job os loading the template system you&#8217;ll use,
+in this case Jinja2.  Jinja2 and Mako use the same <span class="caps">API</span> so you can configure
+Mako here as well, as long as the object assigned to view.<span class="caps">LOADER</span> has the same <span class="caps">API</span>
+it will work.</p>
+
+	<h1>Developing With Lamson</h1>
+
+	<p>Now that you&#8217;ve received a thorough introduction to how to manage Lamson, and 
+how it is configured, you can get into actually writing some code for it.</p>
+
+	<p>Before you begin, you should know that writing an application for a mail server
+can be a pain.  The clients and servers that handle <span class="caps">SMTP</span> make a large number of
+assumptions based on how the world was back in 1975.  Everything is on defined ports
+with defined command line parameters and the concept of someone pointing their
+mail client at a different server arbitrarily just doesn&#8217;t exist.  
+The world of email is not like the web where you just take any old &#8220;client&#8221; and point
+it at any old server and start messing with it.</p>
+
+	<p>Lucky for you, Lamson has solved most of these problems and provides you with a 
+bunch of handy development tools and tricks so you can work with your Lamson server
+without having to kill yourself in configuration hell.</p>
+
+	<h2>Using Mutt</h2>
+
+	<p>You probably don&#8217;t have another <span class="caps">SMTP</span> server running, and even if you did, it&#8217;d
+be a pain to configure it for development purposes.  You&#8217;d have to setup aliases, new
+mail boxes, restart it all the time, and other annoyances.</p>
+
+	<p>For development, what we want is our own little private <span class="caps">SMTP</span> relay, and since Lamson can
+also deliver mail, that is what we get with the command:</p>
+
+<pre class="code">
+$ lamson log
+</pre>
+
+	<p>This tells Lamson to run as a &#8220;logging server&#8221;, which doesn&#8217;t actually deliver
+any mail.  With this one command you have a server running on 8825 that takes every
+mail it receives and saves it to the <code>run/queue</code> Maildir and also logs it to
+<code>logs/logger.log</code>.  It also logs the full protocol chat to <code>logs/lamson.err</code> so
+you can inspect it.</p>
+
+	<blockquote>
+		<p>Lamson uses Maildir by default since it is the most reliable and fastest mail queue
+format available.  It could also store mail messages to any queue supported by Python&#8217;s
+<a href="http://docs.python.org/library/mailbox.html">mailbox</a> library.  If you were
+adventurous you could also use a <span class="caps">RDBMS</span>, but that&#8217;s just silly.</p>
+	</blockquote>
+
+	<p>You also have the file <code>muttrc</code> which is configured to trick mutt into talking to <strong>your</strong>
+running Lamson server, and then read mail out of the <code>run/queue</code> maildir that is filled
+in by the <code>lamson log</code> server.  Let&#8217;s take a look:</p>
+
+<pre class="code">
+set mbox_type=Maildir
+set folder="run/queue"
+set mask="!^\\.[^.]"
+set mbox="run/queue"
+set record="+.Sent"
+set postponed="+.Drafts"
+set spoolfile="run/queue"
+set sendmail="/usr/bin/env lamson sendmail -port 8823 -host 127.0.0.1"
+</pre>
+
+	<p>Notice that it&#8217;s configured sendmail to be &#8220;sendmail -port 8823 -host 127.0.0.1&#8221;
+which is a special <code>lamson sendmail</code> command that knows how to talk to lamson and
+read the arguments and input that mutt gives to deliver a mail.</p>
+
+	<blockquote>
+		<p> Why does Lamson need its own sendmail?  Because you actually have to configure most
+mail server&#8217;s configuration files to change their ports before their <strong>sendmail command</strong>
+will use a different port.  Yes, the average sendmail command line tool assumes that it
+is always talking to one and only one server on one and only one port for ever and all
+eternity.  Without <code>lamson sendmail</code> you wouldn&#8217;t be able to send to an arbitrary
+server.</p>
+	</blockquote>
+
+	<p>With this setup (<code>lamson start</code> ; <code>lamson log</code> ; <code>mutt -F muttrc</code>) you can now
+use your mutt client as a test tool for working with your application.</p>
+
+	<h2>Stopping Lamson</h2>
+
+	<p>The <acronym title="Process ID">PID</acronym> files are stored in the <code>run</code> directory.  Here&#8217;s a sample
+session where I stop all the running servers:</p>
+
+<pre class="code">
+$ ls -l run/*.pid
+-rw-r--r--  1 zedshaw  staff  5 May 16 16:41 run/log.pid
+-rw-r--r--  1 zedshaw  staff  5 May 16 16:41 run/smtp.pid
+
+$ lamson stop -ALL run
+Stopping processes with the following PID files: ['run/log.pid', 'run/smtp.pid']
+Attempting to stop lamson at pid 1693
+Attempting to stop lamson at pid 1689
+</pre>
+
+	<p>You can also pass other options to the stop command to just stop one server.  Use
+<em>lamson help -for stop</em> to see all the options.</p>
+
+	<h2>Starting Lamson Again</h2>
+
+	<p>Hopefully you&#8217;ve been paying attention and have figured out how to restart lamson and the
+logging server.  Just in case, here it is again:</p>
+
+<pre class="code">
+$ lamson start
+$ lamson log
+</pre>
+
+	<p>You should also look in the logs/lamson.log file to see that it actually started.  The
+other files in the logs directory contain messages dumped to various output methods (like
+Python&#8217;s stdout and stderr).  Periodically, if the information you want is not in 
+logs/lamson.log then it is probably in the other files.</p>
+
+	<blockquote>
+		<p> You can change your logging configuration by editing the logging line your config/settings.py file.</p>
+	</blockquote>
+
+	<h2>Other Useful Commands</h2>
+
+	<p>You should read the <a href="/docs/lamson_commands.html">available commands</a> documentation to get an
+overview, and you can also use <em>lamson help</em> to see them at any time.</p>
+
+	<h2>send</h2>
+
+	<p>The first useful command is <em>lamson send</em>, which lets you send mail to <span class="caps">SMTP</span> servers (not
+just Lamson) and watch the full <span class="caps">SMTP</span> protocol chatter.  Here&#8217;s a sample:</p>
+
+<pre class="code">
+$ lamson send -port 25 -host zedshaw.com -debug 1 \
+    -sender tester@test.com -to zedshaw@zedshaw.com \
+    -subject "Hi there" -body "Test body."
+send: 'ehlo zedshawscomputer.local\r\n'
+reply: '502 Error: command "EHLO" not implemented\r\n'
+reply: retcode (502); Msg: Error: command "EHLO" not implemented
+send: 'helo zedshawcomputer.local\r\n'
+reply: '250 localhost.localdomain\r\n'
+reply: retcode (250); Msg: localhost.localdomain
+send: 'mail FROM:<tester@test.com>\r\n'
+reply: '250 Ok\r\n'
+reply: retcode (250); Msg: Ok
+send: 'rcpt TO:<zedshaw@zedshaw.com>\r\n'
+reply: '250 Ok\r\n'
+reply: retcode (250); Msg: Ok
+send: 'data\r\n'
+reply: '354 End data with <CR><LF>.<CR><LF>\r\n'
+reply: retcode (354); Msg: End data with <CR><LF>.<CR><LF>
+data: (354, 'End data with <CR><LF>.<CR><LF>')
+send: 'Content-Type: text/plain; charset="us-ascii"\r\nMIME-Version: 1.0\r\nContent-Transfer-Encoding: 7bit\r\nSubject: Hi there\r\nFrom: tester@test.com\r\nTo: zedshaw@zedshaw.com\r\n\r\n.\r\n'
+reply: '250 Ok\r\n'
+reply: retcode (250); Msg: Ok
+data: (250, 'Ok')
+send: 'quit\r\n'
+reply: '221 Bye\r\n'
+reply: retcode (221); Msg: Bye
+</pre>
+
+	<p>Using this helps you debug your Lamson server by showing you the exact protocol sent
+between you and the server.  It is also a useful <span class="caps">SMTP</span> server debug command by itself.</p>
+
+	<blockquote>
+		<p> When you use the supplied muttrc you&#8217;ll be configured to use Lamson&#8217;s sendmail
+(not *send) command as your delivery command.  This lets you use mutt as a complete development
+tool with minimal configuration.</p>
+	</blockquote>
+
+	<h2>queue</h2>
+
+	<p>The <em>lamson queue</em> command lets you investigate and manipulate the run/queue (or any maildir).
+You can pop a message off, get a message by its key, remove a message by its key, count the messages,clear the queue, list keys in the queue.   It gives you a lower level view of the queue than
+mutt would, and lets you manipulate it behind the scenes.</p>
+
+	<h2>restart</h2>
+
+	<p>Lamson does reload the code of your project when it receives a new request (probably too
+frequently), but if you change the <code>config/settings.py</code> file then you need to restart.
+Easiest way to do that is with the restart command.</p>
+
+	<h2>Walking Through The Code</h2>
+
+	<p>You should actually know quite a lot about how to run and mess with Lamson, so you&#8217;ll
+want to start writing code.  Before you do, go check out the <a href="/docs/api/"><span class="caps">API</span> Documentation</a>
+and take a look around.  This document will guide you through where everything is and how
+to write your first handler, but when you start going out on your own you&#8217;ll need a good
+set of reference material.</p>
+
+	<p>At the top level of your newly minted project you have these directories:</p>
+
+<pre class="code">
+app -- Where the application code (handlers, templates, models) lives.
+config -- You already saw everything in here.
+logs -- Log files get put here.
+run -- Stuff that would go in a /var/run like PID files and queues.
+tests -- Unit tests for handlers, templates, and models.
+</pre>
+
+	<p>Lamson expects all of these directories to be right there, so don&#8217;t get 
+fancy and think you can move them around.</p>
+
+	<p>The first place to look is in the app directory, which has this:</p>
+
+<pre class="code">
+app/__init__.py
+app/data -- Data you want to keep around goes here.
+app/handlers -- Lamson handlers go here.
+app/model -- Any type of backend ORM models or other non-handler code.
+app/templates -- Email templates.
+</pre>
+
+	<p>You don&#8217;t technically <strong>have</strong> to store your data in app/data.  You are free
+to put it anywhere you want, it&#8217;s just convenient for most situations to
+have it there.</p>
+
+	<p>Your <code>app/model</code> directory could have anything in it from simple modules for
+working various Maildir queues, to full blown SQLAlchemy configurations for
+your database.  The only restriction is that you load them in the modules
+yourself (no magic here).</p>
+
+	<p>The <code>app/templates</code> directory can have any structure you want, and as you
+saw from the <code>config.boot</code> discussion it is just configured into the
+Jinja2 configuration as the default.  If you have a lot of templates it might
+help to have them match your <code>app/handlers</code> layout in some logical way.</p>
+
+	<p>That only leaves your <code>app/handlers</code> directory:</p>
+
+<pre class="code">
+app/handlers/__init__.py
+app/handlers/sample.py
+</pre>
+
+	<p>This is where the world gets started.  If you look at your <code>config.settings</code>
+you&#8217;ll see this line:</p>
+
+<pre class="code prettyprint">
+handlers = ['app.handlers.sample']
+</pre>
+
+	<p>Yep, that&#8217;s telling the <a href="http://lamsonproject.org/docs/api/lamson.routing.RoutingBase-class.html">lamson.routing.Router</a> 
+to load your <code>app.handlers.sample</code>
+module to kick it into gear.  It really is as simple as just putting the file in
+that directory (in in sub-modules there) and then adding them to the handlers
+list.</p>
+
+	<p>You can also add handlers from modules outside of your <code>app.handlers</code>:</p>
+
+<pre class="code prettyprint">
+handlers = ['app.handlers.sample', 'lamson.handlers.log']
+</pre>
+
+	<p>This installs the handler (<a href="http://lamsonproject.org/docs/api/lamson.handlers.log-module.html">lamson.handlers.log</a>) that lamson uses to log every email it receives.</p>
+
+	<h2>Writing Your Handler</h2>
+
+	<p>This document is for getting started quickly, so going into the depths of the cool stuff
+you can do with Lamson handlers is outside the scope, but if you open the <em>app/handlers/sample.py</em>
+file and take a look you&#8217;ll how a handler is structured.</p>
+
+	<blockquote>
+		<p>Since Lamson is changing so much the contents of the file aren&#8217;t included in this document.  You&#8217;ll have to open it and take a look.</p>
+	</blockquote>
+
+	<p>At the top of the file you should see your typical import statements:</p>
+
+<pre class="code prettyprint">
+import logging
+from lamson.routing import route, route_like, stateless
+from config.settings import relay, database
+from lamson import view
+</pre>
+
+	<p>Notice that we include elements from the <code>lamson.routing</code> that are decorators
+we use to configure a route.  Then you&#8217;ll see that we&#8217;re getting that <code>settings.relay</code>
+and <code>settings.database</code> we configured in the previous sections.  Finally we bring
+in the <code>lamson.view</code> module directory to make rendering templates into email messages
+a lot easier.</p>
+
+	<p>Now take a look at the rest of the file and you&#8217;ll how a handler is structured:</p>
+
+	<ol>
+		<li>Each state is a separate function in <span class="caps">CAPS</span>.  It doesn&#8217;t have to be, it just looks better.</li>
+		<li>Above each state function is a <a href="http://lamsonproject.org/docs/api/lamson.routing.route-class.html">route</a>, <a href="http://lamsonproject.org/docs/api/lamson.routing.route_like-class.html">route_like</a>, or <a href="http://lamsonproject.org/docs/api/lamson.routing-module.html#stateless">stateless</a> decorator to configure how <code>lamson.routing.Router</code> uses it.</li>
+		<li>The <a href="http://lamsonproject.org/docs/api/lamson.routing.route-class.html">route</a> decorator takes a pattern and then regex keyword arguments to fill it in.  The words in the pattern string are replaced in the final more complex routing regex by the keyword arguments after.  However, <strong>if you want to use regex directly you can</strong>, <a href="http://lamsonproject.org/docs/api/lamson.routing.route-class.html">route</a> just needs a string that eventually becomes a regex.</li>
+		<li>A state function changes state by returning the next function to call.  You want to go to the <span class="caps">RUNNING</span> state, just <code>return RUNNING</code>.</li>
+		<li>If any state function throws an error it will go into the <code>ERROR</code> state, so if you make a state handler named <span class="caps">ERROR</span> it will get called on the next event and can recover.</li>
+		<li>If you want to run a state on this event rather than wait to have it run on the next, then simple call it and return what it returns.  So to have <span class="caps">RUNNING</span> go now, just do <code>return RUNNING(message, ...)</code> and it will work.</li>
+		<li>If a state has the same regex as another state, just use <a href="http://lamsonproject.org/docs/api/lamson.routing.route_like-class.html">route_like</a> to say that.</li>
+		<li>If you have a <a href="http://lamsonproject.org/docs/api/lamson.routing-module.html#stateless">stateless</a> decorator after a <a href="http://lamsonproject.org/docs/api/lamson.routing.route-class.html">route</a> or <a href="http://lamsonproject.org/docs/api/lamson.routing.route_like-class.html">route_like</a>, then that handler will run for <strong>all</strong> addresses that match, not just if this handler is in that state.</li>
+	</ol>
+
+	<p>That is pretty much the entire complexity of how you write a handler.  You
+setup routes, and return the next step in your conversation as the next
+function to run.   The <code>lamson.routing.Router</code> then takes each message it receives
+and runs it through a processing loop handing it to your states and handlers.</p>
+
+	<h2>How States Are Run</h2>
+
+	<p>The best way to see how states are processed is to look at the <a href="http://lamsonproject.org/docs/api/lamson.routing.RoutingBase-class.html">Router</a> code that does it:</p>
+
+<pre class="code prettyprint">
+    def deliver(self, message):
+        if self.RELOAD: self.reload()
+
+        called_count = 0
+
+        for functions, matchkw in self.match(message['to']):
+            to_call = []
+            in_state_found = False
+
+            for func in functions:
+                if lamson_setting(func, 'stateless'):
+                    to_call.append(func)
+                elif not in_state_found and self.in_state(func, message):
+                    to_call.append(func)
+                    in_state_found = True
+
+            called_count += len(to_call)
+
+            for func in to_call:
+                if lamson_setting(func, 'nolocking'):
+                    self.call_safely(func, message,  matchkw)
+                else:
+                    with self.call_lock:
+                        self.call_safely(func, message, matchkw)
+
+        if called_count == 0:
+            if self.UNDELIVERABLE_QUEUE:
+                LOG.debug("Message to %r from %r undeliverable, putting in undeliverable queue.",
+                          message['to'], message['from'])
+                self.UNDELIVERABLE_QUEUE.push(message)
+            else:
+                LOG.debug("Message to %r from %r didn't match any handlers.",
+                          message['to'], message['from'])
+</pre>
+
+	<p>What this does is take all the handlers you&#8217;ve loaded, and then finds which handlers have a state function that
+matches the current message.  It then goes through each potential match, and determines which of all the matching
+state functions is &#8220;in that state&#8221;.  This means that, even though you have six state functions that answer to
+&#8220;(list_name)-(action)@(host)&#8221; only the one that matches the users current state (say <span class="caps">PENDING</span>) will be called next.
+As it goes through these functions it also loads up any that are marked &#8220;stateless&#8221; so they can be called as well.</p>
+
+	<p>Finally, it just calls them in order.  If the message results in no methods to call, then it will take the message
+and tell you this, or put it into an <code>UNDELIVERABLE_QUEUE</code> for you to review it later.</p>
+
+	<blockquote>
+		<p> Slight design criticism:  Currently the order of these calls is fairly deterministic, but you can&#8217;t rely on it.
+It&#8217;s also not clear if <strong>all</strong> matching states should run, or just the first.  It currently only runs the first match,
+but it might be better to run each match from each handler.  Suggestions welcome on this.</p>
+	</blockquote>
+
+	<h2>Debugging Routes</h2>
+
+	<p>In the old way of doing routing you would edit a large table of &#8220;routes&#8221; in your <code>config/settings.py</code> file and
+then that told Lamson how to run.  The problem with this is it was too hard to maintain and too hard to 
+indicate that different states needed a different route.</p>
+
+	<p>The new setup is great because all your routing for each handler module is right there, and it&#8217;s easy to see
+what will cause a particular state function to go off.</p>
+
+	<p>What sucks about the new setup is that you can&#8217;t find out what all the routes are doing <strong>globally</strong> in one 
+place.  That&#8217;s where <code>lamson routes</code> comes in.  Simply run that command and you&#8217;ll get a debug dump of
+all the full routing regex and the functions and modules they belong to:</p>
+
+<pre class="code">
+Routing ORDER:  ['^(?P&lt;address>.+)@(?P&lt;host>test\\.com)$']
+Routing TABLE: 
+---
+'^(?P&lt;address>.+)@(?P&lt;host>test\\.com)$':  app.handlers.sample.START  app.handlers.sample.NEW_USER
+   app.handlers.sample.END  app.handlers.sample.FORWARD  
+---
+</pre>
+
+	<p>This is telling you which regex is matched first, then what those regex are mapped to.  This is very handy as you can copy-paste
+that regex right into a python shell and then play with it to see if it would match what you want.</p>
+
+	<p>You can also pass in an email address to the <code>-test</code> option and it will tell you what routes would match
+and which functions that will call:</p>
+
+<pre class="code">
+osb $ lamson routes -test test.blog@oneshotblog.com
+2009-06-07 02:33:31,678 - root - INFO - Database configured to use sqlite:///app/data/main.db URL.
+Routing ORDER:  [... lots of regex here ...]
+Routing TABLE: 
+---
+... each regex and what state functions it maps ..
+---
+'^post-confirm-(?P<id_number>[a-z0-9]+)@(?P<host>oneshotblog\\.com)$':  app.handlers.post.CONFIRMING  
+---
+
+TEST address 'test.blog@oneshotblog.com' matches:
+  '^(?P<post_name>[a-zA-Z0-9][a-zA-Z0-9.]+)@(?P<host>oneshotblog\\.com)$' app.handlers.index.POSTING
+  -  {'host': 'oneshotblog.com', 'post_name': 'test.blog'}
+  '^(?P<post_name>[a-zA-Z0-9][a-zA-Z0-9.]+)@(?P<host>oneshotblog\\.com)$' app.handlers.post.START
+  -  {'host': 'oneshotblog.com', 'post_name': 'test.blog'}
+  '^(?P<post_name>[a-zA-Z0-9][a-zA-Z0-9.]+)@(?P<host>oneshotblog\\.com)$' app.handlers.post.POSTING
+  -  {'host': 'oneshotblog.com', 'post_name': 'test.blog'}
+osb $ 
+</pre>
+
+	<p>If you&#8217;re working with Lamson this is incredibly helpful, because it tells you what
+routes you have, what functions they call, and then it&#8217;ll take an email address and
+tell you all the routes that match it.</p>
+
+	<h2>THREADING!</h2>
+
+	<p>Lamson takes a lighter approach to how it runs.  It assumes that most of the
+time you want lamson to keep itself sane with minimal locking, and that you
+want each of your state functions to run in a thread lock that prevents others
+from stepping on your operations.  In 95% of the cases, this is what you want.</p>
+
+	<p>To accomplish this, Lamson&#8217;s router will acquire an internal lock for
+operations that change its state, and a separate lock before it calls each
+state function.  Since multiple state functions run inside each thread, but one
+thread handles each message, you&#8217;ll get multiple processing, but each state
+won&#8217;t step on other states in the system.</p>
+
+	<p>However, it&#8217;s those 5% of the times that will kill your application, and if you
+know what you&#8217;re doing, you should be able to turn this off.  In order to tell
+the Router <strong>not</strong> to lock your state function, simply decorate it with
+<a href="http://lamsonproject.org/docs/api/lamson.routing-module.html#nolocking">nolocking</a>
+and Lamson will skip the locking and just run your state raw.  This means that
+other threads will run potentially stepping on your execution, so you <strong>must</strong> do
+your own locking.</p>
+
+	<p>Now, don&#8217;t think that slapping a
+<a href="http://lamsonproject.org/docs/api/lamson.routing-module.html#nolocking">nolocking</a>
+on your state functions is some magic cure for performance issues.  You only
+ever want to do this if you <strong>really</strong> know your stuff, and you know how to make
+that operation faster with better controlled locking.</p>
+
+	<p>The reality is, if you have an operation that takes so long it blocks
+everything else, then you are doing it wrong by trying to do it all in your
+state function.  You should change your design so that this handler drops the
+message into a
+<a href="http://lamsonproject.org/docs/api/lamson.queue.Queue-class.html">lamson.queue.Queue</a>
+and that <strong>another</strong> Lamson server reads messages out of that to do the long
+running processing.</p>
+
+	<p>Using queues and separate Lamson servers you can solve most of your processing
+issues without a lot of thread juggling and process locking.  In fact, since
+Lamson uses maildir queues by default you can even spread these processors out
+to multiple machines reading off a shared disk and everything will be just
+fine.</p>
+
+	<p>But, since programmers will always want to just try turning off the locking,
+Lamson supports the <code>nolocking</code> decorator.  Use with care.</p>
+
+	<h2>What&#8217;s In A Unit Test</h2>
+
+	<p>Writing unit tests is way outside the scope of this document, but you should read up on using nosetests, testunit, and
+you should look at <a href="http://lamsonproject.org/docs/api/lamson.testing-module.html">lamson.testing</a> for a bunch of helper functions.  Also look in the generated <code>tests</code> directory
+to see some examples.</p>
+
+	<h2>Spell Checking Your Email Templates</h2>
+
+	<p>Another big help is that Lamson has support for <a href="http://www.rfk.id.au/software/pyenchant/">PyEnchant</a> so you
+can spell check your templates.  You can use <a href="http://lamsonproject.org/docs/api/lamson.testing-module.html#spelling">lamson.testing.spelling</a> function in your unit tests.</p>
+
+	<p>Installing PyEnchant is kind of a pain, but the trick is to get the dictionary you want and put it in your
+<code>~/.enchant/myspell</code> directory.  You&#8217;ll also want to open the <code>config/testing.py</code> file and uncomment the
+lines at the bottom that tell PyEnchant where to find the enchant so (dylib).</p>
+
+	<p>PyEnchant is kind of hard to use, so if you have suggestions on a better Python spell checking lib for 
+unit tests please let <a href="/contact.html">me know.</a></p>
+
+	<h2>Spam Filtering For Free</h2>
+
+	<p>Lamson comes with the
+<a href="http://lamsonproject.org/docs/api/lamson.spam-module.html">lamson.spam</a> module
+which supports <a href="http://spambayes.sourceforge.net/">SpamBayes</a> spam filtering
+system.</p>
+
+	<p>Read the document on <a href="/docs/filtering_spam.html">Filtering Spam With Lamson</a> to get
+a full set of instructions on using the spam filtering features.</p>
+
+	<h2>Other Examples</h2>
+
+	<p>Next you&#8217;ll want to sink your teeth in a bigger example.  Go grab <a href="/releases/">the source distribution .tar.gz</a> and 
+extract it so you can get at the examples:</p>
+
+<pre class="code">
+$ tar -xzvf lamson-VERSION.tar.gz
+$ cd lamson-VERSION
+$ cd examples/osb
+</pre>
+
+	<p>You are now in the osb example that is running on
+<a href="http://oneshotblog.com/">oneshotblog.com</a>.  Using what you&#8217;ve learned so far
+you can start reviewing the code and finding out how a working example
+operates.</p>
+
+	<h2>Getting Help</h2>
+
+	<p>As you work through this documentation, send your questions <a href="/contact.html">to me</a> and I&#8217;ll try to help
+you.  You can also join the <a href="mailto:lamson@librelist.com">lamson@librelist.com mailing list</a> and get help
+from other Lamson users.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

@@ -1,0 +1,124 @@
+From: Zed
+Title: Lamson The Python Mail Server
+template: input/home_template.html
+Content-Type: text/html
+
+
+<p>Rather than stay stuck in the 1970's, Lamson adopts modern web application
+framework design and uses a proven scripting language (Python).</p>
+
+<pre class="code prettyprint">
+@route("(post_name)@(host)")
+def START(message, post_name=None, host=None):
+    message['X-Post-Name'] = post_name
+    confirmation.send(relay, "post", message, "mail/confirm.msg", locals())
+    return CONFIRMING
+</pre>
+
+<p>Instead of hideous aliases files (that you never remember to update) 
+Lamson uses friendly regular expressions and routing decorators that make 
+configuring how email is handled trivial.</p>
+
+<pre class="code prettyprint">
+@route("post-confirm-(id_number)@(host)", id_number="[a-z0-9]+")
+def CONFIRMING(message, id_number=None, host=None):
+    original = confirmation.verify(message, id_number)
+    ...
+
+
+@route("(post_name)@(host)")
+@route("(post_name)-(action)@(host)", action="delete")
+def POSTING(message, post_name=None, host=None, action=None):
+    name, address = parseaddr(message['from'])
+    ...
+</pre>
+
+
+<p>Rather than bizarre flat file "databases" and hashtable stores, Lamson uses anything
+that Python does to store data.  You can use all of the following to store data in Lamson:
+
+<ul>
+<li><a href="http://docs.djangoproject.com/en/dev/ref/models/instances/">Django's ORM</a></li>
+<li><a href="http://webpy.org/">web.py's simple database library</a></li>
+<li><a href="http://tokyocabinet.sourceforge.net/tyrantdoc/">Tokyo Tyrant</a></li>
+<li><a href="http://opensource.plurk.com/LightCloud/">Lightcloud</a></li>
+<li><a href="http://docs.python.org/library/shelve.html">Python's Shelve (not recommended)</a></li>
+<li><a href="http://docs.python.org/library/sqlite3.html">Raw SQLite3</a></li>
+<li><a href="http://sqlobject.org/">SQLObject</a></li>
+<li><a href="http://code.google.com/p/couchdb-python/">CouchDB</a></li>
+<li><a href="http://www.mongodb.org/display/DOCS/Python+Tutorial">Mongo DB</a></li>
+<li><a href="http://www.sqlalchemy.org/">SQLAlchemy</a></li>
+</ul>
+
+<p>There's so many great ways to store data in Python that Lamson doesn't make
+any assumptions other than to provide a convenience function or two for configuring
+SQLAlchemy (since it's kind of a pain to setup).  In reality, there's so many
+ORMs and storage mechanisms available to Python that you should try as many as
+you can and use the one you like the most.</p>
+
+<p>Lamson also supports extensive spam blocking through <a href="http://spambayes.sourceforge.net/">SpamBayes</a>:</p>
+
+<pre class="code prettyprint">
+@route("(anything)@(host)", anything=".+", host=".+")
+@spam_filter(ham_db, "tests/.hammierc", "run/queue", next_state=SPAMMING)
+def START(message, **kw):
+    ....
+</pre>
+
+<p>Bounce detection and analysis is available that regular people can use without going RFC nuts:</p>
+<pre class="code prettyprint">
+@route("(anything)@(host)", anything=".+", host=".+")
+@bounce_to(soft=SOFT_BOUNCED, hard=HARD_BOUNCED)
+def START(message, **kw):
+    ...
+</pre>
+
+<p>All within a framework that works well with existing legacy mail servers so you can 
+gradually get into using Lamson.</p>
+
+
+<h2>The 30 Second Introduction</h2>
+
+If you have Python and easy_install already, then try this out:
+
+<pre class="code">
+$ easy_install lamson
+$ lamson gen -project mymailserver
+$ cd mymailserver
+$ lamson start
+$ lamson log
+$ nosetests
+$ lamson help -for send
+$ lamson send -sender me@mydomain.com -to test@test.com \
+        -subject "My test." -body "Hi there." -port 8823
+$ less logs/lamson.log
+$ mutt -F muttrc
+$ lamson stop -ALL run
+</pre>
+
+<p>You now have a working base Lamson setup ready for you to work on with everything you need installed.</p>
+
+<h2>Next Steps</h2>
+
+<p>Grab <a href="/download.html">the code</a> and you can read through the 
+<a href="/docs/getting_started.html">quick start</a> documentation.  After you've gone through
+that, best thing to do is read the code to the examples/osb example included in
+the <a href="/releases/">source distribution</a> and read the rest of the
+<a href="/docs">documentation</a> on this site.</p>
+
+<p>At any point, you can get help for all available Lamson commands with:</p>
+
+<pre class="code">
+$ lamson help
+</pre>
+
+<p>You can get individual command help with:</p>
+
+<pre class="code">
+$ lamson help -for start
+</pre>
+
+<p>Finally, if you really want to get started using Lamson to implement your dream email
+application, but are completely lost, then you can <a href="/contact.html">contact me</a> for help.</p>
+
+

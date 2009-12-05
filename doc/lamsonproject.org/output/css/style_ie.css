@@ -1,0 +1,12 @@
+#header, #nav, #sidebar, #sidebar * {
+	zoom: 1;
+}
+
+#sidebar, #sidebar .act {
+	position: relative;
+	z-index: 1;
+}
+
+#sidebar .act {
+	z-index: 30;
+}

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: 0.9.5 Almost There, But Stumped On Templates</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>0.9.5 Almost There, But Stumped On Templates</h1>
+                	<p>Since the 0.9.4 release I&#8217;ve rewritten the main part of the decoding parser 
+so that it&#8217;s much cleaner and handles more edge conditions.  If there&#8217;s one 
+word that defines what makes <span class="caps">MIME</span> horrible it would be &#8220;edge&#8221;.</p>
+
+	<p>It&#8217;s amazing the kind of stupid crap clients are allowed to send out in headers.
+I&#8217;ve actually got test cases from Mutt where it breaks headers up into completely
+different encodings across multiple lines for no damn reason at all.  Here&#8217;s a 
+test I had to write just to cover the one worst case I found:</p>
+
+<pre class="code prettyprint">
+def test_dumb_shit():
+    # this is a sample of possibly the worst case Mutt can produce
+    idiot = '=?iso-8859-1?B?SOlhdnkgTel05WwgVW7uY/hk?=\n\t=?iso-8859-1?Q?=E9?='
+    should_be = u'H\xe9avy M\xe9t\xe5l Un\xeec\xf8d\xe9'
+    assert_equal(encoding.header_from_mime_encoding(idiot), should_be)
+</pre>
+
+	<p>If you can decode what that actually is and why it&#8217;s retarded then you&#8217;ll win a
+prize.  I&#8217;ll give you a hint:  <code>B != Q</code>.</p>
+
+	<p>The example of the above working is <a href="http://oneshotblog.com/posts/zedshaw@zedshaw.com/test.html">on this page at oneshotblog.com</a> so that&#8217;s solved (for now).</p>
+
+	<h2>Now About Those Templates</h2>
+
+	<p>I originally wanted to make writing templates as easy as writing an email or a web page, 
+so I let you do things like this:</p>
+
+<pre class="code prettyprint">
+To: {{ message['from'] }}
+From: {{ confirm_address }}@{{host}}
+Subject:  Please confirm your new blog {{ post_name }}
+Reply-To: {{ confirm_address }}@{{host}}
+
+Hi there, you requested that I create a blog with a post named:
+
+{{ post_name }} : {{ message['subject'] }}
+...
+</pre>
+
+	<p>This is a <a href="http://jinja.pocoo.org/2/">Jinja2</a> that <a href="oneshotblog.com">oneshotblog.com</a> sends
+out when it makes you confirm creating a blog.</p>
+
+	<p>This seems all normal, since it&#8217;s the headers you want and the body, 
+like an email, but it is <strong>a total fantasy</strong>.  The reason is you can&#8217;t actually
+decode the above template if any part of it has non-ascii chars.  I&#8217;ll explain, and
+then hopefully I can get some suggestions on what people would like.</p>
+
+	<p>First, Lamson does the right thing and in your templates you are getting perfectly
+usable and future proof <code>unicode</code> objects to work with in your handlers.  Also,
+Jinja2 has no problem with taking this unicode and processing the above template.
+It works fine, and Jinja2 or Mako aren&#8217;t to blame for the problem with
+templates now.</p>
+
+	<p>The problem is actually in how email has to be parsed, since the email library
+expects you to hand it a <code>ascii</code> encoded string, no unicode allowed.  Nothing else.
+Lamson&#8217;s new code can handle the unicode fine, the problem is actually in 
+this one function:</p>
+
+<pre class="code prettyprint">
+def respond(template, variables, html=False):
+    results = render(template, variables)
+
+    data = email.message_from_string(results.encode('ascii', 'replace'))
+
+    if html:
+        msg = mail.MailResponse(Html=data.get_payload())
+    else:
+        msg = mail.MailResponse(Body=data.get_payload())
+
+    msg.update(data)
+
+    return msg
+</pre>
+
+	<p>The above function has to go, but where I&#8217;m stuck is that it&#8217;d be way more
+elegant to ditch this whole mess completely and remove headers from
+the template.</p>
+
+	<p>It&#8217;s too hard to write these headers by hand unless they are simple ones,
+and there needs to be a way to pass in more complex headers that you want
+to add.  If I&#8217;m providing a way to pass in headers to <code>lamson.view.respond</code>
+then why not take the headers out of the template and simplify the
+whole rendering process?</p>
+
+	<p>I&#8217;d like to hear from people using Lamson or those who might have ideas on this.
+If taking your headers out of the template and moving them to the render call
+will totally screw up your day, then let me know.  If it comes down to it, and I 
+have to do it, I&#8217;ll probably write a conversion tool to help.</p>
+
+	<p>Also, if you have a suggestion for doing the above better but keeping the headers
+then let me know.</p>
+
+	<p>Thanks for your help folks, and I&#8217;ll be hanging out in the #lamson channel on irc.freenode.org
+if people want to hash out a design.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

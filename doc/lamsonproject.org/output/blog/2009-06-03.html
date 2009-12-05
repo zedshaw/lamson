@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Lamson 0.9.1 Out, New Docs</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Lamson 0.9.1 Out, New Docs</h1>
+                	<p>I released Lamson 0.9.1 today so please <a href="/download.html">grab it and test it</a> and shoot me feedback.</p>
+
+	<p>The little changes are easier handling of attachments in MailRequest, a
+small tweak to spam_filter, and then a bunch of test enhancements and extra
+gear.  The big change is a redesign to lamson.args so that it infers the
+command line arguments from the lamson.commands function keyword arguments.
+It&#8217;s mostly an internal change since others can&#8217;t write their own commands
+(yet).</p>
+
+	<h2>New Documentation</h2>
+
+	<p>I ran into a bunch of folks who didn&#8217;t know that Lamson had built-in spam
+filtering, so I wrote a document on <a href="http://lamsonproject.org/docs/filtering_spam.html">Filtering Spam With
+Lamson</a> that tells you how
+to use it.</p>
+
+	<p>Lamson&#8217;s spam filtering support is fairly simplistic, but still useful for
+filtering crap out of your handlers.  It&#8217;s biggest problem is the current
+implementation requires you to use the (barely documented) &#8220;SpamBayes&#8221;
+command line tools for things like training.</p>
+
+	<p>I&#8217;ve got some instructions to get you started with the most important
+SpamBayes command line tool you&#8217;ll need for training.</p>
+
+	<h2>ChangeLog</h2>
+
+	<p>Here&#8217;s the log of what I did:</p>
+
+	<ul>
+		<li>Big code review, cleanup, and test boosting.</li>
+		<li>Modified the MailRequest.body so that it works with attachments.</li>
+		<li>Updated the <span class="caps">OSB</span> in preparation for a redesign to make it more interesting.</li>
+		<li>Didn&#8217;t like the name 'attachments&#8217; for getting what&#8217;s really all the parts of a message.</li>
+		<li>Implemented a method on MailRequest to return all of the attachments in a message reliably.</li>
+		<li>Setup the muttrc to use env to find the lamson command.</li>
+		<li>Updated the commands and utils so that it works with the new lamson.args setup.</li>
+		<li>Refactored lamson.args to use inspect to figure out the required defaults of a command function, thus removing the need for a&#8230;</li>
+		<li>Contributed change to muttrc so it uses lamson wherever it is installed, even virtualenv.</li>
+	</ul>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Lamson Project Blog</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Lamson Project Blog</h1>
+                <h2><a href="/blog/2009-09-26.html">2009-09-26</a> : Quick Lamson 1.0pre6 Release, More This Weekend</h2>
+
+<p>	<p>I put up a quick release of Lamson that fixes a bug in the gen project prototype.
+I recently switched all the domain names being used in the test suite to &#8220;localhost&#8221; or
+a similar nonexistant domain name.  Why?  Well, because some people liked to run
+the Lamson test suite or their fresh project test suite against a <strong>live</strong> <span class="caps">SMTP</span>
+server.  The test suite would &#8220;send&#8221; mail to test@test.com and my own 
+address, under the assumption that people would use the <code>lamson log</code> test server.</p></p>
+<p><a href="/blog/2009-09-26.html">Read more...</a></p>
+<h2><a href="/blog/2009-09-07.html">2009-09-07</a> : Lamson 1.0pre5 Out</h2>
+
+<p>	<p>I just pushed Lamson 1.0pre5 to PyPI for your enjoyment:</p></p>
+<p><a href="/blog/2009-09-07.html">Read more...</a></p>
+<h2><a href="/blog/2009-08-22.html">2009-08-22</a> : Lamson 1.0pre4 Out, Lots Of Docs Done, 100% Coverage</h2>
+
+<p>	<p>I happy to announce probably one of the last few releases before
+I officially put the 1.0 stamp on Lamson.  This last 1% of the things
+I want to do takes a while, but it really puts a good shine on the 
+project.</p></p>
+<p><a href="/blog/2009-08-22.html">Read more...</a></p>
+<h2><a href="/blog/2009-08-03.html">2009-08-03</a> : Lamson 1.0pre2, HTML Email, Standalone</h2>
+
+<p>	<p>Lamson 1.0pre2 features two features that might signal the end of the beginning or
+the beginning of the end, depending on your perspective: <span class="caps">HTML</span> Email and Lamson Standalone.
+<span class="caps">HTML</span> Email support comes from a new module 
+<a href="http://lamsonproject.org/docs/api/lamson.html-module.html">lamson.html</a> that gives a nice template
+method to send out <span class="caps">HTML</span> to victims&#8230;uh&#8230;customers.  Lamson Standalone will be a way
+to run Lamson as your customized email server instead of another server like Postfix.</p></p>
+<p><a href="/blog/2009-08-03.html">Read more...</a></p>
+<h2><a href="/blog/2009-07-20.html">2009-07-20</a> : Lamson 1.0pre1 Released</h2>
+
+<p>	<p>Tonight I&#8217;m releasing Lamson 1.0pre1 with all the latest improvements I&#8217;ve made while
+making <a href="http://librelist.com/">librelist.com</a> and taking feedback from a few people
+using Lamson.  The goal from now on will be to basically squash bugs and write docs, with
+only a rare feature or two as I find them needed on projects.</p></p>
+<p><a href="/blog/2009-07-20.html">Read more...</a></p>
+<h2><a href="/blog/2009-07-19.html">2009-07-19</a> : I Blame Bounces For The Delay</h2>
+
+<p>	<p>I was going to release Lamson 0.9.6 much earlier than this, but as I worked on
+the bounce detection feature, I realized that if I just wrote that and a few
+other cleanups and features, I&#8217;d actually have a <strong>1.0pre1</strong> candidate on my
+hands instead of a 0.9.6 release.</p></p>
+<p><a href="/blog/2009-07-19.html">Read more...</a></p>
+<h2><a href="/blog/2009-07-14.html">2009-07-14</a> : Lamson 0.9.6 Sometime Today</h2>
+
+<p>	<p>I think I&#8217;m at a point where bounce detection and handling works really well and is 
+ready for release.  I&#8217;ve got it running on the latest Lamson demo <a href="http://librelist.com/">librelist.com</a>
+and it works.  I&#8217;ll be pushing out a new release of Libre List in a little while
+that does some advanced bounce handling, and if that all works, then I&#8217;ll push
+out 0.9.6.</p></p>
+<p><a href="/blog/2009-07-14.html">Read more...</a></p>
+<h2><a href="/blog/2009-07-09.html">2009-07-09</a> : Lamson's Bounce Detection Algorithm</h2>
+
+<p>	<p>I just finished committing 0.9.6 code for doing bounce detection and analysis
+with Lamson.  It&#8217;s part of the new mailing list example I&#8217;m coding up for the
+0.9.6 release which I&#8217;ll be running on a free mailing list site I&#8217;m going 
+to release soon.  In this blog post I&#8217;d like to go through the bounce detection
+algorithm and get some feedback and samples from people.  So far it works great for
+the samples I have, but I want it to be fairly bullet proof.</p></p>
+<p><a href="/blog/2009-07-09.html">Read more...</a></p>
+<h2><a href="/blog/2009-07-07.html">2009-07-07</a> : Lamson Mailing Lists Down</h2>
+
+<p>	<p>I&#8217;m making up the release of Lamson and doing some server maintenance so I took down the
+Lamson server running the mailing lists.  I&#8217;ll let everyone know when they&#8217;re back up.</p></p>
+<p><a href="/blog/2009-07-07.html">Read more...</a></p>
+<h2><a href="/blog/2009-07-03.html">2009-07-03</a> : Article In The Reg About Lamson (By Ted Dziuba)</h2>
+
+<p>	<p>Just a quick update to point people at an article in <a href="http://www.theregister.co.uk/">The Register</a> by 
+<a href="http://teddziuba.com/">Ted Dziuba</a> entitled <a href="http://www.theregister.co.uk/2009/07/03/lamson/">Lamson &#8211; email app coding without the palm sweat: Doing what Java never did</a>.  He interviewed me about Lamson, things I think you can use it for, and other fun stuffs.</p></p>
+<p><a href="/blog/2009-07-03.html">Read more...</a></p>
+<h2><a href="/blog/2009-06-26.html">2009-06-26</a> : Lamson 0.9.5, The Push To 1.0</h2>
+
+<p>	<p>I just released Lamson 0.9.5 with all the major Unicode refactoring done and working.
+This is an important release because 0.9.5 is where I declare that I&#8217;m pushing to a 1.0 
+release and the base Lamson <a href="/docs/api/">APIs</a> won&#8217;t change under penalty of death.  In fact they can&#8217;t
+change because I&#8217;m using them myself in a few applications.</p></p>
+<p><a href="/blog/2009-06-26.html">Read more...</a></p>
+<h2><a href="/blog/2009-06-22.html">2009-06-22</a> : 0.9.5 Almost There, But Stumped On Templates</h2>
+
+<p>	<p>Since the 0.9.4 release I&#8217;ve rewritten the main part of the decoding parser 
+so that it&#8217;s much cleaner and handles more edge conditions.  If there&#8217;s one 
+word that defines what makes <span class="caps">MIME</span> horrible it would be &#8220;edge&#8221;.</p></p>
+<p><a href="/blog/2009-06-22.html">Read more...</a></p>
+<h2><a href="/blog/2009-06-20.html">2009-06-20</a> : Lamson 0.9.4 With Unicode Super Powers</h2>
+
+<p>	<p>Lamson 0.9.4 is out and it&#8217;s sporting a completely rewritten and meticulously 
+crafted encoding system.  With the new <a href="http://lamsonproject.org/docs/api/lamson.encoding-module.html">lamson.encoding</a> code Lamson can now decode nearly any nasty horrible encoded spam
+or mail you hand it, turn it into pristine nice Python unicode strings, and
+then output sweet clean ascii or utf-8 in a consistent way.</p></p>
+<p><a href="/blog/2009-06-20.html">Read more...</a></p>
+<h2><a href="/blog/2009-06-14.html">2009-06-14</a> : The Mailocalypse Is Upon Us!</h2>
+
+<p>	<p>I&#8217;m currently polishing off the two final features before I start going for
+the Lamson 1.0 release.  I&#8217;ve been using Lamson to make a few little cute applications
+and create one thing for a potential client, and so far I haven&#8217;t had to change much
+since 0.9.3.  It&#8217;s great so far and I hope that Lamson 1.0 will be a fun release.</p></p>
+<p><a href="/blog/2009-06-14.html">Read more...</a></p>
+<h2><a href="/blog/2009-06-09.html">2009-06-09</a> : Lamson At NYLUG Python Workshop Today @ 6:00PM</h2>
+
+<p>	<p>Just a quick reminder that I&#8217;ll be presenting <a href="http://lamsonproject.org/">Lamson</a> to the 
+<span class="caps">NYLUG</span> Python Workshop today at 6:00PM.  The event is at
+the NY Public Library Hudson Park Branch, 66 Leroy St., NY NY 10014
+in <span class="caps">NYC</span> and you can <a href="http://nylug.org/pipermail/nylug-announce/2009-June/000795.html">find out more here.</a></p></p>
+<p><a href="/blog/2009-06-09.html">Read more...</a></p>
+<h2><a href="/blog/2009-06-08.html">2009-06-08</a> : A Screencast And Docs On Deploying Lamson And OneShotBlog</h2>
+
+<p>	<p>I just finished writing some new documentation on <a href="/docs/deploying_lamson.html">Deploying Lamson and OneShotBlog</a> that
+shows you how to install Lamson and all required software into a completely clean Python 2.6 and virtualenv configuration.
+The instructions take you from nothing to a running <a href="http://oneshotblog.com/">oneshotblog.com</a> installation that you can 
+play with and hack on.  The process of doing Lamson deployments is still a little too rough for me, but these instructions
+should get people started.</p></p>
+<p><a href="/blog/2009-06-08.html">Read more...</a></p>
+<h2><a href="/blog/2009-06-06.html">2009-06-06</a> : Lamson 0.9.3 Is Out And Sexy As Hell</h2>
+
+<p>	<p>This release is the result of me working on my little
+<a href="http://oneshotblog.com/">oneshotblog.com</a> project while tweaking and refining
+Lamson as I go.  The end result is 0.9.3 didn&#8217;t have a lot of big code changes,
+but all the tiny little changes add up to a very nice release.  The highlights
+of this release are more secure server runs, better character encoding handling
+for headers, various cleanups in how mail is queued, and fixes for Python 2.6
+support.</p></p>
+<p><a href="/blog/2009-06-06.html">Read more...</a></p>
+<h2><a href="/blog/2009-06-04.html">2009-06-04</a> : OneShotBlog Sample (Hack) Running</h2>
+
+<p>	<p>I <strong>finally</strong> got off my ass and put the <a href="http://oneshotblog.com/">OneShotBlog</a> sample up.
+This is the code (plus a few little tweaks) from the sample that is in the <a href="/releases/">Lamson source</a>
+running on another server.  It&#8217;s using all the features of Lamson, include the new <a href="/docs/deferred_processing_to_queues.html">Queue Receiver</a>
+functionality.  So far it&#8217;s working great considering I&#8217;ve just been hacking on it on the side to try
+out the usability of the Lamson <a href="/docs/api/">APIs</a> and not really taken it seriously.</p></p>
+<p><a href="/blog/2009-06-04.html">Read more...</a></p>
+<h2><a href="/blog/2009-06-03.html">2009-06-03</a> : Lamson 0.9.1 Out, New Docs</h2>
+
+<p>	<p>I released Lamson 0.9.1 today so please <a href="/download.html">grab it and test it</a> and shoot me feedback.</p></p>
+<p><a href="/blog/2009-06-03.html">Read more...</a></p>
+<h2><a href="/blog/2009-06-03-2.html">2009-06-03-2</a> : Lamson 0.9.2, Test Coverage 97%</h2>
+
+<p>	<p>The 0.9.2 release is out and ready for everyone to easy_install.  I spent the
+day getting rid of my tech debt by boosting the Lamson test coverage to a
+whopping 97%.</p></p>
+<p><a href="/blog/2009-06-03-2.html">Read more...</a></p>
+<h2><a href="/blog/2009-06-01.html">2009-06-01</a> : Lamson 0.9 Is Out, Find My Bugs!</h2>
+
+<p>
+I just pushed Lamson 0.9 up to PyPI for everyone to grab and break.  This release 
+features a complete redesign of the routing, state handling, templating, and a full 
+set of very complete documentation.  Everyone who was using 0.8.x series should be able 
+to migrate to this version with some work, but it won&#8217;t be terribly painful (assuming
+you have unit tests).</p>
+<p><a href="/blog/2009-06-01.html">Read more...</a></p>
+<h2><a href="/blog/2009-05-31.html">2009-05-31</a> : Lamson 0.9 Later Today</h2>
+
+<p>	<p>I have been working hard on the documentation and scrubbing the code for Lamson and the 0.9 release
+coming out soon.  The only things I feel I need to do before an official 0.9 release are:</p></p>
+<p><a href="/blog/2009-05-31.html">Read more...</a></p>
+<h2><a href="/blog/2009-05-28.html">2009-05-28</a> : 0.9-pre2 Up For Testing, Docs Too</h2>
+
+<p>	<p>First off, my apologies to everyone if your <span class="caps">RSS</span> reader went crazy today.
+I include documentation changes in the <span class="caps">RSS</span> feed so that people can
+easily track updates to the Lamson docs.  However, that means when I&#8217;m
+writing a lot of documentation it hits the feed repeatedly.</p></p>
+<p><a href="/blog/2009-05-28.html">Read more...</a></p>
+<h2><a href="/blog/2009-05-24.html">2009-05-24</a> : Features For The 0.9 Release (Soon)</h2>
+
+<p>
+<p>I've been hard at work cooking up the very nice new routing system, and
+I must say it is rather tasty.  I've gone and created a whole new
+routing and state management design that uses decorators right in your
+handler modules to indicate how each state will expect mail addresses.
+</p></p>
+<p><a href="/blog/2009-05-24.html">Read more...</a></p>
+<h2><a href="/blog/2009-05-20.html">2009-05-20</a> : Lamson Project Ideas</h2>
+
+<p>	<p>I wrote a <a href="http://zedshaw.com/blog/2009-05-20.html">blog post about project ideas for Lamson</a>
+on my personal blog.  Head on over if you&#8217;re looking for something to hack on, or just
+want something to read that isn&#8217;t about the web.</p></p>
+<p><a href="/blog/2009-05-20.html">Read more...</a></p>
+<h2><a href="/blog/2009-05-19.html">2009-05-19</a> : New Site Look, Same Great Content</h2>
+
+<p>	<p>This is just a quick update to say thanks to <a href="http://kenkeiter.com/">Ken Keiter</a>
+for creating a new <a href="http://lamsonproject.org/">lamsonproject.org</a> site layout and
+design.  The new site should be easier to read, have more breathing room, and look
+easier on the eyes.  It&#8217;s even got a logo:</p></p>
+<p><a href="/blog/2009-05-19.html">Read more...</a></p>
+<h2><a href="/blog/2009-05-18.html">2009-05-18</a> : Bug Fix 0.8.4, Mailing Lists, Spam Blocking</h2>
+
+<p>	<p>A few announcements from my work on Lamson the last few days.  I managed to fix
+a bug, put Lamson to work doing Lamson&#8217;s mailing lists, and use Lamson to do
+some spam blocking on my own email account.</p></p>
+<p><a href="/blog/2009-05-18.html">Read more...</a></p>
+<h2><a href="/blog/2009-05-16.html">2009-05-16</a> : Lamson Project Site Launched</h2>
+
+<p>	<p>Today I launched the Lamson Project site at
+<a href="http://lamsonproject.org/">lamsonproject.org</a> and started filling in the
+content.  Lamson is really turning into a fun and useful project, and hopefully
+the site will get other people interested in it and using it.</p></p>
+<p><a href="/blog/2009-05-16.html">Read more...</a></p>
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

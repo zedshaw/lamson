@@ -1,0 +1,10 @@
+set mbox_type=Maildir
+set folder="run/posts"
+set mask="!^\\.[^.]"
+set mbox="run/posts"
+set record="+.Sent"
+set postponed="+.Drafts"
+set spoolfile="run/posts"
+set sendmail="/usr/local/bin/lamson sendmail -port 8823 -host 127.0.0.1"
+
+

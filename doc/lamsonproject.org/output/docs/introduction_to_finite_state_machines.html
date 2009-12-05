@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: A Painless Introduction To Finite State Machines</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>A Painless Introduction To Finite State Machines</h1>
+                	<p>Lamson uses the concept of a Finite State Machine to do the internal processing
+and keep track of what it should do next.  You don&#8217;t necessarily need to know
+the details of how a <span class="caps">FSM</span> works, but it helps you if you want to know enough
+about Lamson to do advanced work.  Most people could be blissfully unaware of
+state machines and still do plenty of work with Lamson.</p>
+
+	<h2>Your Computer Science Class Sucked</h2>
+
+	<p>When I say &#8220;finite state machine&#8221; everyone reads it as:</p>
+
+	<blockquote>
+		<p>&#8220;<span class="caps">FINITE</span> <span class="caps">STATE</span> MACHINE!!!!! <span class="caps">OMGWTFBBQ</span> <span class="caps">THOSE</span> <span class="caps">ARE</span> HARD!!!!&#8221;</p>
+	</blockquote>
+
+	<p>Yes, the way your professor explained <span class="caps">FSM</span> makes them much harder than they are
+in practice.  You were probably thrown fairly random sounding terms like
+&#8220;edge&#8221;, &#8220;node&#8221;, &#8220;transitions&#8221;, &#8220;acceptors&#8221;, &#8220;recognizers&#8221;, and &#8220;transducers&#8221;.
+You were probably shown graphs with lines and circles and told confusingly that
+the lines were edges and the circles were nodes, but that the edges were states
+unless you used this kind where the edges were transitions and that kind where
+the circles were states.</p>
+
+	<p>Alright, just forget about that because they aren&#8217;t really that complicated.  A
+practical finite state machine is basically four things:</p>
+
+	<ul>
+		<li>A bunch of functions, or things that need to get done.</li>
+		<li>A bunch of events, or reasons to call these functions.</li>
+		<li>Some piece of data that tracks the &#8220;state&#8221; this bunch of functions is in.</li>
+		<li>Code inside the functions that says how to &#8220;transition&#8221; or &#8220;change&#8221; into the next state for further processing.</li>
+	</ul>
+
+	<p>That is really all there is to every <span class="caps">FSM</span>.  Sure you can change around what a
+state is, add code that runs on a transition, or make <span class="caps">FSM</span> that &#8220;inherit&#8221; from
+other <span class="caps">FSM</span>, but in the end they are all:</p>
+
+	<blockquote>
+		<p>functions, events, states, transitions</p>
+	</blockquote>
+
+	<p>That is all there is to it, no matter how you slice these or dice these up.</p>
+
+	<h2>Implementing A Practical <span class="caps">FSM</span></h2>
+
+	<p>Now that we&#8217;ve brought the fear level down, let&#8217;s actually make one.  This will
+be a little toy <span class="caps">FSM</span>, but it will get you started and it won&#8217;t be too far off
+from what Lamson uses.</p>
+
+	<p>We are going to implement your classic email confirmation system.  This system
+usually works like this:</p>
+
+	<ol>
+		<li>You receive an email at some service, let&#8217;s say users-subscribe@test.com.</li>
+		<li>You reply to the sender with a confirmation message.</li>
+		<li>They reply with an email to your confirmation&#8217;s random address.</li>
+		<li>You receive this, approve the handshake, and make them subscribed with a welcome email.</li>
+		<li>They send an email, and since they are subscribed, you post it to the list.</li>
+	</ol>
+
+	<p>This is a typical operation on most mailing lists, but with a state machine it
+turns out to be fairly trivial to implement.</p>
+
+	<p>First, we need to look at the above conversation and think about what is more
+clear:  states the user will be in, or events that they will generate.  In this
+case I&#8217;d go with the states they will be in during the conversation:</p>
+
+	<ul>
+		<li><span class="caps">START</span> &#8212; Every machine has one of these.</li>
+		<li><span class="caps">PENDING</span> &#8212; We sent the confirm, and waiting for their reply.</li>
+		<li><span class="caps">POSTING</span> &#8212; They replied to the confirm and can now post.</li>
+	</ul>
+
+	<p>Notice I gave each state a verb.  You are saying what state this user is in.
+&#8220;They are currently posting.&#8221;  You don&#8217;t say what they &#8220;did&#8221;.  Now, sometimes
+it just makes sense to do it differently, so don&#8217;t be a slave to this setup.
+I&#8217;ve just found it helps keep things consistent if you name the states after
+what they are currently doing.</p>
+
+	<p>Now that we know what kind of states we&#8217;re dealing with we need to solve the
+next two parts of the puzzle:  events or transitions.  In an email application
+I like to start with the events, as these are the email addresses and messages
+they will be sending me.  What we do now is for each state, list the addresses
+we&#8217;ll consider an &#8220;event&#8221; for that state.</p>
+
+	<ul>
+		<li><span class="caps">START</span> &#8212; (list_name)-subscribe@test.com</li>
+		<li><span class="caps">PENDING</span> &#8212; (list_name)-confirm-(id)@test.com</li>
+		<li><span class="caps">POSTING</span> &#8212; (list_name)@test.com</li>
+	</ul>
+
+	<p>This is all the &#8220;events&#8221; we need right now, written out as email addresses.</p>
+
+	<blockquote>
+		<p>If we were to add the ability to unsubscribe, then we would add an event
+for (list_name)-unsubscribe@test.com to <span class="caps">POSTING</span> so that we could transition
+    them from <span class="caps">POSTING</span> to say, <span class="caps">SLEEPING</span>.</p>
+	</blockquote>
+
+	<p>We now have our states, and the events that each state answers.  Last step is
+to figure out what state &#8220;transitions&#8221; to which other state.</p>
+
+	<h2>Write The Functions</h2>
+
+	<p>At this point, our <span class="caps">FSM</span> is simple enough that we could just write the functions,
+and the logic of each function would dictate the transitions.  However, if you
+had a larger number of states and events you would want to sit down and draw a
+diagram or a make a table of the transitions before you wrote some code.</p>
+
+	<p>To start our functions we&#8217;ll just name them after the states and put the events
+they handle at the top as pseudo code <code>event</code> decorators:</p>
+
+<pre class="code prettyprint">
+@event("(list_name)-subscribe@test.com")
+def START(...):
+    """Initial setup of the user."""
+    ...
+
+@event("(list_name)-confirm-(id)@test.com")
+def PENDING(...):
+    """Waiting for them to confirm."""
+    ...
+
+@event("(list_name)@test.com")
+def POSTING(...):
+    """They are posting, anything they send we post."""
+    ...
+</pre>
+
+	<p>This is abbreviating the syntax quite a bit, is not functioning Python code but
+it is pretty close.  Instead of <code>event</code> you would have a <code>route</code> decorator and
+it would have a few regexes.  Otherwise it&#8217;s about the same.</p>
+
+	<blockquote>
+		<p>We could also say that each state handles multiple events, which is what
+you would do if <span class="caps">POSTING</span> handled the &#8220;unsubscribe&#8221; requests.</p>
+	</blockquote>
+
+	<h2>Add Logic And Transitions</h2>
+
+	<p>The final piece, and the part you&#8217;ll spend the longest getting right, is
+filling in the logic and making the transitions happen.  How would you indicate
+<strong>where</strong> each state should go next?  Remember that each state is a simple Python
+function, and that to &#8220;transition&#8221; means to change to another state.  Well, we
+have to tell whatever is running the state machine to run a <strong>different</strong>
+function next time.</p>
+
+	<p>Easiest way to do that is for our handlers to just return the next function.
+The &#8220;runner&#8221; will then take that, store it somewhere, and the next time an
+event comes the runner will load the next function to run.</p>
+
+	<p>Here&#8217;s the psuedo code to do just that:</p>
+
+<pre class="code prettyprint">
+@event("(list_name)-subscribe@test.com")
+def START(...):
+    """Initial setup of the user."""
+    send_confirmation()
+    return PENDING
+
+@event("(list_name)-confirm-(id)@test.com")
+def PENDING(...):
+    """Waiting for them to confirm."""
+    if check_confirmation_is_good():
+        send_welcome()
+        return POSTING
+    else:
+        ignore_them()
+
+@event("(list_name)@test.com")
+def POSTING(...):
+    """They are posting, anything they send we post."""
+    deliver_message_to_all()
+    return POSTING
+</pre>
+
+	<p>Right away you can see that we change to the next state by just returning the
+actual function to call next.  When the next event comes in, the runner matches
+it to the right function, calls it, and then sets up for the next one.</p>
+
+	<p>If you look at <span class="caps">PENDING</span>, you can see that it either returns <span class="caps">POSTING</span> if they
+confirm correctly or it just ignores them.  You could also transition to
+&#8220;return ERROR&#8221; if you wanted to put them in an error state and send a different
+message.</p>
+
+	<p>Looking at <span class="caps">POSTING</span>, you see that it just keeps returning itself to indicate
+that it is staying there.  If you had <span class="caps">POSTING</span> process &#8220;unsubscribes&#8221; then it
+would simply do the unsubscribe confirm, and then transition to <span class="caps">UNSUBSCRIBING</span>.
+That state function would then check the confirmation and unsubscribe them,
+transitioning to something like <span class="caps">DEAD</span> or <span class="caps">SLEEPING</span>.</p>
+
+	<blockquote>
+		<p>An &#8220;optimization&#8221; in Lamson is that if a state function doesn&#8217;t return
+anything then it&#8217;s assumed to just want to stay in that state.  In this case
+<span class="caps">POSTING</span> could have no return and it would work the same.</p>
+	</blockquote>
+
+	<h2>Jump To vs. Transition</h2>
+
+	<p>You now know pretty much everything you need to handle <span class="caps">FSM</span> except for a tiny
+corner case.  It is typically called the &#8220;epsilon transition&#8221; which basically
+means &#8220;transition to that state without an explicit event&#8221;.  When you use this
+is when your event needs to fire off the code for the <strong>next</strong> transition right
+now, rather than waiting for the next event from the user.</p>
+
+	<p>In the above pseudo code this is simply done by actually calling that
+transition function and returning whatever it returns.  Let&#8217;s say we wanted to
+have <span class="caps">PENDING</span> also call <span class="caps">POSTING</span> with the original message they sent:</p>
+
+<pre class="code prettyprint">
+def PENDING(message):
+    if check_confirmation_is_good():
+        send_welcome()
+        return POSTING (message):
+    else:
+        ignore_them()
+
+def POSTING(message):
+    deliver_message_to_all()
+    return POSTING
+</pre>
+
+	<p>Notice that we changed the <code>return POSTING</code> to a <code>return POSTING(...)</code> which
+returns the results of calling <span class="caps">POSTING</span>.</p>
+
+	<p>That&#8217;s it, you now know epsilon transitions.  Man, that was tough.</p>
+
+	<blockquote>
+		<p> The danger of this is if you don&#8217;t have your <span class="caps">FSM</span> carefully mapped out,
+then you could call a state that loops back to your state and you&#8217;re in an
+endless loop.  Watch for that.</p>
+	</blockquote>
+
+	<h2>Why Finite State Machines Anyway</h2>
+
+	<p>Finite State Machines like this are very powerful because they behave in ways
+that are consistent, easily debugged, and intelligent.  Because the decision of
+how each step in the chain of events is controlled by a constrained set of
+states, events, and transitions, you can actually avoid many bugs you&#8217;d get in
+regular classes and objects.</p>
+
+	<p>For example, if you were to receive another subscribe message while there is a
+confirmation pending, then that event (email address) isn&#8217;t recognize and just
+ignored.  You would see it in the logs, and see that your <span class="caps">FSM</span> stayed in the
+<span class="caps">PENDING</span> state.  If you then wanted <span class="caps">PENDING</span> to handle additional requests it&#8217;s a
+simple matter of adding that event and writing the code.</p>
+
+	<p>The way to think of the a <span class="caps">FSM</span> is it is like an object that has a white list of
+functions, parameters, <span class="caps">AND</span> allowed values for its private data.  If an <span class="caps">FSM</span>
+tries to change to a state that doesn&#8217;t exist it&#8217;s an error.  If it gets an
+event it doesn&#8217;t know it ignores it.  If you try to transition wrong you see it
+in the logs, or it&#8217;s an error.</p>
+
+	<p><span class="caps">FSM</span> also have the debugging advantage of showing you the history of not only
+what states were called, but <strong>why</strong> they were called and what they did next.
+You will see the entire conversation and can pinpoint exactly where it went
+wrong.</p>
+
+	<p>However, the most important reason to use <span class="caps">FSM</span> is because this is how email and
+asynchronous conversations work.  When you have a conversation with someone
+there is state involved.  You don&#8217;t have to start the entire conversation from
+scratch at the start of each sentence.  Instead you remember what the person
+said and what state you are in (angry, sad, happy) and that controls what you
+do next (punch them, run away, hug them) based on the events they send (&#8220;screw
+you&#8221;, &#8220;you&#8217;re dead&#8221;, &#8220;i love you&#8221;).</p>
+
+	<p>The use of an <span class="caps">FSM</span> will make your Lamson applications seem like magic.  They
+will behave more like smart systems that just seems to know like a wizard what
+should happen next, and <strong>why</strong> it should happen that way.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Bug Fix 0.8.4, Mailing Lists, Spam Blocking</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Bug Fix 0.8.4, Mailing Lists, Spam Blocking</h1>
+                	<p>A few announcements from my work on Lamson the last few days.  I managed to fix
+a bug, put Lamson to work doing Lamson&#8217;s mailing lists, and use Lamson to do
+some spam blocking on my own email account.</p>
+
+	<p>Hopefully eating my own dogfood won&#8217;t be too painful.</p>
+
+	<h2>Grab 0.8.4, Important Bug Fix</h2>
+
+	<p>I wasn&#8217;t using the SMTPServer class in Python correctly, and was stopping the
+whole server when a single channel had an error.  It&#8217;s a one line fix and I&#8217;ve
+been running it for a few days with no problems.</p>
+
+	<p>Please make sure that you upgrade if you installed Lamson:</p>
+
+	<p>sudo easy_install &#8212;upgrade lamson</p>
+
+	<p>Or you can <a href="http://pypi.python.org/pypi?name=lamson&#38;version=0.8.4&#38;:action=display">grab it from PyPI</a></p>
+
+	<h2>Mailing Lists</h2>
+
+	<p>Lamson is now running its very simple <em>examples/mailinglist</em> sample on
+lists.lamsonproject.org.  You can send an email to:</p>
+
+	<p>lamson.users-subscribe@lists.lamsonproject.org</p>
+
+	<p>And try it out.  The software running that is also what&#8217;s available in the
+<em>examples/mailinglist</em> sample (minus a few tweaks) so if you want to help make it
+a real functioning mailing list then feel free to contribute.</p>
+
+	<p>I&#8217;m subscribed there, and I&#8217;ll be working on it over the next week to turn it
+into a more complete and robust mailing list.  An important thing I need to
+implement is bounce and vacation detection.  I&#8217;ll probably also take my spam
+filter hacks and work them in as well.</p>
+
+	<p>Also, the software at lists.lamsonproject.org is an open mailing list system.
+Feel free to use it at your own risk, and if it becomes popular then I may turn
+it into a permanent thing.</p>
+
+	<p>As an open mailing list system, what it does is creates any list that doesn&#8217;t
+exist when you subscribe.  Think of it as lazy loading for mailing lists.  No
+need to fill out forms, beg for permission, alter aliases, edit text files, or
+run a ton of shell commands. </p>
+
+	<p>Just subscribe and go.</p>
+
+	<p>Now, if that turns into a massive abuse vector then I&#8217;ll turn it off, but I&#8217;d
+like to make it work for people since it demonstrates something simple that
+Lamson can do which other mailing list systems are bad at.</p>
+
+	<h2>Spam Filtering And Graylists In The Works</h2>
+
+	<p>My personal email account (zedshaw@zedshaw.com) is now running
+<a href="http://spambayes.sourceforge.net/">Spambayes</a> inside of Lamson to filter spam.
+Here&#8217;s the code (stripped down for show):</p>
+
+<pre class="code prettyprint">
+class SpamHandler(server.MessageHandler):
+    """Uses app.spam to mark all messages it receives as Spam."""
+    def process(self, session, message, args):
+        filter = spam.Filter()
+        filter.train_spam(message.msg)
+        filter.close()
+
+class FilterHandler(server.MessageHandler):
+    """
+    Uses the spam filter to either queue up a message
+    into the run/queue for later review, or forward 
+    it on if it is not spam.
+    """
+    def process(self, session, message, args):
+        classifier = spam.Filter( )
+        classifier.filter(message.msg)
+        if message.msg['X-Spambayes-Classification'].startswith('spam'):
+            q = queue.Queue('run/spam')
+            q.push(str(message))
+        else:
+            self.relay.deliver(message)
+</pre>
+
+	<p>This shows Lamson&#8217;s raw &#8220;handler style&#8221; of extension, which the Finite State Machine 
+stuff is built on.  These are wired into the config/settings.py file routing
+so that any mail that&#8217;s sent to zedshaw@zedshaw.com goes through <strong>FilterHandler</strong>
+and any mail that sent to bogus addresses @zedshaw.com goes through <strong>SpamHandler</strong>.</p>
+
+	<p>It turns out that a lot of spam is delivered to random addresses at zedshaw.com, so
+this works as an autotraining mechanism.  Well, at least until some asshat figures
+out he can game my spam filter.</p>
+
+	<p>The FilterHandler then takes messages that SpamBayes knows is spam and puts it into
+a queue for later review.  I periodically check that folder and pull out any false
+positives for retraining.</p>
+
+	<p>It&#8217;s all very hacky right now, but seems to be working really well, so once I work out
+the full workflow I&#8217;ll formalize this code and add it to Lamson as extra handlers
+to use.  I&#8217;ll also implement a simple graylisting system and include that too.</p>
+
+	<p>Well, enjoy the work so far and shoot me any comments you have.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

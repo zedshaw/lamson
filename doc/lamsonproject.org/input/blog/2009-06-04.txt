@@ -1,0 +1,44 @@
+Title:  OneShotBlog Sample (Hack) Running
+
+I *finally* got off my ass and put the "OneShotBlog":http://oneshotblog.com/ sample up.
+This is the code (plus a few little tweaks) from the sample that is in the "Lamson source":/releases/
+running on another server.  It's using all the features of Lamson, include the new "Queue Receiver":/docs/deferred_processing_to_queues.html
+functionality.  So far it's working great considering I've just been hacking on it on the side to try
+out the usability of the Lamson "APIs":/docs/api/ and not really taken it seriously.
+
+The concept of the oneshotblog is a little weird:
+
+# You send an email to SOMETAG@oneshotblog.com, it can have textile markup.
+## SOMETAG can be anything that's a tag (chars, ints, periods, no leading periods), like:  i.want.my.blog@oneshotblog.com
+# That is posted for you at http://oneshotblog.com/posts/YOURADDRESS/SOMETAG.html
+## I *do* block attempts to use a bad path by whitelisting.  If you send something messed up for the tag it's ignored.
+# Then your post is summarized and tossed on the "front page":http://oneshotblog.com/ with the most recent 50 shown.
+## This is done by a deferred queue receiver that indexes messages as it receives them.
+# If you send to that same tag, it replaces it with the new contents (although the index will show the old stuff for a while).
+
+There's some dumb bugs in it currently, like delete doesn't remove your message from the index and other
+fun things, but so far it's running as expected given the work I put into it.
+
+Anyway, feel free to try it out and shoot me feedback.  Try sending really broken email too so that
+I can see what Lamson does with it.
+
+h2. Future Features Of OSB
+
+Just for fun I'm gonna clean up OSB and make it official.  I'll add features like commenting on a post via email, each
+post is a little mailing list, and handling image and code attachments.  For the code attachments I'll colorize them
+with Pygments and put them up with the post.
+
+
+h2. Mailing Lists and Failmail
+
+I'll be bringing back the mailing list example soon, and I'll also make an address failmail@lamsonproject.org.
+More on that later.
+
+
+h2. Python 2.6 Support
+
+If you're running Python 2.6 then you'll want to wait for the 0.9.3 release later today.  The deployed OSB sample
+at "oneshotblog.com":http://oneshotblog.com/ is running on Python 2.6, so I had to fix about 4 failing tests 
+regarding unicode issues and weirdness with python-daemonize.
+
+

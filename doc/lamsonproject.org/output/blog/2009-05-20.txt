@@ -1,0 +1,7 @@
+Title: Lamson Project Ideas
+
+I wrote a "blog post about project ideas for Lamson":http://zedshaw.com/blog/2009-05-20.html
+on my personal blog.  Head on over if you're looking for something to hack on, or just
+want something to read that isn't about the web.
+
+

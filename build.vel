@@ -1,0 +1,90 @@
+# Copyright (C) 2008 Zed A. Shaw.  You're free to reuse this file
+# in your build scripts in anyway and remove the copyright 
+# notice.
+
+imports [
+    recipe(from 'scripts/testing' as 'testing')
+    recipe(from 'scripts/dist' as 'dist')
+    recipe(from 'scripts/sample' as 'sample')
+]
+
+options(
+        project "lamson"
+        default 'tests'
+        sudo 'sudo'
+        version '1.0pre7'
+        website './doc/lamsonproject.org/output/releases/'
+        bzr.revision '.bzr/branch/last-revision'
+        version.file 'lamson/version.py'
+
+        setup(
+            name 'lamson'
+            version '1.0pre7'
+            author 'Zed A. Shaw'
+            description 'Lamson is a modern Pythonic mail server built like a web application server.'
+            url 'http://pypi.python.org/pypi/lamson'
+            download_url 'http://pypi.python.org/pypi/lamson'
+            author_email 'zedshaw@zedshaw.com'
+            package_data ( lamson [ 'data/prototype.zip' ])
+            packages ['lamson' 'lamson.handlers']
+            scripts ['bin/lamson']
+            install_requires ['chardet' 'jinja2' 'mock' 'nose' 'python-daemon']
+        )
+)
+
+depends(
+        build ['tests' 'prototype' 'examples' 'virus' 'version.gen' 'dist.install' 'dist.sdist']
+        commit ['dist.gen.setup' 'parser' 'dist.clean']
+        tests ['parser' 'testing.run']
+        release ['build' 'dist.release' 'book.release' ]
+        clean ['dist.clean']
+        pypi ['build']
+)
+
+targets(
+        commit [
+            $ bzr log --short > CHANGES
+            $ bzr commit
+            $ bzr push
+        ]
+
+        virus [
+            $ clamscan -i -r
+        ]
+
+        examples [
+            $ rm -rf run/queue examples/osb/run/* examples/librelist/run/*
+            $ rm -rf examples/librelist/app/data/archive/*
+            $ find . -name "main.db" -exec rm {} \;
+            $ find . -name "*.log" -exec rm {} \;
+            $ find . -name "*.err" -exec rm {} \;
+            $ find . -name "*.out" -exec rm {} \;
+            $ find . -name "*.pyc" -exec rm {} \;
+            $ find . -name "*.sw*" -exec rm {} \;
+            $ rm -f tests/test.db
+            $ rm -f tests/sbdb
+            $ rm -rf doc/lamsonproject.org/output/docs/api
+        ]
+
+        prototype [
+            $ rm -f lamson/data/prototype.zip
+            $ cd lamson/data/prototype ; zip -r ../prototype.zip .
+        ]
+
+        version.gen [
+            py [
+                |rev = open("%(bzr.revision)s").read().split()
+                |ver = {"version": version, "rev": rev}
+                |open("%(version.file)s", 'w').write(
+                |    "VERSION=" + repr(ver))
+            ]
+        ]
+
+        coverage [
+            $ nosetests --quiet --with-coverage --cover-package lamson
+        ]
+
+        pypi [
+            $ python setup.py register sdist bdist_egg upload
+        ]
+)

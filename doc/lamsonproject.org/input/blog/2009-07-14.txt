@@ -1,0 +1,20 @@
+Title:  Lamson 0.9.6 Sometime Today
+
+I think I'm at a point where bounce detection and handling works really well and is 
+ready for release.  I've got it running on the latest Lamson demo "librelist.com":http://librelist.com/
+and it works.  I'll be pushing out a new release of Libre List in a little while
+that does some advanced bounce handling, and if that all works, then I'll push
+out 0.9.6.
+
+This release will include bounce handling, the ability to change how state is 
+stored and maintained, the ability to route on the envelope rather than the
+headers, and the full code to the librelist.com site including "Django Integration":http://dpaste.de/3qGB/
+which really isn't "integration".
+
+The plans for the 0.9.7 release are to remove all dependencies on SQLAlchemy to make
+it clear that you don't have to use it, and any bug fixes.  After that release, assuming
+there's nothing major I need to add, I'll be doing the 1.0 pre-releases.
+
+Shoot me email if you have questions, or hop on #lamson on irc.freenode.org to chat.
+
+

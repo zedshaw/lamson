@@ -1,0 +1,86 @@
+source deploy/lib/log4sh
+
+function mark_complete {
+    migration=$1
+
+    date >> deploy/state/$migration
+    logger_info "Migration $migration ran successfully."
+}
+
+function run_migration {
+    migration=$1
+
+    logger_info "Running $migration migration."
+
+    if sh deploy/migrations/$migration
+    then
+        mark_complete $migration
+    else
+        logger_error "Script $migration failed, exiting."
+        exit 1
+    fi
+}
+
+function migrate {
+    TARGET=$1
+
+    logger_info "Changing to $TARGET"
+
+    pushd $TARGET
+    assert_in $TARGET
+
+    for migration in $(ls deploy/migrations | sort -n)
+    do
+        if [ -e deploy/state/$migration ]
+        then
+            logger_info "Skipping $migration migration."
+        else
+            run_migration $migration
+        fi
+    done
+
+    popd
+}
+
+
+function backup {
+
+    logger_info "Backing up $1 to $2 before deployment to "
+    
+    rdiff-backup $1 $2
+    rdiff-backup -l $2
+}
+
+function rollback {
+    BACK_BY=$1
+    SOURCE=$2
+    TARGET=$3
+
+    logger_info "Rolling back to $BACK_BY backups ago."
+
+    rdiff-backup -r $BACK_BY $SOURCE $TARGET
+}
+
+function deploy_code {
+    logger_info "Deploying code from $1 to $2."
+
+    rsync --exclude config -av $1 $2
+}
+
+function assert_in {
+    if [ "$PWD" != "$1" ]
+    then
+        logger_error "You must be in the source checkout directory!"
+        exit 1
+    fi
+}
+
+function assert_env {
+    if [ "$SOURCE" == "" ]
+    then
+        logger_error "You must specify an environment (testing/prod/staging)".
+        exit 1
+    fi
+}
+
+

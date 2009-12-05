@@ -1,0 +1,26 @@
+Title: Quick Lamson 1.0pre6 Release, More This Weekend
+
+I put up a quick release of Lamson that fixes a bug in the gen project prototype.
+I recently switched all the domain names being used in the test suite to "localhost" or
+a similar nonexistant domain name.  Why?  Well, because some people liked to run
+the Lamson test suite or their fresh project test suite against a *live* SMTP
+server.  The test suite would "send" mail to test@test.com and my own 
+address, under the assumption that people would use the @lamson log@ test server.
+
+End result:  Periodically I'd get bounce messages from test.com and other test 
+suite mail.
+
+Well, I made that change, but forgot to update a couple places in the prototype, 
+so newbies were seeing the tests for their fresh project fail and wondering 
+if Lamson was broken.
+
+Sorry about that.
+
+You can grab this 1.0pre6 release from the "releases":/releases/ area, and
+you can also do the usual @easy_install -U lamson@ to get it.
+
+I'll be doing some more work to fix a few bugs this weekend and working on a 
+fun new site for guitarists, so stay tuned.  And if there's something in particular
+you want in Lamson just email the lamson@librelist.com mailing list.
+
+

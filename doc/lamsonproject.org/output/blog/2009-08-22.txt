@@ -1,0 +1,143 @@
+Title: Lamson 1.0pre4 Out, Lots Of Docs Done, 100% Coverage
+
+I happy to announce probably one of the last few releases before
+I officially put the 1.0 stamp on Lamson.  This last 1% of the things
+I want to do takes a while, but it really puts a good shine on the 
+project.
+
+What I've got in 1.0pre4 is "tons of docs":http://lamsonproject.org/docs/
+and 100% test coverage.  Most of the features that were added are
+nice-to-haves that I've found useful while developing my various sites.
+
+h2. Getting The Release
+
+As usual, @sudo easy_install lamson@ is your friend.  If you want
+to use the HTML generation features, then you'll want to also install:
+
+<pre class="code">
+BeautifulSoup
+CleverCSS
+markdown2
+</pre>
+
+For completeness, here's the remaining packages I have installed in most
+of the virtualenvs for my applications:
+
+<pre class="code">
+ipython
+mock
+nose
+Jinja2
+lockfile
+pydns
+spambayes
+chardet
+lxml
+python_daemon
+pytyrant
+</pre>
+
+You can also grab "source releases":/releases/ and "download instructions":/download.html
+from this site if PyPI is failing you.
+
+
+h2. 100% Test Coverage
+
+First, I've managed to get the test coverage for Lamson up to 100%:
+
+<pre class="code">
+Name                    Stmts   Exec  Cover   Missing
+-----------------------------------------------------
+lamson                      0      0   100%   
+lamson.args               124    124   100%   
+lamson.bounce              91     91   100%   
+lamson.commands           176    176   100%   
+lamson.confirm             57     57   100%   
+lamson.encoding           238    238   100%   
+lamson.handlers             0      0   100%   
+lamson.handlers.log         4      4   100%   
+lamson.handlers.queue       6      6   100%   
+lamson.html                62     62   100%   
+lamson.mail               140    140   100%   
+lamson.queue               74     74   100%   
+lamson.routing            218    218   100%   
+lamson.server              80     80   100%   
+lamson.spam                80     80   100%   
+lamson.utils               56     56   100%   
+lamson.version              1      1   100%   
+lamson.view                22     22   100%   
+-----------------------------------------------------
+TOTAL                    1429   1429   100%   
+-----------------------------------------------------
+Ran 156 tests in 16.305s
+</pre>
+
+It's mostly a vanity thing, but doing this did uncover a couple of
+minor little bugs here and there, and it makes people feel better
+trusting Lamson.
+
+
+h2. Docs, Docs, Docs
+
+I firmly believe that a good software project has *both* "API":http://lamsonproject.org/docs/api/lamson-module.html
+style documentation and guided documentation.  That's why I spent almost this whole 
+time working on documenting all the parts of Lamson people need and making sure the generated
+docs were complete.
+
+What I've done is reorganized the documentation section so that you can find
+topic by their categories, and then documented most of the features people
+need to use daily.  Here's some highlights:
+
+* "Unit Testing":http://lamsonproject.org/docs/unit_testing.html
+* "Confirmations":http://lamsonproject.org/docs/confirmations.html
+* "Filtering Spam":http://lamsonproject.org/docs/filtering_spam.html
+* "Bounce Detection":http://lamsonproject.org/docs/bounce_detection.html
+* "HTML Email Generation":http://lamsonproject.org/docs/html_email_generation.html
+* "Unicode Encoding/Decoding":http://lamsonproject.org/docs/unicode_encoding_and_decoding.html
+* "Hooking Into Django":http://lamsonproject.org/docs/hooking_into_django.html
+* "Tons more...":http://lamsonproject.org/docs/
+
+I especially like how the HTML Email generation came out as a feature, but I really
+like the "Bounce Detection":http://lamsonproject.org/docs/bounce_detection.html 
+documentation the most.
+
+h2. New Confirmation API
+
+This release has a few little bug fixes, but mostly it has a solidified feature for 
+doing "Confirmations":http://lamsonproject.org/docs/confirmations.html easily.
+
+
+h2. HTML/Text Dual Email
+
+Previously the "HTML Email Generation":http://lamsonproject.org/docs/html_email_generation.html
+feature could only generate HTML email reliably, but I managed to track down 
+a bug that lets you now craft dual email.  I even went a step further and made it easy
+to simply use your markdown content templates as your text/plain alternative
+when you send out HTML Email.
+
+
+h2. Multiple Recipient Routing
+
+There was no way to avoid this, so I just implemented it.  Now when a message is for
+multiple recipients (in the envelope) Lamson will route the message to each
+address.  That means if it is destined for multiple people, then Lamson will
+effectively try to match each of those people and run them through your handlers
+separately.
+
+I was worried this would cause problems, but so far it's working fine.  If you see
+that it can be used as a DOS attack, then I'll work on a way to limit the number
+of recipients that Lamson will allow (similar to how you can restrict the size
+of messages off a Queue).
+
+
+h2. Test And Report
+
+As usual, please test this out, review the documentation, and report back to me
+any problems you find.
+
+I'll be in #lamson on irc.freenode.org more, and will probably install a IRC
+bot to notify when I post new code to the repository.
+
+
+
+

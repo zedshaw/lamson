@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Lamson 1.0pre1 Released</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Lamson 1.0pre1 Released</h1>
+                	<p>Tonight I&#8217;m releasing Lamson 1.0pre1 with all the latest improvements I&#8217;ve made while
+making <a href="http://librelist.com/">librelist.com</a> and taking feedback from a few people
+using Lamson.  The goal from now on will be to basically squash bugs and write docs, with
+only a rare feature or two as I find them needed on projects.</p>
+
+	<h2>What&#8217;s In This Release</h2>
+
+	<p>This release features really only four major enhancements, and a bunch of little fixes 
+here and there.</p>
+
+	<ol>
+		<li>There&#8217;s now a working mailing list example in examples/librelist.</li>
+		<li>The router now uses the envelope header To (message.To) instead of the headers.</li>
+		<li>There is now very solid bounce detection and analysis.</li>
+		<li>Modules can specify anything as the state key (from, to+from, module+to, etc.)</li>
+	</ol>
+
+	<p>Here&#8217;s the important changes from the change log by category:</p>
+
+	<h3>Enhancements</h3>
+
+	<ul>
+		<li>340 Added a version command finally, with some good information.</li>
+		<li>330 There is now a safe=False option to lamson.queue.Queue to use a modified Maildir that md5 hashes the original hostname used.</li>
+		<li>321 Routing it more deterministic and a bit quicker.  It now uses the envelope To for routing.</li>
+		<li>320 Refactored the routing to it is more deterministic and doesn&#8217;t loop over the functions mulitple times.  Still some work to do though.</li>
+		<li>314 Bounce information now includes the original messages in easier to access forms.</li>
+		<li>308 Got bounce handling working and tested.</li>
+		<li>303 Slight reorg with the way @state_key_generator is implemented.</li>
+		<li>302 Implemented a means to specify that a module will key off of different parts of a message.</li>
+		<li>301 Got tired of not seeing errors during test runs so I made an option in the Router to explode on exceptions vs. log them.</li>
+		<li>300 Bounce routing decorator for doing the actual routing of messages that are bounces.</li>
+		<li>296 Implemented a bounce analysis method that is simple but seems to work on most bounce mail.</li>
+	</ul>
+
+	<h3>Bug Fixes </h3>
+
+	<ul>
+		<li>329 Found an email that had a nasty header causing an edge case in the parser.</li>
+		<li>325 Bounce detection was using the wrong email address.</li>
+		<li>319 Removed the egg dependency on sqlalchemy.</li>
+		<li>318 Moved the bounce stuff around in order to make it more advanced.</li>
+		<li>307 Fixed up the @bounce_to decorator so that it returns the next state.</li>
+		<li>294 Small bug in multipart handling where content types of 'message/&#8217; can be multipart too.</li>
+	</ul>
+
+	<h3>Librelist Related</h3>
+
+	<ul>
+		<li>323 librelist.com sample is looking good, bounce handling is working, archives are started.</li>
+		<li>322 Super bounce handling for librelist.com.</li>
+		<li>306 Got the first cut of the whole app.handlers.admin working, including bounces, but Lamson bounce detection has a flaw.</li>
+		<li>305 Got the basics of making mailing lists, managing subscribers.</li>
+		<li>304 Initial commit of the librelist.com sample application.</li>
+	</ul>
+
+	<p>Also, librelist demonstrates how to integrate Lamson with <a href="http://www.djangoproject.com/">Django</a> which
+turns out to just require a couple lines of code.  I&#8217;ll have some documentation on that soon.</p>
+
+	<h3>Docs and Website Related</h3>
+
+	<ul>
+		<li>317 Removed references to SQLAlchemy being needed in the docs.</li>
+	</ul>
+
+	<h2>Getting This Release</h2>
+
+	<p>As usual, try to install it using <a href="http://peak.telecommunity.com/DevCenter/EasyInstall">easy_install</a>
+and make sure you do the upgrade:</p>
+
+<pre class="code prettyprint">
+$ sudo easy_install -U lamson
+</pre>
+
+	<p>This release does not depend on SQLAlchemy anymore, since you can really use Lamson with any
+data source you can access with Python.  As mentioned above, the librelist sample uses
+Django models.</p>
+
+	<p>If you want to download the source you can visit the <a href="/releases/">releases</a> page and 
+grab it from there.</p>
+
+	<h2>Mailing List Back Online</h2>
+
+	<p>Finally, the lamson mailing list is now back online, so you can subscribe to it 
+and get help.  Read <a href="/lists/">the lists page</a> to find out more.</p>
+
+	<h2><span class="caps">IRC</span> Channel</h2>
+
+	<p>I&#8217;m also more active in the <span class="caps">IRC</span> channel #lamson on irc.freenode.org.  Come by 
+if you need help.</p>
+
+	<p>Thanks again folks, and shoot me any bugs you find.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

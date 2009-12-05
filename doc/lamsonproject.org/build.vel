@@ -1,0 +1,29 @@
+imports [  
+    module(from "vellum.commands")
+]
+
+options(
+         default 'sync' 
+         sudo 'sudo'
+)
+
+
+depends(
+        sync ['gen']
+        )
+
+targets(
+        commit 
+            $ bzr commit
+
+        gen [
+            $ python webgen.py
+            $ cd ../.. && epydoc --graph classtree --url http://lamsonproject.org/ --name "Lamson Mail Server" --html --redundant-details lamson -o doc/lamsonproject.org/output/docs/api/
+        ]
+
+        sync [
+            $ rsync -av input/* output/
+            $ rsync -avuz output/* zedshaw@www.zedshaw.com:/usr/local/nginx/html/lamsonproject/
+            $ rsync -av ../../dist/* zedshaw@www.zedshaw.com:/usr/local/nginx/html/lamsonproject/releases/
+        ]
+)

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Hooking Lamson Into Django</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Hooking Lamson Into Django</h1>
+                
+This is a short document because using <a href="http://www.djangoproject.com/">Django</a> <span class="caps">ORM</span> is very simple from Lamson.  The trick is 
+to fake out Django so that when you import the Django model into Lamson, the Django model
+knows where it&#8217;s living and will operate.  We&#8217;ll go through an &#8220;integration&#8221; step
+by step.
+
+	<h1>Step 1:  Make Your Django App Work</h1>
+
+	<p>There&#8217;s no point in trying to import an <span class="caps">ORM</span> that doesn&#8217;t work.  So get it working,
+maybe write some tests.</p>
+
+	<p>An important thing is that you should be able to run <code>python manage.py shell</code> and import
+your model without problems.</p>
+
+	<h2>Step 2: Fake Out Django</h2>
+
+	<p>You then have to put an environment variable in your Lamson <code>config/settings.py</code> file before
+you load any Django Models:</p>
+
+<pre class="code prettyprint">
+os.environ['DJANGO_SETTINGS_MODULE'] = 'webapp.settings'
+</pre>
+
+	<p>This is from the <a href="http://librelist.com/">librelist.com</a> examples, where the Django 
+models are in <code>webapp</code> so we our settings module from Lamson perspective is <code>webapp.settings</code>.</p>
+
+	<h2>Step 3:  Use The Django Models</h2>
+
+	<p>After that, you can just import your models however you want.  Here&#8217;s an example of
+Librelist using a Django Model to store confirmations:</p>
+
+<pre class="code prettyprint">
+from webapp.librelist.models import Confirmation
+
+class DjangoConfirmStorage():
+    def clear(self):
+        Confirmation.objects.all().delete()
+
+    def get(self, target, from_address):
+        confirmations = Confirmation.objects.filter(from_address=from_address, 
+                                                list_name=target)
+        if confirmations:
+            return confirmations[0].expected_secret, confirmations[0].pending_message_id
+        else:
+            return None, None
+
+    def delete(self, target, from_address):
+        Confirmation.objects.filter(from_address=from_address, 
+                                                list_name=target).delete()
+
+    def store(self, target, from_address, expected_secret, pending_message_id):
+        conf = Confirmation(from_address=from_address,
+                            expected_secret = expected_secret,
+                            pending_message_id = pending_message_id,
+                            list_name=target)
+        conf.save()
+</pre>
+
+	<h2>Well, That Wasn&#8217;t Too Hard</h2>
+
+	<p>The only thing you&#8217;ll have to contend with is where code you need to use these models
+lives.  Since it&#8217;s all Python, you can just import what you need, but my recommendation
+is to focus most of your model code into your Django application, and then only put
+a small amount into Lamson.</p>
+
+	<p>For more information, look in the <a href="/releases/">Lamson source releases</a> to see how 
+Django is used in the <code>examples/librelist</code> code.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

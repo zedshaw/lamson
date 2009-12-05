@@ -1,0 +1,34 @@
+Title: New Site Look, Same Great Content
+
+This is just a quick update to say thanks to "Ken Keiter":http://kenkeiter.com/
+for creating a new "lamsonproject.org":http://lamsonproject.org/ site layout and
+design.  The new site should be easier to read, have more breathing room, and look
+easier on the eyes.  It's even got a logo:
+
+!http://lamsonproject.org/images/lamson.png!
+
+Which I like quite a lot.
+
+Feel free to shoot your comments about the design to "me.":/contact.html
+
+h2. Two Days Of Spam Filtering
+
+So far the new Lamson based spam blocking and filtering is working pretty well.
+The majority of spam is blocked, however the success rate of
+"SpamBayes":http://spambayes.sourceforge.net/ needs to improve.  Right now I've
+trained it with a large set of ham, and with a reasonable number of spam
+messages as I encounter them.  I think it's received about a 20/1 (ham/spam)
+ratio for training.
+
+With that training it's sorted about 50 spam, no false positives, and missed
+about 15 spam as "unsure", with about 4 as "ham".  The 4 that were classified
+as ham were just one liners with a link in them.  The unsure spam probably
+could have just been treated as spam, but I'm being conservative while I test
+it out.
+
+Hopefully the success rate improves over the next few days.  SpamBayes is 
+great for being a Python library I can use easily, but if it's success rate
+doesn't get much higher then I may look at other options.  Of course, there
+are more important things I could be doing right now too.
+
+

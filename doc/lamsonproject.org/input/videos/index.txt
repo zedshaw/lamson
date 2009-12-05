@@ -1,0 +1,16 @@
+Title:  Screencasts And Tutorials
+Content-Type: text/html
+
+<p>
+This is the first screencast that walks you through the first half of the <a href="/docs/deploying_lamson.html">Deploying Lamson</a>
+tutorial.  It is the first screencast so it's probably rough and the sound isn't so great.  If you have tips and feedback on doing these
+better <a href="/contact.html">contact me</a> and let me know.
+</p>
+
+<embed type="application/x-shockwave-flash" width="640" 	height="480" 	allowfullscreen="true" 	allowscriptaccess="always" 	src="http://www.archive.org/flow/flowplayer.commercial-3.0.5.swf" 	w3c="true" 	flashvars='config={"key":"#$b6eb72a0f2f1e29f3d4","playlist":[{"url":"http://www.archive.org/download/Lamsonproject.orgDeployLamsonInAVirtualenv/format=Thumbnail?.jpg","autoPlay":true,"scaling":"fit"},{"url":"http://www.archive.org/download/Lamsonproject.orgDeployLamsonInAVirtualenv/deploy_lamson_virtual_env.m4v","autoPlay":false,"accelerated":true,"scaling":"fit","provider":"h264streaming"}],"clip":{"autoPlay":false,"accelerated":true,"scaling":"fit","provider":"h264streaming"},"canvas":{"backgroundColor":"0x000000","backgroundGradient":"none"},"plugins":{"audio":{"url":"http://www.archive.org/flow/flowplayer.audio-3.0.3-dev.swf"},"controls":{"playlist":false,"fullscreen":true,"gloss":"high","backgroundColor":"0x000000","backgroundGradient":"medium","sliderColor":"0x777777","progressColor":"0x777777","timeColor":"0xeeeeee","durationColor":"0x01DAFF","buttonColor":"0x333333","buttonOverColor":"0x505050"},"h264streaming":{"url":"http://www.archive.org/flow/flowplayer.h264streaming-3.0.5.swf"}},"contextMenu":[{"Item Lamsonproject.orgDeployLamsonInAVirtualenv at archive.org":"function()"},"-","Flowplayer 3.0.5"]}'> </embed>
+
+<p><B>WARNING: Seeking seems to not work with this player using the highquality video.  Just let it stream or download it.</b></p>
+
+<p>
+You can <a href="http://www.archive.org/details/Lamsonproject.orgDeployLamsonInAVirtualenv">download this video from archive.org</a> to get a better quality video.
+</p>

@@ -1,0 +1,40 @@
+{% extends "web/base.html" %}
+
+{% block header %}
+{{ super() }}
+    <script type="text/javascript" src="/jquery.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+                $("#comments").empty()
+                $("#comments").load("{{ post_name + "-comments.html" }}")
+    });
+    </script>
+{% endblock %}
+
+{% block title %}
+<title>{{user}}: {{message['Subject'] | striptags | escape | title }}</title>
+{% endblock %}
+
+{% block notifications %}
+{{ super() }}
+<li>
+    <div>
+        <h3>About {{user}}</h3>
+        <p>They blog here.  That's all we know.</p>
+    </div>
+</li>
+{% endblock %}
+
+
+{% block content %}
+<div class="post">
+    <h2>{{ message['Subject'] }}</h2>
+    <a href="mailto:{{user_id}}-AT-{{domain}}-{{post_name}}-comment@{{host}}">[send a comment]</a>
+    {{content}}
+</div>
+
+<div id="comments">
+</div>
+{% endblock %}
+
+

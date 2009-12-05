@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Unit Testing</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Unit Testing</h1>
+                
+Lamson provides the
+<a href="http://lamsonproject.org/docs/api/lamson.testing-module.html">lamson.testing</a>
+to help with writing unit tests.  It doesn&#8217;t do everything for you, but does
+enough that you can <span class="caps">TDD</span> your email interactions with pretend users.  It
+includes features for checking messages get delivered to queues, checking
+spelling, and running things through a fake or real relay.
+
+	<h2>The Log Server</h2>
+
+	<p>The first thing you need to do for testing is to run the &#8220;log server&#8221;:</p>
+
+<pre class="code prettyprint">
+$ lamson log
+</pre>
+
+	<p>The log server acts as the smart relay host you&#8217;ve configured in your <code>config/settings.py</code>
+file by default.  What it does is take all emails that your Lamson application 
+&#8220;sends out&#8221; and redeposits them into <code>run/queue</code>.  This queue directory is then also
+used by <code>lamson.testing</code> for checking that emails were sent out.  When anything goes
+wrong, you can look in this directory and see what is getting sent out.</p>
+
+	<blockquote>
+		<p>An alternative to this setup would be to have all of the sending/routing/relaying done
+internal to the whole testing framework, similar to how <code>lamson.testing.RelayConversation</code> works.
+However, I found that this made testing that your server actually sends proper emails much
+too difficult.</p>
+	</blockquote>
+
+	<h2>Test Organization</h2>
+
+	<p>Lamson organizes tests into directories that match the things you&#8217;re testing:</p>
+
+<pre class="code">
+librelist $ ls -l tests/
+total 16
+drwxr-xr-x  6 zedshaw  staff   204 Aug 19 17:01 handlers
+drwxr-xr-x  8 zedshaw  staff   272 Aug 18 15:50 model
+drwxr-xr-x  3 zedshaw  staff   102 Aug 18 15:50 templates
+</pre>
+
+	<p>In most of the projects I&#8217;ve only rarely used template tests, but I&#8217;ll cover
+them below.  Model tests make sure that any <code>app.model</code> classes work right, and
+handler tests make sure that any <code>app.handler</code> classes work.  Nice and simple.</p>
+
+	<p>You can add any other directories you want to this, and you can also use
+doctests if you want.  This comes free with
+<a href="http://somethingaboutorange.com/mrl/projects/nose/0.11.1/">nosetests</a> and is
+very handy.</p>
+
+	<h2>Handler Tests</h2>
+
+	<p>We&#8217;ll use an example from the <a href="http://librelist.com/">librelist.com</a> code base
+that validates that a user can subscribe, unsubscribe, and post a message to a
+mailing list.  This test was primarily written in a <span class="caps">TDD</span> style, since generally
+interactions and usability testing works better
+<a href="http://en.wikipedia.org/wiki/Test-driven_development">TDD</a> style.</p>
+
+	<p>First you have a common preamble of modules that you need to include:</p>
+
+<pre class="code prettyprint">
+from nose.tools import *
+from lamson.testing import *
+from config import settings
+import time
+from app.model import archive, confirmation
+
+</pre>
+
+	<p>Right away you notice we just include everything from <code>nose.tools</code> and
+<code>lamson.testing</code> so that we can use it directly.  Yes, this violates Python
+style guidelines, but practicality is more important than dogmatic slavery to
+supposed standards.</p>
+
+	<p>After that we include the <code>config.settings</code>, and two modules from <code>app.model</code> that we&#8217;ll
+use to check that everything was working.</p>
+
+	<blockquote>
+		<p>Notice that we don&#8217;t include anything from <code>app.handlers</code> directly.  These tests are meant
+to be from the perspective of a user interacting with the handler via emails.</p>
+	</blockquote>
+
+	<p>Once we have that we do a little setup to clear set some common variables and clear
+out some queues we&#8217;ll need to check:</p>
+
+<pre class="code prettyprint">
+queue_path = archive.store_path('test.list', 'queue')
+sender = "sender-%s@sender.com" % time.time()
+host = "librelist.com"
+list_name = "test.list"
+list_addr = "test.list@%s" % host
+client = RouterConversation(sender, 'Admin Tests')
+
+def setup():
+    clear_queue("run/posts")
+    clear_queue("run/spam")
+</pre>
+
+	<p>Most of these are just variables used in tests later, but the big one is the
+<code>client</code> variable.  It&#8217;s a
+<a href="http://lamsonproject.org/docs/api/lamson.testing.RouterConversation-class.html">lamson.testing.RouterConversation</a>
+class that lets you simulate delivering email to your Lamson project.</p>
+
+	<blockquote>
+		<p> There&#8217;s also a
+<a href="http://lamsonproject.org/docs/api/lamson.testing.TestConversation-class.html">lamson.testing.TestConversation</a>
+class that actually uses your real <code>config/settings.py</code> to connect to a Relay.
+This isn&#8217;t used so much, but is intended for running &#8220;smoke tests&#8221; against a
+newly deployed server.</p>
+	</blockquote>
+
+	<p>With that we&#8217;re ready to write out first handler test:</p>
+
+<pre class="code prettyprint">
+def test_new_user_subscribes_with_invalid_name():
+    client.begin()
+
+    client.say('test-list@%s' % host, "I can't read!", 'noreply')
+    client.say('test=list@%s' % host, "I can't read!", 'noreply')
+    clear_queue()
+
+    client.say('unbounce@%s' % host, "I have two email addresses!")
+    assert not delivered('noreply')
+    assert not delivered('unbounce')
+
+    client.say('noreply@%s' % host, "Dumb dumb.")
+    assert not delivered('noreply')
+</pre>
+
+	<p>This is the longest of the tests, and shows all the various things you can do
+with the <code>lamson.testing</code> gear.  Here&#8217;s what we&#8217;re doing in order:</p>
+
+	<ol>
+		<li>Call <code>client.begin</code> to clear out queues and state and start fresh.</li>
+		<li>Use <code>client.say</code> to send an email from that client to your Lamson application.  Notice that you configured the RelayConversation to pretend to be one person with each email getting the same subject line.</li>
+		<li>Use <code>lamson.testing.clear_queue</code> when you want to make sure the queue is clean.</li>
+		<li>Use <code>lamson.testing.delivered</code> to check if a certain message from someone is in the queue.</li>
+	</ol>
+
+	<p>With that you can do pretty much everything you need to send an email and make
+sure you get proper replies.</p>
+
+	<p>Here&#8217;s another example:</p>
+
+<pre class="code prettyprint">
+def test_new_user_subscribes():
+    client.begin()
+    msg = client.say(list_addr, "Hey I was wondering how to fix this?",
+                     list_name + '-confirm')
+    client.say(msg['Reply-To'], 'Confirmed I am.', 'noreply')
+    clear_queue()
+</pre>
+
+	<p>Notice in this example we have a fourth parameter <code>list_name + &#39;-confirm&#39;</code> and
+we get a <code>msg</code> back from our call to <code>client.say</code>.  This basically combines
+<code>client.say</code> with <code>delivered</code> to do it in one shot.  Very commonly, you&#8217;ll want
+to say something to your server and make sure you got a certain response, and
+then do something with that response.  This is how you do that.</p>
+
+	<p>We then use this '-confirm&#8217; email message to actually subscribe the fake user.</p>
+
+	<p>Finally, here&#8217;s two more examples:</p>
+
+<pre class="code prettyprint">
+def test_existing_user_unsubscribes():
+    test_new_user_subscribes()
+    msg = client.say(list_name + "-unsubscribe@%s" % host,
+        "I would like to unsubscribe.", 'confirm')
+    client.say(msg['Reply-To'], 'Confirmed yes I want out.', 'noreply')
+
+def test_existing_user_posts_message():
+    test_new_user_subscribes()
+    msg = client.say(list_addr, "Howdy folks, I was wondering what this is?",
+                     list_addr)
+    # make sure it gets archived
+    assert delivered(list_addr, to_queue=queue(queue_path))
+</pre>
+
+	<p>In <code>test_existing_user_unsubscribes</code> what we do is call
+<code>test_new_user_subscribes</code> to go through that process again, and then we chain
+off that to do an unsubscribe.  There&#8217;s really nothing new here other than that
+little trick.</p>
+
+	<p>In <code>test_existing_user_posts_message</code> we do the usual send a message and expect
+a reply, but then we <strong>also</strong> make sure that this message was delivered to the
+archiver queue.</p>
+
+	<p>Apart from those methods and techniques, there&#8217;s really nothing more to doing a
+handler test.  The only additional thing would be using
+<a href="http://lamsonproject.org/docs/api/lamson.testing-module.html#assert_in_state">assert_in_state</a>
+to make sure that your handler is in a particular state.  I&#8217;d recommend against
+doing that too much in a handler test, since it will make your tests brittle.
+I only do it when the state is very important, such as when checking that they
+are in a <span class="caps">SPAMMING</span> or <span class="caps">BOUNCING</span> state that I need to enforce.</p>
+
+	<h2>Model Tests</h2>
+
+	<p>There&#8217;s less functionality available in <code>lamson.testing</code> for doing your models.  The theory
+is that your models will be classes, modules, and <span class="caps">ORM</span> that you need to perform the majority
+of your storage and analysis.  Since has very little to do with email you probably won&#8217;t
+use <code>lamson.testing</code> as much.</p>
+
+	<p>About the only things you might use are APIs for checking that queues get certain messages
+in them, and that certain users are in certain states.</p>
+
+	<p>Here&#8217;s a quick example from <a href="http://librelist.com">librelist.com</a> again that tests how 
+archives work:</p>
+
+<pre class="code prettyprint">
+from nose.tools import *
+from lamson.testing import *
+from lamson.mail import MailRequest, MailResponse
+from app.model import archive, mailinglist
+import simplejson as json
+import shutil
+
+queue_path = archive.store_path('test.list', 'queue')
+json_path = archive.store_path('test.list', 'json')
+
+def setup():
+    clear_queue(queue_path)
+    shutil.rmtree(json_path)
+
+def teardown():
+    clear_queue(queue_path)
+    shutil.rmtree(json_path)
+
+def test_archive_enqueue():
+    msg = MailResponse(From="zedshaw@zedshaw.com", To="test.list@librelist.com",
+                       Subject="test message", Body="This is a test.")
+
+    archive.enqueue('test.list', msg)
+    assert delivered('zedshaw', to_queue=queue(queue_path))
+</pre>
+
+	<p>This is the usual initial setup, and then some extras to make sure that the <a href="http://librelist.com/browser/"><span class="caps">JSON</span> archives</a> is working.  You&#8217;ll notice that we hand construct various messages, call methods on the <code>app.model.archive</code> module, and then use <code>delivered</code> to make sure they&#8217;re correctly delivered.</p>
+
+	<h2>Template Tests</h2>
+
+	<p>Typically you really can only test that your templates are spelled right, or that your templates
+render when given certain locals.  I&#8217;ve found that automated testing of templates isn&#8217;t incredibly
+useful yet, so the only one I&#8217;ve written is from the <a href="http://oneshotblog.com/">oneshotblog</a> example:</p>
+
+<pre class="code prettyprint">
+from nose.tools import *
+from lamson.testing import *
+from lamson import view
+import os
+from glob import glob
+
+def test_spelling():
+    message = {}
+    original = {}
+    for path in glob("app/templates/mail/*.msg"):
+        template = "mail/" + os.path.basename(path)
+        result = view.render(locals(), template)
+        spelling(template, result)
+</pre>
+
+	<p>This uses <code>lamson.testing.spelling</code> to make sure that each template renders and
+that it is spelled correctly.  This uses
+<a href="http://www.rfk.id.au/software/pyenchant/">PyEnchant</a> to do the checking, which
+turns out to be rather annoying.  If you are interested in improving the
+template testing setup, then feel free to talk about your ideas on <a href="mailto:lamson@librelist.com">the lamson
+mailing list</a> (but bring code, talk is cheap).</p>
+
+	<h2>Conclusion</h2>
+
+	<p>Hopefully you&#8217;ll be able to develop your application using good testing techniques with
+the <code>lamson.testing</code> <span class="caps">API</span>.  If you find additional testing patterns that could be included
+then <a href="mailto:lamson@librelist.com">talk about them on the lamson mailing list</a> to see
+if they&#8217;re general enough for others.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

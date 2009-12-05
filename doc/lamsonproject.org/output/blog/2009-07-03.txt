@@ -1,0 +1,24 @@
+Title:  Article In The Reg About Lamson (By Ted Dziuba)
+
+Just a quick update to point people at an article in "The Register":http://www.theregister.co.uk/ by 
+"Ted Dziuba":http://teddziuba.com/ entitled "Lamson - email app coding without the palm sweat: Doing what Java never did":http://www.theregister.co.uk/2009/07/03/lamson/.  He interviewed me about Lamson, things I think you can use it for, and other fun stuffs.
+
+A snippet from the article:  "As a development platform, e-mail has gone
+neglected for decades. Its esoteric implementation details and specifications
+are regarded by many in the IT business as voodoo, best left to old-granddad
+programs like Sendmail or Postfix. Zed Shaw hopes to change that with his new
+project, Lamson. (The name Lamson is a throwback to the early 20th century
+pneumatic tubes used to shuttle messages between offices. It was
+originally called Son of Sam, but Zed's dog convinced him to change
+it)."
+
+
+"Read the article.":http://www.theregister.co.uk/2009/07/03/lamson/
+
+
+h2. 0.9.6 Coming Soon
+
+I've been cranking on various projects with Lamson and haven't ran into too many other bugs.  I'll be
+doing a code review of what's in the Bazaar repo and then pusing out a 0.9.6 probably this weekend.
+
+

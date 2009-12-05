@@ -1,0 +1,91 @@
+Title: Lamson 0.9.4 With Unicode Super Powers
+
+Lamson 0.9.4 is out and it's sporting a completely rewritten and meticulously 
+crafted encoding system.  With the new "lamson.encoding":http://lamsonproject.org/docs/api/lamson.encoding-module.html code Lamson can now decode nearly any nasty horrible encoded spam
+or mail you hand it, turn it into pristine nice Python unicode strings, and
+then output sweet clean ascii or utf-8 in a consistent way.
+
+The purpose of this new encoding system is to make sure that Lamson
+is giving your handlers the best input it can, based on the assumption
+that the world is evil and Lamson will be handed utter garbage.
+
+In order to pull this off, Lamson actually attempts to decode everything
+it gets, and uses "chardet":http://chardet.feedparser.org/ to guess whenever
+it can't.  It goes far enough to make sure that 99.9% of legit mail gets through,
+and the rest is usually spam.  However, Lamson is so good at this conversion
+now that it even does it properly on about 99% of spam, even more.
+
+It doesn't matter what character encoding is used, if there's a mix of encodings
+or even if something lies about the encoding or doesn't give one.  Lamson can
+figure this out and convert it anyway, and the rest is junk.
+
+You can look at this "image of a spam inbox":/lamson_vs_spam.png and 
+"this image of a spam inbox":/lamson_vs_spam_2.png where you can see a
+screen session showing this off.  This is a split screen with a Mutt on top
+showing badly formatted spam, and then a Mutt on the bottom with the
+results of Lamson's cleansing.  This is just running in iTerm, but looks
+the same in most unicode enabled terminals and clients.
+
+The interesting side effect of Lamson's decoding is that it undoes almost all 
+of the spam obfuscation techniques quickly and consistently.
+
+
+h2. There Will Be Bugs
+
+I've thrashed the hell out of this code and made sure that I really took
+the time to get it right.  I've ran it on thousands and thousands of real and
+spam mail and tested the crap out of it with unit tests and fuzzing.
+
+Still, this is new code handling email so there will be bugs in it.  If
+you run into an email that you think should parse correctly, send it to
+me and I'll look at it.
+
+
+h2. How It Works
+
+All Lamson does is completely parse every header and figure out how to decode it,
+but it assumes that the client is a liar.  If the string decodes without errors
+then Lamson is happy, but if it blows up then Lamson uses chardet to figure out
+what the contents really are encoded as.  If chardet can't figure it out, or if
+it's still busted, then Lamson rejects that mail (which happens less than a fraction
+of a percent of the time to real email).
+
+Once this decoding process is finished Lamson has converted the email completely
+into Python unicode only.  You can work with it in a modern way without worrying
+about the original codecs, and you can set your headers and attachments without
+worrying about setting the codecs because Lamson will use the same tech to get
+the encoding right.
+
+When Lamson writes an email, it assumes that your text can be encoded as either
+plain ASCII (as most headers are), or UTF-8.  If it can't, then your text 
+probably can't be processed by Lamson anyway.  Lamson will favor ASCII first since
+it's easier, and then use UTF-8 for anything that can't be ASCII.
+
+bq. During this conversion process anything that's *not* text is treated as raw binary
+and just decoded as-is.
+
+By doing this Lamson produces nice clean email that can be easily processed and
+passed around, and which you can review and debug easier.  It also turns Lamson
+into a "modernizing" agent since it is producing the email it wants to see.
+
+
+h2. Getting This Release
+
+I had some issues pushing this release to PyPI, so let me know if it barfs on you.
+
+Otherwise, you can hit the "download":/download.html section and grab the 
+gear.
+
+
+h2. The New "Cleanse" Command
+
+In order to make it easier for people to try this new cleansing system on real
+email I've written a quick @lamson cleanse@ command.  What this command will do is
+take a mbox or Maildir, and run it through the washing machine, writing the results
+to a different maildir.  When it's done you can go look at the reasons why some
+mail failed, how many failures, and you can actually open that maildir mail and
+look at it with your client.
+
+Try it out and report any errors you find.
+
+

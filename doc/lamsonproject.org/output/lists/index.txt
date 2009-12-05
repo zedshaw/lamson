@@ -1,0 +1,31 @@
+From: Zed
+Title: Lamson Project Mailing Lists
+
+Lamson's mailing lists are hosted on "librelist.com":http://librelist.com/
+which is also written in Lamson.
+
+You can subscribe to the list by sending an email to "lamson@librelist.com":mailto:lamson@librelist.com
+with your first message.  *Remember that librelist posts this message, so introduce yourself.*
+
+If you want to read the archives for the Lamson list, you can browse them
+"here":http://librelist.com/archives/lamson/ in a very very basic
+form (soon to improve).
+
+You can also get the archives for the Lamson list by using rsync:
+
+<pre class="code prettyprint">
+$ rsync -azv librelist.com::archives/lamson lamson_archives
+</pre>
+
+Be careful when you do this since that will get everything.  It's better
+to figure out which month or day you want using your web browser and 
+then get that directory only.
+
+h2. IRC Channel
+
+For people who don't want to join the mailing list but still need help
+there's a #lamson irc channel on irc.freenode.org.  Come by and ask
+your question, and stick around since it might take people a little
+while to respond.
+
+

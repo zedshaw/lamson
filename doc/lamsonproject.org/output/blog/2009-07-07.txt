@@ -1,0 +1,6 @@
+Title: Lamson Mailing Lists Down
+
+I'm making up the release of Lamson and doing some server maintenance so I took down the
+Lamson server running the mailing lists.  I'll let everyone know when they're back up.
+
+

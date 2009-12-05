@@ -1,0 +1,237 @@
+Title: The Mailocalypse Is Upon Us!
+
+I'm currently polishing off the two final features before I start going for
+the Lamson 1.0 release.  I've been using Lamson to make a few little cute applications
+and create one thing for a potential client, and so far I haven't had to change much
+since 0.9.3.  It's great so far and I hope that Lamson 1.0 will be a fun release.
+
+The *big* thing that must improve though is handling character encodings in emails.
+After spending a week or more trying to come up with an automated conversion scheme that 
+would honor all the encodings on the planet, I had a realization.
+
+
+h2. Why Isn't All Mail UTF-8?
+
+Remembering the purpose of Lamson as a *modern* mail server and framework, it finally
+struck me as dumb that I'm trying to keep around encodings that were invented in the 
+pre-Unicode days.  Every modern system understands and displays UTF-8, and apart from
+some pissy attitudes from the Japanese about the Han unification, there's really no reason
+that every email Lamson handles can't be "upgraded" to UTF-8.
+
+As I thought about this more I started to like the idea.  Take all mail Lamson handles, and
+upgrade it to utf-8.  Then inside Lamson you know that it's future proofed and ready to
+be used by Python no matter what.  Finally when the mail goes out, the conversion for sending
+is simply to encode the email as proper UTF-8 encoding consistently.
+
+However, I'm not the type of person to think any random idea I have is instantly valid because
+I thought it up.  Before I make a grand announcement that Lamson only deals with UTF-8 I better
+know that it's going to have minimal impact on people using it.  I made a similar decision with
+Mongrel, where I chose *not* to accept clients that didn't follow the standard, and it turned
+out to block a ton of security attacks for free.
+
+What if Lamson's required conversion to UTF-8 could not only simplify Lamson mail processing,
+but also prevent spam and security flaws?  I decided to do some basic analysis and find out.
+
+
+h2. This Is The Mailocalypse
+
+I've decided that Lamson will *NOT* try to maintain the encodings it is given by a client.
+It will consider all encodings suspect, and attempt to convert them to UTF-8 as a means
+of cleaning and simplifying the mail it receives before it talks to other systems.  Every
+other system you'd most likely talk to is either UTF-8 capable or even requires it.
+
+I'm calling this "The Mailocalypse" because it's funny, but it will also separate Lamson from
+other systems, in potentially awesome or horrible ways.
+
+To validate this premise, I created a small Python script that takes a Maildir or mbox and tries to 
+convert every email into a UTF-8 encoding.  It's not trying to write the emails, just
+load them and convert every single piece reliably to UTF-8.  It then reports any emails
+that have a problem with the conversion.  After that I ran it on a bunch of mail I had
+and got other people to run it and report their findings.
+
+bq.  "You can grab the mailocalypse.py script here.":/mailocalypse.py  Improvements welcome.
+
+The data I got from a small sample of the mail (randomly selected) was the following:
+
+<pre class="code">
+all bad spam
+5069 7 0
+263 15 1
+1806 231 1
+2650 69 0
+4509 20 0
+2023 495 1
+3723 74 0
+</pre>
+
+bq. all is the total number of messages in the mailbox (including bad).  bad is the number that were bad. 
+spam is whether that box was a spam box or not (meaning all messages were classified as spam).
+
+I also made sure that the characters showed up in web browsers and in various UTF-8 
+mail clients and terminal windows.  Most of the conversion was reliable and very 
+fast for a quick script.
+
+With the above data, there's two things you can notice right away, and which are confirmed with a quick
+R session:
+
+# Spam fails to convert more frequently than ham messages.  It looks like failure to convert is a 0.03 significant indicator that the message is spam.  I'd need more data to confirm that.
+# Legit mail (ham) only has a 1.2% chance of failing to convert, and a quick eye-ball sample says those failures mail are mostly spam that wasn't classified right.
+
+
+h2. Potential Problems
+
+This analysis shows initially that converting mail to UTF-8 could work, but there are two problems
+I see so far:
+
+# I may not be doing the best conversion in that script.
+# Encryption and signatures will screw this up.
+
+For the first problem I'm posting the script and asking people to check it out and
+let me know if there's problems.  Run it on your stuff and shoot me the ALL/BAD numbers
+when it's done.  Check the code and see if you can improve it.  Whatever you can to show
+that converting to UTF-8 is a good *OR* bad idea.
+
+A key design decision though will be that you never lose the original email, only that it
+is converted for Lamson so you can work with it in your code without it blowing up.  If the
+mail can't convert, then it's bad email and should be rejected anyway.  No point trying to
+process it.  For encrypted email or ones with signatures you would just run all the validation
+on the original, or forward the original on, depending on your application.
+
+For example, a mailing list would still want to convert all mail to UTF-8 for
+processing, posting to web sites, spam filtering, and rejecting potentially bad
+email.  Signed and encrypted email would then just be forwarded on in original form,
+or decoded and validated depending on the how the mailing list works.
+
+
+h2. Advice And Criticism Welcome
+
+Take the mailocalypse script (presented below for review) and try it out.  Confirm that
+it works on most of your mail, and send me the results.  Simplest way is to send me
+a message on twitter like:
+
+bq. @zedshaw ALL 2340 BAD 17 spam yes #mailocalypse
+
+And I'll tally the results and do a better analysis.
+
+You are also encouraged to fill me in on what I'm missing in the idea.  Realize that *part* 
+of the idea is to eliminate uncommon corner cases and to prove that a situation is common
+using evidence.  Try to follow the same model by running the script on your mail to prove
+that it won't convert reliably or devise your own script to demonstrate your thoughts.
+
+
+h2. The Codes
+
+"You can grab the mailocalypse.py script here.":/mailocalypse.py  Improvements welcome.
+
+<pre class="prettyprint code">
+
+import email
+from email.header import make_header, decode_header
+from string import capwords
+import sys
+import mailbox
+
+
+ALL_MAIL = 0
+BAD_MAIL = 0
+
+
+def all_parts(msg):
+    parts = [m for m in msg.walk() if m != msg]
+    
+    if not parts:
+        parts = [msg]
+
+    return parts
+
+def collapse_header(header):
+    if header.strip().startswith("=?"):
+        decoded = decode_header(header)
+        converted = (unicode(
+            x[0], encoding=x[1] or 'ascii', errors='replace')
+            for x in decoded)
+        value = u"".join(converted)
+    else:
+        value = unicode(header, errors='replace')
+
+    return value.encode("utf-8")
+
+
+def convert_header_insanity(header):
+    if header is None: 
+        return header
+    elif type(header) == list:
+        return [collapse_header(h) for h in header]
+    else:
+        return collapse_header(header)
+
+
+def encode_header(name, val, charset='utf-8'):
+    msg[name] = make_header([(val, charset)]).encode()
+
+
+def bless_headers(msg):
+    # go through every header and convert it to utf-8
+    headers = {}
+
+    for h in msg.keys():
+        headers[capwords(h, '-')] = convert_header_insanity(msg[h])
+
+    return headers
+
+def dump_headers(headers):
+    for h in headers:
+        print h, headers[h]
+
+def mail_load_cleanse(msg_file):
+    global ALL_MAIL
+    global BAD_MAIL
+
+    msg = email.message_from_file(msg_file)
+    headers = bless_headers(msg)
+
+    # go through every body and convert it to utf-8
+    parts = all_parts(msg)
+    bodies = []
+    for part in parts:
+        guts = part.get_payload(decode=True)
+        if part.get_content_maintype() == "text":
+            charset = part.get_charsets()[0]
+            try:
+                if charset:
+                    uguts = unicode(guts, part.get_charsets()[0])
+                    guts = uguts.encode("utf-8")
+                else:
+                    guts = guts.encode("utf-8")
+            except UnicodeDecodeError, exc:
+                print >> sys.stderr, "CONFLICTED CHARSET:", exc, part.get_charsets()
+                BAD_MAIL += 1
+            except LookupError, exc:
+                print >> sys.stderr, "UNKNOWN CHARSET:", exc, part.get_charsets()
+                BAD_MAIL += 1
+            except Exception, exc:
+                print >> sys.stderr, "WEIRDO ERROR", exc, part.get_charsets()
+                BAD_MAIL += 1
+
+
+            ALL_MAIL += 1
+
+mb = None
+
+try:
+    mb = mailbox.Maildir(sys.argv[1])
+    len(mb)  # need this to make the maildir try to read the directory and fail
+except OSError:
+    print "NOT A MAILDIR, TRYING MBOX"
+    mb = mailbox.mbox(sys.argv[1])
+
+if not mb:
+    print "NOT A MAILDIR OR MBOX, SORRY"
+
+for key in mb.keys():
+    mail_load_cleanse(mb.get_file(key))
+
+print >> sys.stderr, "ALL", ALL_MAIL
+print >> sys.stderr, "BAD", BAD_MAIL
+
+</pre>

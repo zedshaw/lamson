@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Unicode Encoding And Decoding</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Unicode Encoding And Decoding</h1>
+                
+The world is Unicode, but email existed long before that world.  Lamson uses
+special encoding/decoding gear that takes just about any nasty horrible pre-Unicode
+email it gets and converts it to a perfect little Unicode fantasy.  You do all
+your work in the Unicode world, which Python favors, and then when you&#8217;re ready
+to send, Lamson intelligently figures out how to make an email that anyone can
+read.
+
+	<p>The added advantage of doing this conversion is that Lamson by default also
+cleans up all the various tricks spammers use to get around spam checkers.  Because
+it&#8217;s doing a conversion from just first principles of &#8220;everything must become Unicode&#8221;
+the end result is a crystal clear piece of data you can filter.  When you then
+output the same message, it gets reconverted to sane easily parseable message.</p>
+
+	<p>Lamson is also so persistent in this conversion that it can convert nearly every 
+message that&#8217;s valid, and the very tiny percentage it can&#8217;t (less 1/1000th of a percent)
+are entirely screwed up spam that should not be transmitted anyway.</p>
+
+	<blockquote>
+		<p>This gear apparently doesn&#8217;t support pre-Hindic sanskrit, but then again neither
+does Python.</p>
+	</blockquote>
+
+	<h2>Why</h2>
+
+	<p>Sometimes people ask why Lamson would bother converting everything to Unicode?  
+The reason is simple:  everything you deal with now is Unicode.  Either it&#8217;s in
+a representation like UTF-8, or it&#8217;s internally a Python Unicode string.  Databases,
+web frameworks, <span class="caps">ORM</span>, network protocols, and the entire internet is Unicode.</p>
+
+	<p>However, there&#8217;s another practical reason.  If you were to start using Lamson to
+process email, you would end up inventing almost the exact same gear to convert
+headers and bodies to Unicode.  The only difference is you would do it in a typical
+hacker half-assed fashion that only solved your immediate problems, and you wouldn&#8217;t
+do it in a global useful way.</p>
+
+	<p>The Lamson encoding gear is basically what you should be making to deal with email
+in a modern language.</p>
+
+	<h2>How </h2>
+
+	<p>The <a href="http://lamsonproject.org/docs/api/lamson.encoding-module.html">lamson.encoding</a> module
+is the main meat of this conversion magic.  This code is probably the most dense
+part of Lamson since it has to use various parsing tricks and heuristics to figure
+out how to get every part of the message into a Unicode string.</p>
+
+	<p>The primary trick used is that Lamson does not trust anything it&#8217;s given, and when
+python fails to convert a header or body, it uses the wonderful <a href="http://chardet.feedparser.org/">chardet</a>
+library to guess at what the encoding should be based on the contents.  If this fails
+then the entire data is considered suspect and the message is rejected.</p>
+
+	<p>This turns out to be surprisingly accurate in practice, and it even corrects some 
+invalid clients that fail to encode Subject lines but still place Chinese encodings
+in them.  Lamson will take those unencoded headers, fail to convert them to ascii,
+run chardet on them to see they are actually Chinese, and then convert them accurately.</p>
+
+	<h2>The Rules</h2>
+
+	<p>A set of axioms controls how the encoding is done:</p>
+
+	<ol>
+		<li>NO <span class="caps">ENCODING</span> IS <span class="caps">TRUSTED</span>, NO <span class="caps">LANGUAGE</span> IS <span class="caps">SACRED</span>, <span class="caps">ALL</span> <span class="caps">ARE</span> <span class="caps">SUSPECT</span>.</li>
+		<li>Python wants Unicode, it will get Unicode.</li>
+		<li>Any email that <span class="caps">CANNOT</span> become Unicode, <span class="caps">CANNOT</span> be processed by Lamson or Python.</li>
+		<li>Email addresses are <span class="caps">ESSENTIAL</span> to Lamson&#8217;s routing and security, and therefore will be canonicalized and properly encoded.</li>
+		<li>Lamson will therefore try to &#8220;upgrade&#8221; all email it receives to Unicode internally, and cleaning all email addresses.</li>
+		<li>It does this by decoding all codecs, and if the codec <span class="caps">LIES</span>, then it will attempt to statistically detect the codec using chardet.</li>
+		<li>If it can&#8217;t detect the codec, and the codec lies, then the email is bad.</li>
+		<li>All text bodies and attachments are then converted to Python Unicode in the same way as the headers.</li>
+		<li>All other attachments are converted to raw strings as-is.</li>
+	</ol>
+
+	<p>Once Lamson has done this, your Python handler can now assume that all
+MailRequest objects are happily Unicode enabled and ready to go.  The rule is:</p>
+
+    IF IT <span class="caps">CANNOT</span> BE <span class="caps">UNICODE</span>, <span class="caps">THEN</span> <span class="caps">PYTHON</span> <span class="caps">CANNOT</span> <span class="caps">WORK</span> <span class="caps">WITH</span> IT.
+
+	<p>On the outgoing end (when you send a MailResponse), Lamson tries to create the
+email it wants to receive by canonicalizing it:</p>
+
+	<ol>
+		<li>All email will be encoded in the simplest cleanest way possible without losing information.</li>
+		<li>All headers are converted to 'ascii&#8217;, and if that doesn&#8217;t work, then 'utf-8&#8217;.</li>
+		<li>All text/* attachments and bodies are converted to ascii, and if that doesn&#8217;t work, 'utf-8&#8217;.</li>
+		<li>All other attachments are left alone.</li>
+		<li>All email addresses are normalized and encoded if they have not been already.</li>
+	</ol>
+
+	<h2>Neat Tricks</h2>
+
+	<p>The end result of this is that you can now take any email and then convert it to
+any modern data format and send it over new protocols.  For example, here&#8217;s the
+code from <a href="http://librelist.com/">librelist.com</a> to implement the <span class="caps">JSON</span> dump
+for the <a href="http://librelist.com/browser/">archive browser</a> Javascript interface:</p>
+
+<pre class="code prettyprint">
+def json_encoding(base):
+    ctype, ctp = base.content_encoding['Content-Type']
+    cdisp, cdp = base.content_encoding['Content-Disposition']
+    ctype = ctype or "text/plain"
+    filename = ctp.get('name',None) or cdp.get('filename', None)
+
+    if ctype.startswith('text') or ctype.startswith('message'):
+        encoding = None
+    else:
+        encoding = "base64"
+
+    return {'filename': filename, 'type': ctype, 'disposition': cdisp,
+            'format': encoding}
+
+def json_build(base):
+    data = {'headers': base.headers,
+                'body': base.body,
+                'encoding': json_encoding(base),
+                'parts': [json_build(p) for p in base.parts],
+            }
+
+    if data['encoding']['format'] and base.body:
+        data['body'] = base64.b64encode(base.body)
+
+    return data
+
+def to_json(base):
+    return json.dumps(json_build(base), sort_keys=True, indent=4)
+</pre>
+
+	<p>Since this code can assume that everything inside Lamson is fully Unicode, it only needs
+to worry about binary items like images and encode those as base64.</p>
+
+	<h2>lamson cleanse</h2>
+
+	<p>You can also use the <code>lamson cleanse</code> command to take a Maildir or mbox as input, and
+then convert it into a cleaned up Maildir as output.  Try it on some of your spam
+folders to watch the magic.</p>
+
+	<h2>Reporting Problems</h2>
+
+	<p>If you happen to run into a message that you feel Lamson should accurately 
+decode, feel free to <a href="/contact.html">report it</a> and I&#8217;ll take a look.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

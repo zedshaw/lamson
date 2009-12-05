@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+		<title>LamsonProject: Lamson 0.9 Is Out, Find My Bugs!</title>
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Lamson 0.9 Is Out, Find My Bugs!</h1>
+                
+I just pushed Lamson 0.9 up to PyPI for everyone to grab and break.  This release 
+features a complete redesign of the routing, state handling, templating, and a full 
+set of very complete documentation.  Everyone who was using 0.8.x series should be able 
+to migrate to this version with some work, but it won&#8217;t be terribly painful (assuming
+you have unit tests).
+
+	<h2>Getting 0.9</h2>
+
+	<p>Easiest way to install is with <a href="http://peak.telecommunity.com/DevCenter/EasyInstall">easy_install</a>
+straight from PyPI:</p>
+
+<pre class="code">
+sudo easy_install lamson
+</pre>
+
+	<p>There&#8217;s also instructions on <a href="/docs/lamson_virtual_env.html">installing to a virtualenv</a>
+for those who like that.</p>
+
+	<p>Best thing to do is read the <a href="/docs/getting_started.html">Getting Started</a> instructions
+and when you&#8217;re done with at least the 30 second introduction you&#8217;ll have your Lamson.</p>
+
+	<p>Try to go through the whole document if you can and send me feedback.  </p>
+
+	<h2>Big Changes</h2>
+
+	<p>The biggest change is that the routing mechanism and internals are totally different. 
+Now instead of putting all your routes into the config/settings.py as a big array, 
+you just put them on each state function as a decorator.  To help you debug these
+fancy routes there&#8217;s also a new <code>lamson routes</code> command that will dump them in 
+their final state.</p>
+
+	<p>The biggest impact of the new design is the old school &#8220;BlahHandler&#8221; classes are
+gone.  Later versions of Lamson might bring back the ability to use a class as a
+handler.</p>
+
+	<p>After that comes the removal of depending on SQLAlchemy for state storage.  You
+can now <a href="/docs/writing_a_state_storage.html">write your own state storage</a> and
+store things however you need to whatever you need.  There is currently a simple
+storage for storing in memory and for using a Python shelve dict.</p>
+
+	<p>Next there was a change to how Lamson boots up and configures itself giving you
+more control over what it uses, and giving your handlers better access to your 
+gear.  This change also let&#8217;s you use better unit tests that don&#8217;t require a
+running lamson server, as well as giving you the old &#8220;integration test&#8221; style
+tests that hit your real server.</p>
+
+	<p>There&#8217;s also tentative support for PyEnchant spell checking of your templates,
+and a new <code>lamson spell</code> command to help you use it.  See the <a href="/docs/getting_started.html">getting started</a>
+document for how to configure that, but be warned that PyEnchant is kind of a
+mean install.</p>
+
+	<p>Finally, I switched to Jinja2 templates by default, but you can use Mako fairly easily
+by altering a configuration variable in the boot.py.</p>
+
+	<h2>Look At All The Shiny Docs</h2>
+
+	<p>In addition to redesigning the guts of Lamson so that it&#8217;s easier to work on and use,
+I also spent a lot of time cranking out good documentation so people can get started
+using it.  Take a look in the <a href="/docs">documentation</a> section and have a gander
+at the <a href="/docs/api/"><span class="caps">API</span> documentation</a> that is generated from the source documentation.</p>
+
+	<h2>New Example: One-Shot-Blog</h2>
+
+	<p>In the source distribution <a href="/releases/">you can grab here</a> there&#8217;s an example 
+of doing a simple blog that uses just email to manage the blogger&#8217;s posts.
+The example replaces the mailing list example (for now) as it is simpler and 
+doesn&#8217;t use a database.</p>
+
+	<h2>Please Break It</h2>
+
+	<p>The 0.9 release is the result of a lot of work, but I want people to break it and
+criticize it to death.  The goal is to have people beat up this basic functionality,
+producing a series of 0.9.x releases, and then when everything is tight doing a 1.0
+release.</p>
+
+	<h2>Thanks Everyone</h2>
+
+	<p>I&#8217;d like to thank everyone on Twitter, Hacker News, and yes, even Reddit for
+their comments both good and bad.  It helped me make good decisions knowing 
+what people wanted, so keep the feedback coming.</p>
+
+	<p>Thanks also to those who donated documentation, praise, or other help directly 
+to the project.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

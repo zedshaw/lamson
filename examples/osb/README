@@ -1,0 +1,17 @@
+OSB is a One-Shot-Blog application that makes blog pages for people
+using email messages.  It is meant as a demonsration of the newer
+routing and Lamson design until I can update the mailing list
+application.
+
+To try it do this:
+
+lamson log
+lamson start
+nosetests
+mutt -F muttrc
+mutt -F pendingrc
+
+Then you'll see all the gear.  You can use mutt -F muttrc to actually
+interact with the running server.
+
+
