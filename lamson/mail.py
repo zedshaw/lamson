@@ -17,6 +17,10 @@ from email.utils import parseaddr
 import os
 import warnings
 
+
+# You can change this to 'Delivered-To' on servers that support it like Postfix
+ROUTABLE_TO_HEADER='to'
+
 def _decode_header_randomness(addr):
     """
     This fixes the given address so that it is *always* a set() of 
@@ -55,11 +59,12 @@ class MailRequest(object):
         self.base = encoding.from_string(Data)
         self.Peer = Peer
         self.From = From or self.base['from']
-        self.To = To or self.base['to']
+        self.To = To or self.base[ROUTABLE_TO_HEADER]
 
         if 'from' not in self.base: 
             self.base['from'] = self.From
         if 'to' not in self.base:
+            # do NOT use ROUTABLE_TO here
             self.base['to'] = self.To
 
         self.route_to = _decode_header_randomness(self.To)
