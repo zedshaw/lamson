@@ -1,0 +1,22 @@
+=== 2009-12-12 ===
+19:36:14 [41530d8a34] *CURRENT* Version bump to 1.0pre8 for release. (user:
+         zedshaw tags: trunk)
+19:31:21 [dfe158b282] Initial support of using Delivered-To or similar more
+         exact To header. (user: zedshaw tags: trunk)
+19:14:13 [e9988679b7] Updated prototype.zip for upcoming release. (user:
+         zedshaw tags: trunk)
+19:13:51 [98e94b6103] Potentially fixed the unicode/ascii issues with shelve
+         storage of confirmations and routing. (user: zedshaw tags: trunk)
+18:56:35 [6224ae68e4] Updated docs about confirmation to fix a doc bug. (user:
+         zedshaw tags: trunk)
+18:56:14 [103454c43c] Make things clean up better on INT or TERM (not HUP).
+         (user: zedshaw tags: trunk)
+18:25:29 [009451cabc] Added meta tags to the site so it can be found easier. I
+         didn't know search engines still use that crap. (user: zedshaw tags:
+         trunk)
+18:22:24 [8908d7852d] Applied starttls, username, password patch to server.
+         (user: zedshaw tags: trunk)
+18:16:01 [9a9f9f37b6] Applied patch for handling odd email addresses and white-
+         listing what headers have email addresses. (user: zedshaw tags: trunk)
+18:06:06 [7605ef0517] Patch for queue bugs applied [bug 9d330c8f80] (user:
+         zedshaw tags: trunk)
