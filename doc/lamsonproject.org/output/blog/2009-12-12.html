@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+        <title>LamsonProject: Lamson 1.0pre8 Is Out</title>
+        <meta name="keywords" content="python, email, smtp, automation, framework, auto responder, autoresponder, email agent, smtp agent, email engine, email processor, email processing, email proxy, smtp proxy">
+        <meta name="description" content="Lamson is a email automation framework written in Python. It can be used to automate email processing and simplify email application development."> 
+        <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
+		<!--[if IE 7]>
+		<style type="text/css" media="screen">
+			div#column_left ul.sidebar_menu li div.color{
+				display: none;
+			}
+		</style>
+        <![endif]-->
+
+        <link href="/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/prettify.js"></script>
+		
+	</head>
+	<body onload="prettyPrint()">
+		<div id="content_centered">			
+			<div id="header">
+				<h1><img id="logo" src="/images/lamson.png" alt="Lamson Project(TM) - Pipes and aliases are so 1970." /></h1>
+				<ul id="header_menu">
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">News</a></li>
+                    <li><a href="/feed.xml">Feed</a></li>
+					<li><a href="/download.html">Download</a></li>
+					<li><a href="/docs/">Documentation</a></li>
+					<li><a href="/docs/api/">API</a></li>
+				</ul>
+			</div>
+
+
+            <div id="main_content">
+                <h1>Lamson 1.0pre8 Is Out</h1>
+                	<p>I just got done knocking down all the bugs in the new <a href="http://fossil-scm.org/">Fossil</a> based
+<a href="http://support.lamsonproject.org/">Lamson Support Site</a> and cooked up 1.0pre8.  This has a 
+ton of fixes, but I&#8217;ll let the ChangeLog speak for itself:</p>
+
+<pre>
+=== 2009-12-12 ===
+19:43:53 [bb1b0a0dae] *CURRENT* Updated MailBase.__nonzero__ to include parts
+         as well. (user: zedshaw tags: trunk)
+19:40:51 [2916b83307] Created ChangeLog from fossil timeline of commits.
+         (user: zedshaw tags: trunk)
+19:36:14 [41530d8a34] Version bump to 1.0pre8 for release. (user: zedshaw
+         tags: trunk)
+19:31:21 [dfe158b282] Initial support of using Delivered-To or similar more
+         exact To header. (user: zedshaw tags: trunk)
+19:14:13 [e9988679b7] Updated prototype.zip for upcoming release. (user:
+         zedshaw tags: trunk)
+19:13:51 [98e94b6103] Potentially fixed the unicode/ascii issues with shelve
+         storage of confirmations and routing. (user: zedshaw tags: trunk)
+18:56:35 [6224ae68e4] Updated docs about confirmation to fix a doc bug. (user:
+         zedshaw tags: trunk)
+18:56:14 [103454c43c] Make things clean up better on INT or TERM (not HUP).
+         (user: zedshaw tags: trunk)
+18:25:29 [009451cabc] Added meta tags to the site so it can be found easier. I
+         didn't know search engines still use that crap. (user: zedshaw tags:
+         trunk)
+18:22:24 [8908d7852d] Applied starttls, username, password patch to server.
+         (user: zedshaw tags: trunk)
+18:16:01 [9a9f9f37b6] Applied patch for handling odd email addresses and white-
+         listing what headers have email addresses. (user: zedshaw tags: trunk)
+18:06:06 [7605ef0517] Patch for queue bugs applied [bug 9d330c8f80] (user:
+         zedshaw tags: trunk)
+18:02:50 [ef9808c4f7] Point at the right archive browser. (user: zedshaw tags:
+         trunk)
+18:01:39 [3b3dc9391a] Better logging message on failure to connect to relay.
+         (user: zedshaw tags: trunk)
+=== 2009-12-05 ===
+18:05:40 [ddc4369b1d] Initial commit to the new fossil based support site.
+         (user: zedshaw tags: trunk)
+17:48:22 [8140fcad03] initial empty check-in (user: lamson tags: trunk)
+</pre>
+
+	<p>This closed out a bunch of bugs, so if you entered a bug in then go make sure that it&#8217;s actually working for you.</p>
+
+	<h2>Getting This Release</h2>
+
+	<p>As usual, you should be able to install it with <span class="caps">PIP</span> or easy_install, and you can get the raw downloads from
+the <a href="/releases/">releases</a> section of the site.</p>
+
+	<h2>Submitting Bugs</h2>
+
+	<p>Keep in mind that this isn&#8217;t as heavily tested as other releases, so if you hit a bug, <a href="http://support.lamsonproject.org/">report it</a>
+and I&#8217;ll fix it.  Even better, if you supply a patch then I&#8217;ll consider giving you commit rights.</p>
+
+	<h2>Potential Contributors</h2>
+
+	<p>Most of the changes were from supplied patches, and if you supplied a patch and want to contribute
+to Lamson, then contact me and I&#8217;ll give you an account on the site so you can commit directly.</p>
+
+
+			</div>
+
+			<div id="column_left">
+				<ul class="sidebar_menu">
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff0000;">&nbsp;</div>
+                            <a href="/blog/">Latest News</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff9900;">&nbsp;</div>
+							<a href="/download.html">Download the Gear</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #99cc00;">&nbsp;</div>
+							<a href="/docs/getting_started.html">Getting Started</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #3399ff;">&nbsp;</div>
+							<a href="/docs/">Documentation</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #ff3399;">&nbsp;</div>
+							<a href="/docs/faq.html">Frequently Asked Questions</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #006699;">&nbsp;</div>
+							<a href="/about.html">About Lamson</a>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<div class="color" style="background-color: #0099cc;">&nbsp;</div>
+							<a href="/contact.html">Getting Help with Lamson</a>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="sidebar_item">
+					<h3>Quick Start</h3>
+					<p>See the download instructions for information on getting lamson, and read the getting started instructions to start your own application in less than 10 minutes.</p>
+                </div>
+
+                <br/>
+
+				<div class="sidebar_item">
+					<h3>Mailing Lists</h3>
+                    <p>Lamson hosts its own <a href="/lists/">mailing lists</a> as well as provides a free open mailing list 
+                    service for anyone who needs one.  Simply send an email to the list you want @librelist.com and it will
+                    get you started.</p>
+				</div>
+				
+			</div>
+			
+			<div id="footer">
+				<div class="footer_content">
+                    Lamson Project(TM) and all material on this site Copyright &copy; 2009 <a href="http://zedshaw.com/" title="Zed Shaw's blog">Zed Shaw</a> unless otherwise stated.<br/>
+                    
+                    Website Designed by <a href="http://kenkeiter.com/">Kenneth Keitner</a> and donated to the LamsonProject.
+				</div>
+			</div>
+			
+			<!-- end:centered_content -->
+		</div>
+	</body>
+</html>
+	

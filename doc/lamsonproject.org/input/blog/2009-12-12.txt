@@ -1,3 +1,10 @@
+Title: Lamson 1.0pre8 Is Out
+
+I just got done knocking down all the bugs in the new "Fossil":http://fossil-scm.org/ based
+"Lamson Support Site":http://support.lamsonproject.org/ and cooked up 1.0pre8.  This has a 
+ton of fixes, but I'll let the ChangeLog speak for itself:
+
+<pre>
 === 2009-12-12 ===
 19:43:53 [bb1b0a0dae] *CURRENT* Updated MailBase.__nonzero__ to include parts
          as well. (user: zedshaw tags: trunk)
@@ -32,3 +39,23 @@
 18:05:40 [ddc4369b1d] Initial commit to the new fossil based support site.
          (user: zedshaw tags: trunk)
 17:48:22 [8140fcad03] initial empty check-in (user: lamson tags: trunk)
+</pre>
+
+This closed out a bunch of bugs, so if you entered a bug in then go make sure that it's actually working for you.
+
+h2. Getting This Release
+
+As usual, you should be able to install it with PIP or easy_install, and you can get the raw downloads from
+the "releases":/releases/ section of the site.
+
+h2. Submitting Bugs
+
+Keep in mind that this isn't as heavily tested as other releases, so if you hit a bug, "report it":http://support.lamsonproject.org/
+and I'll fix it.  Even better, if you supply a patch then I'll consider giving you commit rights.
+
+
+h2. Potential Contributors
+
+Most of the changes were from supplied patches, and if you supplied a patch and want to contribute
+to Lamson, then contact me and I'll give you an account on the site so you can commit directly.
+
