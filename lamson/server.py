@@ -59,14 +59,38 @@ class Relay(object):
     It supports a few simple operations for sending mail, replying, and can
     log the protocol it uses to stderr if you set debug=1 on __init__.
     """
-    def __init__(self, host='127.0.0.1', port=25, debug=0):
+    def __init__(self, host='127.0.0.1', port=25, username=None, password=None,
+                 ssl=False, starttls=False, debug=0):
         """
         The hostname and port we're connecting to, and the debug level (default to 0).
+        Optional username and password for smtp authentication.
+        If ssl is True smtplib.SMTP_SSL will be used.
+        If starttls is True (and ssl False), smtp connection will be put in TLS mode.
         It does the hard work of delivering messages to the relay host.
         """
         self.hostname = host
         self.port = port
         self.debug = debug
+        self.username = username
+        self.password = password
+        self.ssl = ssl
+        self.starttls = starttls
+
+    def configure_relay(self, hostname):
+        if self.ssl:
+            relay_host = smtplib.SMTP_SSL(hostname, self.port)
+        else:
+            relay_host = smtplib.SMTP(hostname, self.port)
+
+        relay_host.set_debuglevel(self.debug)
+
+        if self.starttls:
+            relay_host.starttls()
+        if self.username and self.password:
+            relay_host.login(self.username, self.password)
+
+        assert relay_host, 'Code error, tell Zed.'
+        return relay_host
 
     def deliver(self, message, To=None, From=None):
         """
@@ -82,14 +106,10 @@ class Relay(object):
         hostname = self.hostname or self.resolve_relay_host(recipient)
 
         try:
-            relay_host = smtplib.SMTP(hostname, self.port)
+            relay_host = self.configure_relay(hostname)
         except socket.error:
             logging.exception("Failed to connect to host %s:%d" % (hostname, self.port))
             return
-
-        relay_host.set_debuglevel(self.debug)
-
-        msg = str(message)
 
         relay_host.sendmail(sender, recipient, str(message))
         relay_host.quit()

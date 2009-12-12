@@ -62,7 +62,8 @@ def log_command(port=8825, host='127.0.0.1', chroot=False,
     utils.start_server(pid, FORCE, chroot, chdir, uid, gid, umask, loader)
 
 
-def send_command(port=8825, host='127.0.0.1', debug=1, sender=None, to=None,
+def send_command(port=8825, host='127.0.0.1', username=None, password=None,
+                 ssl=False, starttls=False, debug=1, sender=None, to=None,
                  subject=None, body=None, attach=False):
     """
     Sends an email to someone as a test message.
@@ -78,7 +79,8 @@ def send_command(port=8825, host='127.0.0.1', debug=1, sender=None, to=None,
     if attach:
         message.attach(attach)
 
-    relay = server.Relay(host, port=port, debug=debug)
+    relay = server.Relay(host, port=port, username=username, password=password,
+                         ssl=ssl, starttls=starttls, debug=debug)
     relay.deliver(message)
 
 
