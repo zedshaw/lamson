@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
-        <title>LamsonProject: Lamson 1.0pre8 Is Out</title>
+        <title>LamsonProject: Lamson 1.0pre9 Is Out</title>
         <meta name="keywords" content="python, email, smtp, automation, framework, auto responder, autoresponder, email agent, smtp agent, email engine, email processor, email processing, email proxy, smtp proxy">
         <meta name="description" content="Lamson is a email automation framework written in Python. It can be used to automate email processing and simplify email application development."> 
         <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
@@ -37,15 +37,26 @@
 
 
             <div id="main_content">
-                <h1>Lamson 1.0pre8 Is Out</h1>
-                	<p>I just got done knocking down all the bugs in the new <a href="http://fossil-scm.org/">Fossil</a> based
-<a href="http://support.lamsonproject.org/">Lamson Support Site</a> and cooked up 1.0pre8.  This has a 
+                <h1>Lamson 1.0pre9 Is Out</h1>
+                	<p><strong>UPDATE</strong>: This used to be an announce for 1.0pre8, but python-daemon apparently has a bug that makes it not honor
+the <span class="caps">TERM</span> signal (still) so I had to go back to <span class="caps">HUP</span>.</p>
+
+	<p>I just got done knocking down all the bugs in the new <a href="http://fossil-scm.org/">Fossil</a> based
+<a href="http://support.lamsonproject.org/">Lamson Support Site</a> and cooked up 1.0pre9.  This has a 
 ton of fixes, but I&#8217;ll let the ChangeLog speak for itself:</p>
 
 <pre>
 === 2009-12-12 ===
-19:43:53 [bb1b0a0dae] *CURRENT* Updated MailBase.__nonzero__ to include parts
-         as well. (user: zedshaw tags: trunk)
+22:49:43 [c2be9dedc3] *CURRENT* Version bump to 1.0pre9 thanks to python-
+         daemon. (user: zedshaw tags: trunk, 1.0pre9)
+22:43:04 [1718d014a5] Stupid fucking python-daemon doesn't recognize TERM yet.
+         (user: zedshaw tags: trunk)
+20:24:20 [b5796e14a1] Pointed at the tag instead of just the leaves. (user:
+         zedshaw tags: trunk)
+20:00:38 [42768ade2b] 1.0pre8 release announced and done. (user: zedshaw tags:
+         trunk, 1.0pre8)
+19:43:53 [bb1b0a0dae] Updated MailBase.__nonzero__ to include parts as well.
+         (user: zedshaw tags: trunk)
 19:40:51 [2916b83307] Created ChangeLog from fossil timeline of commits.
          (user: zedshaw tags: trunk)
 19:36:14 [41530d8a34] Version bump to 1.0pre8 for release. (user: zedshaw

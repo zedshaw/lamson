@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<rss version="2.0"><channel><title>Lamson Project(TM)</title><link>http://lamsonproject.org</link><description>Lamson The Python SMTP Server and Framework</description><lastBuildDate>Sat, 12 Dec 2009 12:23:30 GMT</lastBuildDate><generator>PyRSS2Gen-1.0.0</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Lamson 1.0pre8 Is Out</title><link>http://lamsonproject.org/blog/2009-12-12.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-12-12.html"&gt;2009-12-12&lt;/a&gt; : Lamson 1.0pre8 Is Out&lt;/h2&gt;
+<rss version="2.0"><channel><title>Lamson Project(TM)</title><link>http://lamsonproject.org</link><description>Lamson The Python SMTP Server and Framework</description><lastBuildDate>Sat, 12 Dec 2009 14:54:22 GMT</lastBuildDate><generator>PyRSS2Gen-1.0.0</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Lamson 1.0pre9 Is Out</title><link>http://lamsonproject.org/blog/2009-12-12.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-12-12.html"&gt;2009-12-12&lt;/a&gt; : Lamson 1.0pre9 Is Out&lt;/h2&gt;
 
-&lt;p&gt;	&lt;p&gt;I just got done knocking down all the bugs in the new &lt;a href="http://fossil-scm.org/"&gt;Fossil&lt;/a&gt; based
-&lt;a href="http://support.lamsonproject.org/"&gt;Lamson Support Site&lt;/a&gt; and cooked up 1.0pre8.  This has a 
-ton of fixes, but I&amp;#8217;ll let the ChangeLog speak for itself:&lt;/p&gt;&lt;/p&gt;
+&lt;p&gt;	&lt;p&gt;&lt;strong&gt;UPDATE&lt;/strong&gt;: This used to be an announce for 1.0pre8, but python-daemon apparently has a bug that makes it not honor
+the &lt;span class="caps"&gt;TERM&lt;/span&gt; signal (still) so I had to go back to &lt;span class="caps"&gt;HUP&lt;/span&gt;.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-12-12.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-12-12.html</guid><pubDate>Sat, 12 Dec 2009 11:58:38 GMT</pubDate></item><item><title>Quick Lamson 1.0pre6 Release, More This Weekend</title><link>http://lamsonproject.org/blog/2009-09-26.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-09-26.html"&gt;2009-09-26&lt;/a&gt; : Quick Lamson 1.0pre6 Release, More This Weekend&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-12-12.html</guid><pubDate>Sat, 12 Dec 2009 14:54:10 GMT</pubDate></item><item><title>Quick Lamson 1.0pre6 Release, More This Weekend</title><link>http://lamsonproject.org/blog/2009-09-26.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-09-26.html"&gt;2009-09-26&lt;/a&gt; : Quick Lamson 1.0pre6 Release, More This Weekend&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;I put up a quick release of Lamson that fixes a bug in the gen project prototype.
 I recently switched all the domain names being used in the test suite to &amp;#8220;localhost&amp;#8221; or
@@ -14,18 +13,18 @@ the Lamson test suite or their fresh project test suite against a &lt;strong&gt;
 server.  The test suite would &amp;#8220;send&amp;#8221; mail to test@test.com and my own 
 address, under the assumption that people would use the &lt;code&gt;lamson log&lt;/code&gt; test server.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-09-26.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-09-26.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Lamson 1.0pre5 Out</title><link>http://lamsonproject.org/blog/2009-09-07.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-09-07.html"&gt;2009-09-07&lt;/a&gt; : Lamson 1.0pre5 Out&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-09-26.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Lamson 1.0pre5 Out</title><link>http://lamsonproject.org/blog/2009-09-07.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-09-07.html"&gt;2009-09-07&lt;/a&gt; : Lamson 1.0pre5 Out&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;I just pushed Lamson 1.0pre5 to PyPI for your enjoyment:&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-09-07.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-09-07.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Lamson 1.0pre4 Out, Lots Of Docs Done, 100% Coverage</title><link>http://lamsonproject.org/blog/2009-08-22.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-08-22.html"&gt;2009-08-22&lt;/a&gt; : Lamson 1.0pre4 Out, Lots Of Docs Done, 100% Coverage&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-09-07.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Lamson 1.0pre4 Out, Lots Of Docs Done, 100% Coverage</title><link>http://lamsonproject.org/blog/2009-08-22.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-08-22.html"&gt;2009-08-22&lt;/a&gt; : Lamson 1.0pre4 Out, Lots Of Docs Done, 100% Coverage&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;I happy to announce probably one of the last few releases before
 I officially put the 1.0 stamp on Lamson.  This last 1% of the things
 I want to do takes a while, but it really puts a good shine on the 
 project.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-08-22.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-08-22.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Lamson 1.0pre2, HTML Email, Standalone</title><link>http://lamsonproject.org/blog/2009-08-03.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-08-03.html"&gt;2009-08-03&lt;/a&gt; : Lamson 1.0pre2, HTML Email, Standalone&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-08-22.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Lamson 1.0pre2, HTML Email, Standalone</title><link>http://lamsonproject.org/blog/2009-08-03.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-08-03.html"&gt;2009-08-03&lt;/a&gt; : Lamson 1.0pre2, HTML Email, Standalone&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;Lamson 1.0pre2 features two features that might signal the end of the beginning or
 the beginning of the end, depending on your perspective: &lt;span class="caps"&gt;HTML&lt;/span&gt; Email and Lamson Standalone.
@@ -34,21 +33,21 @@ the beginning of the end, depending on your perspective: &lt;span class="caps"&g
 method to send out &lt;span class="caps"&gt;HTML&lt;/span&gt; to victims&amp;#8230;uh&amp;#8230;customers.  Lamson Standalone will be a way
 to run Lamson as your customized email server instead of another server like Postfix.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-08-03.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-08-03.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Lamson 1.0pre1 Released</title><link>http://lamsonproject.org/blog/2009-07-20.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-07-20.html"&gt;2009-07-20&lt;/a&gt; : Lamson 1.0pre1 Released&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-08-03.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Lamson 1.0pre1 Released</title><link>http://lamsonproject.org/blog/2009-07-20.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-07-20.html"&gt;2009-07-20&lt;/a&gt; : Lamson 1.0pre1 Released&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;Tonight I&amp;#8217;m releasing Lamson 1.0pre1 with all the latest improvements I&amp;#8217;ve made while
 making &lt;a href="http://librelist.com/"&gt;librelist.com&lt;/a&gt; and taking feedback from a few people
 using Lamson.  The goal from now on will be to basically squash bugs and write docs, with
 only a rare feature or two as I find them needed on projects.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-07-20.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-07-20.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>I Blame Bounces For The Delay</title><link>http://lamsonproject.org/blog/2009-07-19.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-07-19.html"&gt;2009-07-19&lt;/a&gt; : I Blame Bounces For The Delay&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-07-20.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>I Blame Bounces For The Delay</title><link>http://lamsonproject.org/blog/2009-07-19.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-07-19.html"&gt;2009-07-19&lt;/a&gt; : I Blame Bounces For The Delay&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;I was going to release Lamson 0.9.6 much earlier than this, but as I worked on
 the bounce detection feature, I realized that if I just wrote that and a few
 other cleanups and features, I&amp;#8217;d actually have a &lt;strong&gt;1.0pre1&lt;/strong&gt; candidate on my
 hands instead of a 0.9.6 release.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-07-19.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-07-19.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Lamson 0.9.6 Sometime Today</title><link>http://lamsonproject.org/blog/2009-07-14.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-07-14.html"&gt;2009-07-14&lt;/a&gt; : Lamson 0.9.6 Sometime Today&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-07-19.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Lamson 0.9.6 Sometime Today</title><link>http://lamsonproject.org/blog/2009-07-14.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-07-14.html"&gt;2009-07-14&lt;/a&gt; : Lamson 0.9.6 Sometime Today&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;I think I&amp;#8217;m at a point where bounce detection and handling works really well and is 
 ready for release.  I&amp;#8217;ve got it running on the latest Lamson demo &lt;a href="http://librelist.com/"&gt;librelist.com&lt;/a&gt;
@@ -56,7 +55,7 @@ and it works.  I&amp;#8217;ll be pushing out a new release of Libre List in a li
 that does some advanced bounce handling, and if that all works, then I&amp;#8217;ll push
 out 0.9.6.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-07-14.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-07-14.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Lamson's Bounce Detection Algorithm</title><link>http://lamsonproject.org/blog/2009-07-09.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-07-09.html"&gt;2009-07-09&lt;/a&gt; : Lamson's Bounce Detection Algorithm&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-07-14.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Lamson's Bounce Detection Algorithm</title><link>http://lamsonproject.org/blog/2009-07-09.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-07-09.html"&gt;2009-07-09&lt;/a&gt; : Lamson's Bounce Detection Algorithm&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;I just finished committing 0.9.6 code for doing bounce detection and analysis
 with Lamson.  It&amp;#8217;s part of the new mailing list example I&amp;#8217;m coding up for the
@@ -65,51 +64,51 @@ to release soon.  In this blog post I&amp;#8217;d like to go through the bounce 
 algorithm and get some feedback and samples from people.  So far it works great for
 the samples I have, but I want it to be fairly bullet proof.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-07-09.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-07-09.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Lamson Mailing Lists Down</title><link>http://lamsonproject.org/blog/2009-07-07.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-07-07.html"&gt;2009-07-07&lt;/a&gt; : Lamson Mailing Lists Down&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-07-09.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Lamson Mailing Lists Down</title><link>http://lamsonproject.org/blog/2009-07-07.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-07-07.html"&gt;2009-07-07&lt;/a&gt; : Lamson Mailing Lists Down&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;I&amp;#8217;m making up the release of Lamson and doing some server maintenance so I took down the
 Lamson server running the mailing lists.  I&amp;#8217;ll let everyone know when they&amp;#8217;re back up.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-07-07.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-07-07.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Article In The Reg About Lamson (By Ted Dziuba)</title><link>http://lamsonproject.org/blog/2009-07-03.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-07-03.html"&gt;2009-07-03&lt;/a&gt; : Article In The Reg About Lamson (By Ted Dziuba)&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-07-07.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Article In The Reg About Lamson (By Ted Dziuba)</title><link>http://lamsonproject.org/blog/2009-07-03.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-07-03.html"&gt;2009-07-03&lt;/a&gt; : Article In The Reg About Lamson (By Ted Dziuba)&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;Just a quick update to point people at an article in &lt;a href="http://www.theregister.co.uk/"&gt;The Register&lt;/a&gt; by 
 &lt;a href="http://teddziuba.com/"&gt;Ted Dziuba&lt;/a&gt; entitled &lt;a href="http://www.theregister.co.uk/2009/07/03/lamson/"&gt;Lamson &amp;#8211; email app coding without the palm sweat: Doing what Java never did&lt;/a&gt;.  He interviewed me about Lamson, things I think you can use it for, and other fun stuffs.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-07-03.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-07-03.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Lamson 0.9.5, The Push To 1.0</title><link>http://lamsonproject.org/blog/2009-06-26.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-26.html"&gt;2009-06-26&lt;/a&gt; : Lamson 0.9.5, The Push To 1.0&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-07-03.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Lamson 0.9.5, The Push To 1.0</title><link>http://lamsonproject.org/blog/2009-06-26.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-26.html"&gt;2009-06-26&lt;/a&gt; : Lamson 0.9.5, The Push To 1.0&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;I just released Lamson 0.9.5 with all the major Unicode refactoring done and working.
 This is an important release because 0.9.5 is where I declare that I&amp;#8217;m pushing to a 1.0 
 release and the base Lamson &lt;a href="/docs/api/"&gt;APIs&lt;/a&gt; won&amp;#8217;t change under penalty of death.  In fact they can&amp;#8217;t
 change because I&amp;#8217;m using them myself in a few applications.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-06-26.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-26.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>0.9.5 Almost There, But Stumped On Templates</title><link>http://lamsonproject.org/blog/2009-06-22.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-22.html"&gt;2009-06-22&lt;/a&gt; : 0.9.5 Almost There, But Stumped On Templates&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-26.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>0.9.5 Almost There, But Stumped On Templates</title><link>http://lamsonproject.org/blog/2009-06-22.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-22.html"&gt;2009-06-22&lt;/a&gt; : 0.9.5 Almost There, But Stumped On Templates&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;Since the 0.9.4 release I&amp;#8217;ve rewritten the main part of the decoding parser 
 so that it&amp;#8217;s much cleaner and handles more edge conditions.  If there&amp;#8217;s one 
 word that defines what makes &lt;span class="caps"&gt;MIME&lt;/span&gt; horrible it would be &amp;#8220;edge&amp;#8221;.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-06-22.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-22.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Lamson 0.9.4 With Unicode Super Powers</title><link>http://lamsonproject.org/blog/2009-06-20.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-20.html"&gt;2009-06-20&lt;/a&gt; : Lamson 0.9.4 With Unicode Super Powers&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-22.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Lamson 0.9.4 With Unicode Super Powers</title><link>http://lamsonproject.org/blog/2009-06-20.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-20.html"&gt;2009-06-20&lt;/a&gt; : Lamson 0.9.4 With Unicode Super Powers&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;Lamson 0.9.4 is out and it&amp;#8217;s sporting a completely rewritten and meticulously 
 crafted encoding system.  With the new &lt;a href="http://lamsonproject.org/docs/api/lamson.encoding-module.html"&gt;lamson.encoding&lt;/a&gt; code Lamson can now decode nearly any nasty horrible encoded spam
 or mail you hand it, turn it into pristine nice Python unicode strings, and
 then output sweet clean ascii or utf-8 in a consistent way.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-06-20.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-20.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>The Mailocalypse Is Upon Us!</title><link>http://lamsonproject.org/blog/2009-06-14.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-14.html"&gt;2009-06-14&lt;/a&gt; : The Mailocalypse Is Upon Us!&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-20.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>The Mailocalypse Is Upon Us!</title><link>http://lamsonproject.org/blog/2009-06-14.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-14.html"&gt;2009-06-14&lt;/a&gt; : The Mailocalypse Is Upon Us!&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;I&amp;#8217;m currently polishing off the two final features before I start going for
 the Lamson 1.0 release.  I&amp;#8217;ve been using Lamson to make a few little cute applications
 and create one thing for a potential client, and so far I haven&amp;#8217;t had to change much
 since 0.9.3.  It&amp;#8217;s great so far and I hope that Lamson 1.0 will be a fun release.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-06-14.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-14.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Lamson At NYLUG Python Workshop Today @ 6:00PM</title><link>http://lamsonproject.org/blog/2009-06-09.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-09.html"&gt;2009-06-09&lt;/a&gt; : Lamson At NYLUG Python Workshop Today @ 6:00PM&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-14.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Lamson At NYLUG Python Workshop Today @ 6:00PM</title><link>http://lamsonproject.org/blog/2009-06-09.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-09.html"&gt;2009-06-09&lt;/a&gt; : Lamson At NYLUG Python Workshop Today @ 6:00PM&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;Just a quick reminder that I&amp;#8217;ll be presenting &lt;a href="http://lamsonproject.org/"&gt;Lamson&lt;/a&gt; to the 
 &lt;span class="caps"&gt;NYLUG&lt;/span&gt; Python Workshop today at 6:00PM.  The event is at
 the NY Public Library Hudson Park Branch, 66 Leroy St., NY NY 10014
 in &lt;span class="caps"&gt;NYC&lt;/span&gt; and you can &lt;a href="http://nylug.org/pipermail/nylug-announce/2009-June/000795.html"&gt;find out more here.&lt;/a&gt;&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-06-09.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-09.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>A Screencast And Docs On Deploying Lamson And OneShotBlog</title><link>http://lamsonproject.org/blog/2009-06-08.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-08.html"&gt;2009-06-08&lt;/a&gt; : A Screencast And Docs On Deploying Lamson And OneShotBlog&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-09.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>A Screencast And Docs On Deploying Lamson And OneShotBlog</title><link>http://lamsonproject.org/blog/2009-06-08.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-08.html"&gt;2009-06-08&lt;/a&gt; : A Screencast And Docs On Deploying Lamson And OneShotBlog&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;I just finished writing some new documentation on &lt;a href="/docs/deploying_lamson.html"&gt;Deploying Lamson and OneShotBlog&lt;/a&gt; that
 shows you how to install Lamson and all required software into a completely clean Python 2.6 and virtualenv configuration.
@@ -117,7 +116,7 @@ The instructions take you from nothing to a running &lt;a href="http://oneshotbl
 play with and hack on.  The process of doing Lamson deployments is still a little too rough for me, but these instructions
 should get people started.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-06-08.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-08.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Lamson 0.9.3 Is Out And Sexy As Hell</title><link>http://lamsonproject.org/blog/2009-06-06.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-06.html"&gt;2009-06-06&lt;/a&gt; : Lamson 0.9.3 Is Out And Sexy As Hell&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-08.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Lamson 0.9.3 Is Out And Sexy As Hell</title><link>http://lamsonproject.org/blog/2009-06-06.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-06.html"&gt;2009-06-06&lt;/a&gt; : Lamson 0.9.3 Is Out And Sexy As Hell&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;This release is the result of me working on my little
 &lt;a href="http://oneshotblog.com/"&gt;oneshotblog.com&lt;/a&gt; project while tweaking and refining
@@ -127,7 +126,7 @@ of this release are more secure server runs, better character encoding handling
 for headers, various cleanups in how mail is queued, and fixes for Python 2.6
 support.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-06-06.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-06.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>OneShotBlog Sample (Hack) Running</title><link>http://lamsonproject.org/blog/2009-06-04.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-04.html"&gt;2009-06-04&lt;/a&gt; : OneShotBlog Sample (Hack) Running&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-06.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>OneShotBlog Sample (Hack) Running</title><link>http://lamsonproject.org/blog/2009-06-04.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-04.html"&gt;2009-06-04&lt;/a&gt; : OneShotBlog Sample (Hack) Running&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;I &lt;strong&gt;finally&lt;/strong&gt; got off my ass and put the &lt;a href="http://oneshotblog.com/"&gt;OneShotBlog&lt;/a&gt; sample up.
 This is the code (plus a few little tweaks) from the sample that is in the &lt;a href="/releases/"&gt;Lamson source&lt;/a&gt;
@@ -135,17 +134,17 @@ running on another server.  It&amp;#8217;s using all the features of Lamson, inc
 functionality.  So far it&amp;#8217;s working great considering I&amp;#8217;ve just been hacking on it on the side to try
 out the usability of the Lamson &lt;a href="/docs/api/"&gt;APIs&lt;/a&gt; and not really taken it seriously.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-06-04.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-04.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Lamson 0.9.1 Out, New Docs</title><link>http://lamsonproject.org/blog/2009-06-03.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-03.html"&gt;2009-06-03&lt;/a&gt; : Lamson 0.9.1 Out, New Docs&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-04.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Lamson 0.9.1 Out, New Docs</title><link>http://lamsonproject.org/blog/2009-06-03.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-03.html"&gt;2009-06-03&lt;/a&gt; : Lamson 0.9.1 Out, New Docs&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;I released Lamson 0.9.1 today so please &lt;a href="/download.html"&gt;grab it and test it&lt;/a&gt; and shoot me feedback.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-06-03.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-03.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Lamson 0.9.2, Test Coverage 97%</title><link>http://lamsonproject.org/blog/2009-06-03-2.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-03-2.html"&gt;2009-06-03-2&lt;/a&gt; : Lamson 0.9.2, Test Coverage 97%&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-03.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Lamson 0.9.2, Test Coverage 97%</title><link>http://lamsonproject.org/blog/2009-06-03-2.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-03-2.html"&gt;2009-06-03-2&lt;/a&gt; : Lamson 0.9.2, Test Coverage 97%&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;The 0.9.2 release is out and ready for everyone to easy_install.  I spent the
 day getting rid of my tech debt by boosting the Lamson test coverage to a
 whopping 97%.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-06-03-2.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-03-2.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Lamson 0.9 Is Out, Find My Bugs!</title><link>http://lamsonproject.org/blog/2009-06-01.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-01.html"&gt;2009-06-01&lt;/a&gt; : Lamson 0.9 Is Out, Find My Bugs!&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-03-2.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Lamson 0.9 Is Out, Find My Bugs!</title><link>http://lamsonproject.org/blog/2009-06-01.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-06-01.html"&gt;2009-06-01&lt;/a&gt; : Lamson 0.9 Is Out, Find My Bugs!&lt;/h2&gt;
 
 &lt;p&gt;
 I just pushed Lamson 0.9 up to PyPI for everyone to grab and break.  This release 
@@ -154,19 +153,19 @@ set of very complete documentation.  Everyone who was using 0.8.x series should 
 to migrate to this version with some work, but it won&amp;#8217;t be terribly painful (assuming
 you have unit tests).&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-06-01.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-01.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Lamson 0.9 Later Today</title><link>http://lamsonproject.org/blog/2009-05-31.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-05-31.html"&gt;2009-05-31&lt;/a&gt; : Lamson 0.9 Later Today&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-06-01.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Lamson 0.9 Later Today</title><link>http://lamsonproject.org/blog/2009-05-31.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-05-31.html"&gt;2009-05-31&lt;/a&gt; : Lamson 0.9 Later Today&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;I have been working hard on the documentation and scrubbing the code for Lamson and the 0.9 release
 coming out soon.  The only things I feel I need to do before an official 0.9 release are:&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-05-31.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-05-31.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>0.9-pre2 Up For Testing, Docs Too</title><link>http://lamsonproject.org/blog/2009-05-28.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-05-28.html"&gt;2009-05-28&lt;/a&gt; : 0.9-pre2 Up For Testing, Docs Too&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-05-31.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>0.9-pre2 Up For Testing, Docs Too</title><link>http://lamsonproject.org/blog/2009-05-28.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-05-28.html"&gt;2009-05-28&lt;/a&gt; : 0.9-pre2 Up For Testing, Docs Too&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;First off, my apologies to everyone if your &lt;span class="caps"&gt;RSS&lt;/span&gt; reader went crazy today.
 I include documentation changes in the &lt;span class="caps"&gt;RSS&lt;/span&gt; feed so that people can
 easily track updates to the Lamson docs.  However, that means when I&amp;#8217;m
 writing a lot of documentation it hits the feed repeatedly.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-05-28.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-05-28.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Features For The 0.9 Release (Soon)</title><link>http://lamsonproject.org/blog/2009-05-24.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-05-24.html"&gt;2009-05-24&lt;/a&gt; : Features For The 0.9 Release (Soon)&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-05-28.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Features For The 0.9 Release (Soon)</title><link>http://lamsonproject.org/blog/2009-05-24.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-05-24.html"&gt;2009-05-24&lt;/a&gt; : Features For The 0.9 Release (Soon)&lt;/h2&gt;
 
 &lt;p&gt;
 &lt;p&gt;I've been hard at work cooking up the very nice new routing system, and
@@ -175,30 +174,30 @@ routing and state management design that uses decorators right in your
 handler modules to indicate how each state will expect mail addresses.
 &lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-05-24.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-05-24.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Lamson Project Ideas</title><link>http://lamsonproject.org/blog/2009-05-20.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-05-20.html"&gt;2009-05-20&lt;/a&gt; : Lamson Project Ideas&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-05-24.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Lamson Project Ideas</title><link>http://lamsonproject.org/blog/2009-05-20.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-05-20.html"&gt;2009-05-20&lt;/a&gt; : Lamson Project Ideas&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;I wrote a &lt;a href="http://zedshaw.com/blog/2009-05-20.html"&gt;blog post about project ideas for Lamson&lt;/a&gt;
 on my personal blog.  Head on over if you&amp;#8217;re looking for something to hack on, or just
 want something to read that isn&amp;#8217;t about the web.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-05-20.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-05-20.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>New Site Look, Same Great Content</title><link>http://lamsonproject.org/blog/2009-05-19.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-05-19.html"&gt;2009-05-19&lt;/a&gt; : New Site Look, Same Great Content&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-05-20.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>New Site Look, Same Great Content</title><link>http://lamsonproject.org/blog/2009-05-19.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-05-19.html"&gt;2009-05-19&lt;/a&gt; : New Site Look, Same Great Content&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;This is just a quick update to say thanks to &lt;a href="http://kenkeiter.com/"&gt;Ken Keiter&lt;/a&gt;
 for creating a new &lt;a href="http://lamsonproject.org/"&gt;lamsonproject.org&lt;/a&gt; site layout and
 design.  The new site should be easier to read, have more breathing room, and look
 easier on the eyes.  It&amp;#8217;s even got a logo:&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-05-19.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-05-19.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Bug Fix 0.8.4, Mailing Lists, Spam Blocking</title><link>http://lamsonproject.org/blog/2009-05-18.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-05-18.html"&gt;2009-05-18&lt;/a&gt; : Bug Fix 0.8.4, Mailing Lists, Spam Blocking&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-05-19.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Bug Fix 0.8.4, Mailing Lists, Spam Blocking</title><link>http://lamsonproject.org/blog/2009-05-18.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-05-18.html"&gt;2009-05-18&lt;/a&gt; : Bug Fix 0.8.4, Mailing Lists, Spam Blocking&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;A few announcements from my work on Lamson the last few days.  I managed to fix
 a bug, put Lamson to work doing Lamson&amp;#8217;s mailing lists, and use Lamson to do
 some spam blocking on my own email account.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-05-18.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-05-18.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item><item><title>Lamson Project Site Launched</title><link>http://lamsonproject.org/blog/2009-05-16.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-05-16.html"&gt;2009-05-16&lt;/a&gt; : Lamson Project Site Launched&lt;/h2&gt;
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-05-18.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item><item><title>Lamson Project Site Launched</title><link>http://lamsonproject.org/blog/2009-05-16.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-05-16.html"&gt;2009-05-16&lt;/a&gt; : Lamson Project Site Launched&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;Today I launched the Lamson Project site at
 &lt;a href="http://lamsonproject.org/"&gt;lamsonproject.org&lt;/a&gt; and started filling in the
 content.  Lamson is really turning into a fun and useful project, and hopefully
 the site will get other people interested in it and using it.&lt;/p&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/blog/2009-05-16.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;
-</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-05-16.html</guid><pubDate>Sat, 12 Dec 2009 11:52:13 GMT</pubDate></item></channel></rss>
+</description><guid isPermaLink="true">http://lamsonproject.org/blog/2009-05-16.html</guid><pubDate>Sat, 12 Dec 2009 14:47:14 GMT</pubDate></item></channel></rss>
