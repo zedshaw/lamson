@@ -88,7 +88,7 @@ ENCODING_END_REGEX = re.compile(r"\?=", REGEX_OPTS)
 INDENT_REGEX = re.compile(r"\n\s+")
 
 VALUE_IS_EMAIL_ADDRESS = lambda v: '@' in v
-
+ADDRESS_HEADERS_WHITELIST = ['From', 'To', 'Delivered-To', 'Cc', 'Bcc']
 
 class EncodingError(Exception): 
     """Thrown when there is an encoding error."""
@@ -271,7 +271,10 @@ def to_message(mail):
                             (ctype, params, exc.message))
 
     for k in mail.keys():
-        out[k.encode('ascii')] = header_to_mime_encoding(mail[k])
+        if k in ADDRESS_HEADERS_WHITELIST:
+            out[k.encode('ascii')] = header_to_mime_encoding(mail[k])
+        else:
+            out[k.encode('ascii')] = header_to_mime_encoding(mail[k], not_email=True)
 
     out.extract_payload(mail)
 
@@ -339,7 +342,7 @@ def decode_message_body(mail, message):
             pass
 
 
-def properly_encode_header(value, encoder):
+def properly_encode_header(value, encoder, not_email):
     """
     The only thing special (weird) about this function is that it tries
     to do a fast check to see if the header value has an email address in
@@ -355,7 +358,7 @@ def properly_encode_header(value, encoder):
     try:
         return value.encode("ascii")
     except UnicodeEncodeError:
-        if VALUE_IS_EMAIL_ADDRESS(value):
+        if not_email is False and VALUE_IS_EMAIL_ADDRESS(value):
             # this could have an email address, make sure we don't screw it up
             name, address = parseaddr(value)
             return '"%s" <%s>' % (encoder.header_encode(name.encode("utf-8")), address)
@@ -363,14 +366,14 @@ def properly_encode_header(value, encoder):
         return encoder.header_encode(value.encode("utf-8"))
 
 
-def header_to_mime_encoding(value):
+def header_to_mime_encoding(value, not_email=False):
     if not value: return ""
 
     encoder = Charset(DEFAULT_ENCODING)
     if type(value) == list:
-        return "; ".join(properly_encode_header(v, encoder) for v in value)
+        return "; ".join(properly_encode_header(v, encoder, not_email) for v in value)
     else:
-        return properly_encode_header(value, encoder)
+        return properly_encode_header(value, encoder, not_email)
 
 
 def header_from_mime_encoding(header):
