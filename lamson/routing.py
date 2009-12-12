@@ -133,6 +133,8 @@ class ShelveStorage(MemoryStorage):
     install if you need to persist your states (most likely), but if you 
     have a database, you'll need to write your own StateStorage that 
     uses your ORM or database to store.  Consider this an example.
+
+    NOTE: Because of shelve limitations you can only use ASCII encoded keys.
     """
     def __init__(self, database_path):
         """Database path depends on the backing library use by Python's shelve."""
@@ -147,7 +149,7 @@ class ShelveStorage(MemoryStorage):
         """
         with self.lock:
             self.states = shelve.open(self.database_path)
-            value = super(ShelveStorage, self).get(key, sender)
+            value = super(ShelveStorage, self).get(key.encode('ascii'), sender)
             self.states.close()
             return value
 
@@ -157,7 +159,7 @@ class ShelveStorage(MemoryStorage):
         """
         with self.lock:
             self.states = shelve.open(self.database_path)
-            super(ShelveStorage, self).set(key, sender, state)
+            super(ShelveStorage, self).set(key.encode('ascii'), sender, state)
             self.states.close()
 
     def clear(self):

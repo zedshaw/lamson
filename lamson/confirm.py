@@ -43,8 +43,14 @@ class ConfirmationStorage(object):
         """
         Used internally to construct a string key, if you write
         your own you don't need this.
+
+        NOTE: To support proper equality and shelve storage, this encodes the
+        key into ASCII.  Make a different subclass if you need unicode and your
+        storage supports it.
         """
-        return target + ':' + from_address
+        key = target + ':' + from_address
+
+        return key.encode('ascii')
 
     def get(self, target, from_address):
         """
