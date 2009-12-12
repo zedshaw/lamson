@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<rss version="2.0"><channel><title>Lamson Project(TM)</title><link>http://lamsonproject.org</link><description>Lamson The Python SMTP Server and Framework</description><lastBuildDate>Sat, 12 Dec 2009 11:58:51 GMT</lastBuildDate><generator>PyRSS2Gen-1.0.0</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Lamson 1.0pre8 Is Out</title><link>http://lamsonproject.org/blog/2009-12-12.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-12-12.html"&gt;2009-12-12&lt;/a&gt; : Lamson 1.0pre8 Is Out&lt;/h2&gt;
+<rss version="2.0"><channel><title>Lamson Project(TM)</title><link>http://lamsonproject.org</link><description>Lamson The Python SMTP Server and Framework</description><lastBuildDate>Sat, 12 Dec 2009 12:23:30 GMT</lastBuildDate><generator>PyRSS2Gen-1.0.0</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Lamson 1.0pre8 Is Out</title><link>http://lamsonproject.org/blog/2009-12-12.html</link><description>&lt;h2&gt;&lt;a href="/blog/2009-12-12.html"&gt;2009-12-12&lt;/a&gt; : Lamson 1.0pre8 Is Out&lt;/h2&gt;
 
 &lt;p&gt;	&lt;p&gt;I just got done knocking down all the bugs in the new &lt;a href="http://fossil-scm.org/"&gt;Fossil&lt;/a&gt; based
 &lt;a href="http://support.lamsonproject.org/"&gt;Lamson Support Site&lt;/a&gt; and cooked up 1.0pre8.  This has a 
