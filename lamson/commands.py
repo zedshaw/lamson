@@ -145,7 +145,7 @@ def stop_command(pid='./run/smtp.pid', KILL=False, ALL=False):
             if KILL:
                 os.kill(int(pid), signal.SIGKILL)
             else:
-                os.kill(int(pid), signal.SIGHUP)
+                os.kill(int(pid), signal.SIGTERM)
             
             os.unlink(pid_f)
         except OSError, exc:

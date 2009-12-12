@@ -11,6 +11,7 @@ import logging
 import daemon
 from daemon import pidlockfile
 import imp
+import signal
 
 
 def import_settings(boot_also, from_dir=None, boot_module="config.boot"):
@@ -39,6 +40,12 @@ def daemonize(pid, chdir, chroot, umask, files_preserve=None, do_open=True):
     context.stderr = open(os.path.join(chdir, "logs/lamson.err"),"a+")                                                                                                       
     context.files_preserve = files_preserve or []
     context.working_directory = os.path.expanduser(chdir)
+
+    context.signal_map = {
+        signal.SIGTERM: 'terminate',
+        signal.SIGINT: 'terminate'
+    }
+
     
     if chroot: 
         context.chroot_directory = os.path.expanduser(chroot)
