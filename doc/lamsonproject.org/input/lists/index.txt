@@ -8,7 +8,7 @@ You can subscribe to the list by sending an email to "lamson@librelist.com":mail
 with your first message.  *Remember that librelist posts this message, so introduce yourself.*
 
 If you want to read the archives for the Lamson list, you can browse them
-"here":http://librelist.com/archives/lamson/ in a very very basic
+"here":http://librelist.com/browser/ in a very very basic
 form (soon to improve).
 
 You can also get the archives for the Lamson list by using rsync:
