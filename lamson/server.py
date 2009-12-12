@@ -7,6 +7,7 @@ import smtplib
 import smtpd
 import asyncore
 import threading
+import socket
 import logging
 from lamson import queue, mail, routing
 import time
@@ -80,7 +81,12 @@ class Relay(object):
 
         hostname = self.hostname or self.resolve_relay_host(recipient)
 
-        relay_host = smtplib.SMTP(hostname, self.port)
+        try:
+            relay_host = smtplib.SMTP(hostname, self.port)
+        except socket.error:
+            logging.exception("Failed to connect to host %s:%d" % (hostname, self.port))
+            return
+
         relay_host.set_debuglevel(self.debug)
 
         msg = str(message)
