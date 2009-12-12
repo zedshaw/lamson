@@ -43,8 +43,9 @@ class SafeMaildir(mailbox.Maildir):
 
 class QueueError(Exception):
 
-    def __init__(msg, data):
-        self.message = msg
+    def __init__(self, msg, data):
+        Exception.__init__(self, msg)
+        self._message = msg
         self.data = data
 
 
@@ -119,8 +120,12 @@ class Queue(object):
                                 key, self.pop_limit)
                     os.unlink(over_name)
             else:
-                msg = self.get(key)
-                self.remove(key)
+                try:
+                    msg = self.get(key)
+                except QueueError, exc:
+                    raise exc
+                finally:
+                    self.remove(key)
                 return key, msg
 
         return None, None
@@ -140,7 +145,7 @@ class Queue(object):
         try:
             return mail.MailRequest(self.dir, None, None, msg_data)
         except Exception, exc:
-            raise QueueError("Failed to decode message: %s" % exc, data)
+            raise QueueError("Failed to decode message: %s" % exc, msg_data)
 
 
     def remove(self, key):

@@ -209,10 +209,12 @@ class QueueReceiver(object):
         inq = queue.Queue(self.queue_dir)
 
         while True:
+            key = None
+
             try:
                 key, msg = inq.pop()
             except QueueError, exc:
-                undeliverable_message(exc.data, exc.message)
+                undeliverable_message(exc.data, exc._message)
             except:
                 logging.exception("Total error, will continue processing but you "
                                   "might be screwed.")
