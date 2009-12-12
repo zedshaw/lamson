@@ -41,12 +41,6 @@ def daemonize(pid, chdir, chroot, umask, files_preserve=None, do_open=True):
     context.files_preserve = files_preserve or []
     context.working_directory = os.path.expanduser(chdir)
 
-    context.signal_map = {
-        signal.SIGTERM: 'terminate',
-        signal.SIGINT: 'terminate'
-    }
-
-    
     if chroot: 
         context.chroot_directory = os.path.expanduser(chroot)
     if umask != False:
