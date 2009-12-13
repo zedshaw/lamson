@@ -2,7 +2,7 @@ Title: Lamson Releases
 
 You can get the Lamson source in various ways:
 
-* Download it from "support site 1.0pre9 tag":http://support.lamsonproject.org/vinfo/c2be9dedc35f72294ed38010bd4fdd20fa29bb2b as a "Zip file":http://support.lamsonproject.org/zip/Lamson%20Project-c2be9dedc3.zip?uuid=c2be9dedc35f72294ed38010bd4fdd20fa29bb2b
+* Download it from "support site 1.0pre10 tag":http://support.lamsonproject.org/vinfo/04be77cc30e25f78afb30ee0790e7ada4c37a63f as a "Zip file":http://support.lamsonproject.org/zip/Lamson%20Project-04be77cc30.zip?uuid=04be77cc30e25f78afb30ee0790e7ada4c37a63f
 * Use "Fossil":http://fossil-scm.org to get the code as described on the "support site":http://support.lamsonproject.org/home
 
 
@@ -18,11 +18,11 @@ look in your site-packages directory and delete all the versions of Lamson you f
 
 h2. Releases
 
-You can get the 1.0pre9 release source from the this site as well:
+You can get the 1.0pre10 release source from the this site as well:
 
-"1.0pre9 release tar.gz":/releases/lamson-1.0pre9.tar.gz
+"1.0pre10 release tar.gz":/releases/lamson-1.0pre10.tar.gz
 
-"1.0pre9 release Python Egg":/releases/lamson-1.0pre9-py2.5.egg
+"1.0pre10 release Python Egg":/releases/lamson-1.0pre10-py2.5.egg
 
 h2. Examples
 
