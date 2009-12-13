@@ -127,7 +127,7 @@ class MailBase(object):
         del self.headers[normalize_header(key)]
 
     def __nonzero__(self):
-        return self.body != None or len(self.headers) or self.parts
+        return self.body != None or len(self.headers) > 0 or len(self.parts) > 0
 
     def keys(self):
         """Returns the sorted keys."""
