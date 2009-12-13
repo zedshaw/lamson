@@ -380,6 +380,7 @@ class RoutingBase(object):
             raise
         except:
             self.set_state(func.__module__, message, 'ERROR')
+
             if self.UNDELIVERABLE_QUEUE:
                 self.UNDELIVERABLE_QUEUE.push(message)
 

@@ -3,7 +3,7 @@ Title: Lamson Releases
 You can get the Lamson source in various ways:
 
 * Download it from "support site 1.0pre9 tag":http://support.lamsonproject.org/vinfo/c2be9dedc35f72294ed38010bd4fdd20fa29bb2b as a "Zip file":http://support.lamsonproject.org/zip/Lamson%20Project-c2be9dedc3.zip?uuid=c2be9dedc35f72294ed38010bd4fdd20fa29bb2b
-* Use "Fossil":fossil-scm.org to get the code as described on the "support site":http://support.lamsonproject.org/home
+* Use "Fossil":http://fossil-scm.org to get the code as described on the "support site":http://support.lamsonproject.org/home
 
 
 And don't forget you can install it with easy_install as well:
