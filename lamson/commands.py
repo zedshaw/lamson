@@ -62,7 +62,7 @@ def log_command(port=8825, host='127.0.0.1', chroot=False,
     utils.start_server(pid, FORCE, chroot, chdir, uid, gid, umask, loader)
 
 
-def send_command(port=8825, host='127.0.0.1', username=None, password=None,
+def send_command(port=8825, host='127.0.0.1', username=False, password=False,
                  ssl=False, starttls=False, debug=1, sender=None, to=None,
                  subject=None, body=None, attach=False):
     """
@@ -71,6 +71,9 @@ def send_command(port=8825, host='127.0.0.1', username=None, password=None,
     
     lamson send -port 8825 -host 127.0.0.1 -debug 1 \\
             -sender EMAIL -to EMAIL -subject STR -body STR -attach False'
+
+    There is also a username, password, and starttls option for those 
+    who need it.
     """
     message = mail.MailResponse(From=sender,
                                   To=to,
@@ -78,6 +81,11 @@ def send_command(port=8825, host='127.0.0.1', username=None, password=None,
                                   Body=body)
     if attach:
         message.attach(attach)
+
+    if username == False:
+        username = None
+    if password == False:
+        password = None
 
     relay = server.Relay(host, port=port, username=username, password=password,
                          ssl=ssl, starttls=starttls, debug=debug)
