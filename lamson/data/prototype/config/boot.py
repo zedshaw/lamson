@@ -1,7 +1,7 @@
 from config import settings
 from lamson.routing import Router
 from lamson.server import Relay, SMTPReceiver
-from lamson import view
+from lamson import view, queue
 import logging
 import logging.config
 import jinja2

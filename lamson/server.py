@@ -233,20 +233,20 @@ class QueueReceiver(object):
 
             try:
                 key, msg = inq.pop()
-            except QueueError, exc:
-                undeliverable_message(exc.data, exc._message)
+
+                while key:
+                    logging.debug("Pulled message with key: %r off", key)
+                    self.process_message(msg)
+                    key, msg = inq.pop()
+
+                if one_shot: 
+                    return
+                else:
+                    time.sleep(self.sleep)
+
             except:
-                logging.exception("Total error, will continue processing but you "
-                                  "might be screwed.")
-
-            while key:
-                logging.debug("Pulled message with key: %r off", key)
-                self.process_message(msg)
-                key, msg = inq.pop()
-
-            if one_shot: 
-                return
-            else:
+                logging.exception("Error popping from the queue, this might be a problem.")
+                undeliverable_message(exc.data, exc._message)
                 time.sleep(self.sleep)
 
     def process_message(self, msg):
