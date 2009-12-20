@@ -24,5 +24,5 @@ def test_drops_open_relay_messages():
     """
     client.begin()
     client.say("tester@badplace.notinterwebs", "Relay should not happen")
-    assert queue().count() == 0, "Should not deliver that message."
+    assert queue().count() == 0, "You are configured currently to accept everything.  You should change config/settings.py router_defaults so host is your actual host name that will receive mail."
 
