@@ -74,7 +74,7 @@ targets(
             $ fossil info | grep checkout > /tmp/lamson.rev
             py [
                 |rev = open("/tmp/lamson.rev").read().split()[1]
-                |ver = {"version": version, "rev": [rev, rev]}
+                |ver = {"version": version, "rev": [rev[:10], rev]}
                 |open("%(version.file)s", 'w').write(
                 |    "VERSION=" + repr(ver))
             ]

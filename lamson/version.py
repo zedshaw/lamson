@@ -1,1 +1,1 @@
-VERSION={'version': '1.0pre11', 'rev': ['3429d60e0a4b86bd133d37cf7c15c1f3032e96c8', '3429d60e0a4b86bd133d37cf7c15c1f3032e96c8']}
+VERSION={'version': '1.0pre11', 'rev': ['fa366c52e3', 'fa366c52e3a127a211ec48338a27eca782884ce0']}
