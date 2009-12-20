@@ -12,14 +12,13 @@ options(
         project "lamson"
         default 'tests'
         sudo 'sudo'
-        version '1.0pre10'
+        version '1.0pre11'
         website './doc/lamsonproject.org/output/releases/'
-        bzr.revision '.bzr/branch/last-revision'
         version.file 'lamson/version.py'
 
         setup(
             name 'lamson'
-            version '1.0pre10'
+            version '1.0pre11'
             author 'Zed A. Shaw'
             description 'Lamson is a modern Pythonic mail server built like a web application server.'
             url 'http://pypi.python.org/pypi/lamson'
@@ -72,9 +71,10 @@ targets(
         ]
 
         version.gen [
+            $ fossil info | grep checkout > /tmp/lamson.rev
             py [
-                |rev = open("%(bzr.revision)s").read().split()
-                |ver = {"version": version, "rev": rev}
+                |rev = open("/tmp/lamson.rev").read().split()[1]
+                |ver = {"version": version, "rev": [rev, rev]}
                 |open("%(version.file)s", 'w').write(
                 |    "VERSION=" + repr(ver))
             ]
