@@ -12,13 +12,13 @@ options(
         project "lamson"
         default 'tests'
         sudo 'sudo'
-        version '1.0pre11'
+        version '1.0'
         website './doc/lamsonproject.org/output/releases/'
         version.file 'lamson/version.py'
 
         setup(
             name 'lamson'
-            version '1.0pre11'
+            version '1.0'
             author 'Zed A. Shaw'
             description 'Lamson is a modern Pythonic mail server built like a web application server.'
             url 'http://pypi.python.org/pypi/lamson'
@@ -27,7 +27,7 @@ options(
             package_data ( lamson [ 'data/prototype.zip' ])
             packages ['lamson' 'lamson.handlers']
             scripts ['bin/lamson']
-            install_requires ['chardet' 'jinja2' 'mock' 'nose' 'python-daemon']
+            install_requires ['chardet' 'jinja2' 'mock' 'nose' 'python-daemon==1.5.5']
         )
 )
 

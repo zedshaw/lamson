@@ -11,6 +11,7 @@ noreply_format = "testing-noreply@"
 
 def test_forwards_relay_host():
     """
+    !!!!!! YOU MUST CONFIGURE YOUR config/settings.py OR THIS WILL FAIL !!!!!!
     Makes sure that your config/settings.py is configured to forward mail from
     localhost (or your direct host) to your relay.
     """

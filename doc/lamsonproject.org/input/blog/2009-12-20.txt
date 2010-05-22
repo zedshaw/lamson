@@ -1,0 +1,45 @@
+Title:  Lamson 1.0pre11 Out, Minor Bug Fixes, One Crash
+
+I just pushed out Lamson 1.0pre11, which has the following changes:
+
+
+<pre>
+=== 2009-12-20 ===
+18:12:03 [86905426c5] *CURRENT* Lamson 1.0pre11 release. (user: zedshaw tags:
+         trunk, 1.0pre11)
+18:05:53 [ea07801db2] Slight tweak to the version number so it matches how
+         fossil does it. (user: zedshaw tags: trunk)
+18:03:09 [fa366c52e3] Version bump and fixed the repository revision to use
+         fossil's. (user: zedshaw tags: trunk)
+17:40:33 [3429d60e0a] send command shouldn't require username/password
+         options. (user: zedshaw tags: trunk)
+16:37:02 [2e4b343250] Fixed up the prototype so that it has a more explicit
+         test saying to set the hostname. (user: zedshaw tags: trunk)
+16:30:08 [ccf0879149] These empty log files are annoying, people will just
+         have to make the directories. (user: zedshaw tags: trunk)
+16:16:43 [f83c680521] Fix in the prototype to set the undeliverable queue to a
+         Queue. (user: zedshaw tags: trunk)
+16:14:29 [6846d43d79] Fixed a stupid bug in the queue receiver's processing
+         loop. Now it will never die. (user: zedshaw tags: trunk)
+=== 2009-12-13 ===
+21:58:20 [0f1044af31] Update prior to release of 1.0pre10. (user: zedshaw
+         tags: trunk)
+20:59:39 [04be77cc30] Actually *now* the damn __nonzero__ is fixed. (user:
+         zedshaw tags: trunk, 1.0pre10)
+</pre>
+
+Most of these are fairly minor, but the big one is that there was *still* a 
+crash possible if the lamson.queue.Queue class hit an email it couldn't pull
+out of the maildir queue it was managing.  Now when it hits a bad email, no
+matter what it will put it into the undeliverable queue and then sleep before
+processing the rest of the queue.
+
+The down side to this approach is that it still could go down in the except
+handler, so I'll be running it for a while and then tweaking the handling 
+to be smarter.
+
+
+Alright, feel free to "get the goods":/releases/ and report back to me
+with "any tickets you might have.":http://support.lamsonproject.org/
+
+

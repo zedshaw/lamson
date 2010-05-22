@@ -123,7 +123,7 @@ class Queue(object):
                 try:
                     msg = self.get(key)
                 except QueueError, exc:
-                    raise exc
+                    logging.exception("Failed to parse message %r garbage.", key)
                 finally:
                     self.remove(key)
                 return key, msg
