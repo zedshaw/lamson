@@ -25,11 +25,6 @@ Then just do:
 pip install lamson
 </pre>
 
-Remember though that if you do install it like this you'll need to 
-manually update it by visiting Launchpad, finding the latest tarball 
-URL and `pip install`ing it.
-
-
 h2. Credits
 
 These instructions were donated to Lamson by "Zachary
