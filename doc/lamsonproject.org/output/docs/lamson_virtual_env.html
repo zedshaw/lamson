@@ -4,7 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
-		<title>LamsonProject: Installing Lamson Into Virtualenv With Pip</title>
+        <title>LamsonProject: Installing Lamson Into Virtualenv With Pip</title>
+        <meta name="keywords" content="python, email, smtp, automation, framework, auto responder, autoresponder, email agent, smtp agent, email engine, email processor, email processing, email proxy, smtp proxy">
+        <meta name="description" content="Lamson is a email automation framework written in Python. It can be used to automate email processing and simplify email application development."> 
         <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
         <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
 		<!--[if IE 7]>
@@ -55,29 +57,10 @@ you&#8217;ve activated the virtualenv:</p>
 easy_install -U pip
 </pre>
 
-	<p>If you have bazaar installed on your machine, then just do:</p>
+	<p>Then just do:</p>
 
 <pre class="code">
-pip install -e bzr+http://bazaar.launchpad.net/~zedshaw/lamson/development/#egg lamson
-</pre>
-
-	<p>This&#8217;ll install the development version of lamson into a src/lamson 
-directory (src/ will be created if it doesn&#8217;t exist). It will also 
-install all of Lamson&#8217;s dependencies into the virtualenv. If you 
-want to update to the latest development version of Lamson, run:</p>
-
-<pre class="code">
-cd src/lamson
-bzr pull
-</pre>
-
-	<p>This will fetch the latest bazaar tip from Launchpad.</p>
-
-	<p>If you don&#8217;t have bazaar installed and don&#8217;t want to install it, you 
-can grab the latest release of Lamson like this:</p>
-
-<pre class="code">
-pip install -F http://launchpad.net/lamson/trunk/0.9-pre2/+download/lamson-0.9-pre2.tar.gz
+pip install lamson
 </pre>
 
 	<p>Remember though that if you do install it like this you&#8217;ll need to 

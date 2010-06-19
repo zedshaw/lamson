@@ -100,14 +100,6 @@ started":/docs/getting_started.html documentation for more information.
 
 h2.  How can I get the code to Lamson?
 
-Lamson lives on Launchpad at "https://launchpad.net/lamson":https://launchpad.net/lamson where you can get the code via:
-
-<pre class="code">
-bzr branch lp:lamson
-</pre>
-
-Bazaar may ask you to login, but it should still give you the source.
-
 Refer to the "download instructions":/download.html for more information.
 
 

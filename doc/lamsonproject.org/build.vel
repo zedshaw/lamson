@@ -13,9 +13,6 @@ depends(
         )
 
 targets(
-        commit 
-            $ bzr commit
-
         gen [
             $ python webgen.py
             $ cd ../.. && epydoc --graph classtree --url http://lamsonproject.org/ --name "Lamson Mail Server" --html --redundant-details lamson -o doc/lamsonproject.org/output/docs/api/
