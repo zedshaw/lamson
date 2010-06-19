@@ -4,7 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
-		<title>LamsonProject: Downloading Lamson</title>
+        <title>LamsonProject: Downloading Lamson</title>
+        <meta name="keywords" content="python, email, smtp, automation, framework, auto responder, autoresponder, email agent, smtp agent, email engine, email processor, email processing, email proxy, smtp proxy">
+        <meta name="description" content="Lamson is a email automation framework written in Python. It can be used to automate email processing and simplify email application development."> 
         <link rel="stylesheet" href="/styles/global.css" type="text/css" charset="utf-8" />
         <link rel="stylesheet" href="/css/code.css" type="text/css" charset="utf-8" />
 		<!--[if IE 7]>
@@ -39,14 +41,18 @@
                 	<p>You can get the Lamson <strong>source</strong>, read <a href="/releases/">the source releases</a> documentation to
 find out how.</p>
 
-	<p>For people who can&#8217;t click the above link, and who still want the source code, do:</p>
+	<p>For people who can&#8217;t click the above link, and who still want the source code, Lamson
+uses the <a href="http://fossil-scm.org/">Fossil SCM</a> for managing its source code.  To get your
+very own checkout of Lamson, first <a href="http://www.fossil-scm.org/download.html">go get fossil</a>
+and then do these commands:</p>
 
 <pre class="code">
-bzr branch lp:lamson
+mkdir ~/fossils
+fossil clone http://support.lamsonproject.org/ ~/fossils/lamson.fossil
+mkdir -p projects/lamson
+cd projects/lamson
+fossil open ~/fossils/lamson.fossil
 </pre>
-
-	<p>But really you should read the read <a href="/releases/">the source releases</a> documentation to
-find out how.</p>
 
 	<h2>Installing With Easy Install</h2>
 
@@ -59,7 +65,6 @@ it will do the work of getting the dependencies and setting everything up.</p>
 you have <strong>Mako</strong>, and <strong>nose</strong> installed:</p>
 
 <pre class="code">
-$ sudo easy_install sqlalchemy
 $ sudo easy_install jinja
 $ sudo easy_install nose
 </pre>
@@ -77,6 +82,8 @@ $ python setup.py install
 	<h2>Installing Into A Virtual Env</h2>
 
 	<p>Read the instructions <a href="/docs/lamson_virtual_env.html">for installing with virtual env</a> in the <a href="/docs/">documentation</a> section.</p>
+
+
 			</div>
 
 			<div id="column_left">

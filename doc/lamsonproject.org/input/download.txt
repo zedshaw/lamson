@@ -4,14 +4,18 @@ Title: Downloading Lamson
 You can get the Lamson *source*, read "the source releases":/releases/ documentation to
 find out how.
 
-For people who can't click the above link, and who still want the source code, do:
+For people who can't click the above link, and who still want the source code, Lamson
+uses the "Fossil SCM":http://fossil-scm.org/ for managing its source code.  To get your
+very own checkout of Lamson, first "go get fossil":http://www.fossil-scm.org/download.html
+and then do these commands:
 
 <pre class="code">
-bzr branch lp:lamson
+mkdir ~/fossils
+fossil clone http://support.lamsonproject.org/ ~/fossils/lamson.fossil
+mkdir -p projects/lamson
+cd projects/lamson
+fossil open ~/fossils/lamson.fossil
 </pre>
-
-But really you should read the read "the source releases":/releases/ documentation to
-find out how.
 
 h2. Installing With Easy Install
 
@@ -24,7 +28,6 @@ Once you get the source, you can also use setup.py to install Lamson.  First mak
 you have *Mako*, and *nose* installed:
 
 <pre class="code">
-$ sudo easy_install sqlalchemy
 $ sudo easy_install jinja
 $ sudo easy_install nose
 </pre>
@@ -42,3 +45,4 @@ $ python setup.py install
 h2. Installing Into A Virtual Env
 
 Read the instructions "for installing with virtual env":/docs/lamson_virtual_env.html in the "documentation":/docs/ section.
+
