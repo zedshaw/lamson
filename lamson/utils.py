@@ -9,7 +9,12 @@ from lamson import server, routing
 import sys, os
 import logging
 import daemon
-from daemon import pidlockfile
+
+try:
+    from daemon import pidlockfile 
+except:
+    from lockfile import pidlockfile 
+
 import imp
 import signal
 

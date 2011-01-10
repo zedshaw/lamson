@@ -156,7 +156,6 @@ def stop_command(pid='./run/smtp.pid', KILL=False, ALL=False):
                 os.kill(int(pid), signal.SIGHUP)
             
             os.unlink(pid_f)
-            os.unlink(pid_f + ".lock")
         except OSError, exc:
             print "ERROR stopping Lamson on PID %d: %s" % (int(pid), exc)
 
