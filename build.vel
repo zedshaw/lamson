@@ -12,7 +12,7 @@ options(
         project "lamson"
         default 'tests'
         sudo 'sudo'
-        version '1.0'
+        version '1.1'
         website './doc/lamsonproject.org/output/releases/'
         version.file 'lamson/version.py'
 
@@ -41,12 +41,6 @@ depends(
 )
 
 targets(
-        commit [
-            $ bzr log --short > CHANGES
-            $ bzr commit
-            $ bzr push
-        ]
-
         virus [
             $ clamscan -i -r
         ]
