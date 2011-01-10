@@ -229,24 +229,21 @@ class QueueReceiver(object):
         inq = queue.Queue(self.queue_dir)
 
         while True:
-            key = None
+            keys = inq.keys()
 
-            try:
-                key, msg = inq.pop()
+            for key in keys:
+                msg = inq.get(key)
 
-                while key:
+                if msg:
                     logging.debug("Pulled message with key: %r off", key)
                     self.process_message(msg)
-                    key, msg = inq.pop()
+                    logging.debug("Removed %r key from queue.", key)
 
-                if one_shot: 
-                    return
-                else:
-                    time.sleep(self.sleep)
+	        inq.remove(key)
 
-            except:
-                logging.exception("Error popping from the queue, this might be a problem.")
-                undeliverable_message(exc.data, exc._message)
+            if one_shot: 
+                return
+            else:
                 time.sleep(self.sleep)
 
     def process_message(self, msg):

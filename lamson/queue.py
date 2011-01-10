@@ -123,7 +123,7 @@ class Queue(object):
                 try:
                     msg = self.get(key)
                 except QueueError, exc:
-                    logging.exception("Failed to parse message %r garbage.", key)
+                    raise exc
                 finally:
                     self.remove(key)
                 return key, msg
@@ -145,7 +145,8 @@ class Queue(object):
         try:
             return mail.MailRequest(self.dir, None, None, msg_data)
         except Exception, exc:
-            raise QueueError("Failed to decode message: %s" % exc, msg_data)
+            logging.exception("Failed to decode message: %s" % exc, msg_data)
+            return None
 
 
     def remove(self, key):
