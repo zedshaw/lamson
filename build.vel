@@ -18,7 +18,7 @@ options(
 
         setup(
             name 'lamson'
-            version '1.0'
+            version '1.1'
             author 'Zed A. Shaw'
             description 'Lamson is a modern Pythonic mail server built like a web application server.'
             url 'http://pypi.python.org/pypi/lamson'
@@ -42,7 +42,7 @@ depends(
 
 targets(
         virus [
-            $ clamscan -i -r
+            $ echo clamscan -i -r
         ]
 
         examples [
