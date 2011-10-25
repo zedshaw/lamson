@@ -95,14 +95,15 @@ def check_for_pid(pid, force):
             os.unlink(pid)
 
 
-def start_server(pid, force, chroot, chdir, uid, gid, umask, settings_loader):
+def start_server(pid, force, chroot, chdir, uid, gid, umask, settings_loader, debug):
     """
     Starts the server by doing a daemonize and then dropping priv
     accordingly.  It will only drop to the uid/gid given if both are given.
     """
     check_for_pid(pid, force)
 
-    daemonize(pid, chdir, chroot, umask, files_preserve=[])
+    if not debug:
+        daemonize(pid, chdir, chroot, umask, files_preserve=[])
 
     sys.path.append(os.getcwd())
 
