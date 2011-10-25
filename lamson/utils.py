@@ -115,3 +115,13 @@ def start_server(pid, force, chroot, chdir, uid, gid, umask, settings_loader, de
         logging.warning("You probably meant to give a uid and gid, but you gave: uid=%r, gid=%r.  Will not change to any user.", uid, gid)
 
     settings.receiver.start()
+
+    if debug:
+        print "Lamson started in debug mode. ctrl-c to quit..."
+        import time
+        try:
+            while True:
+                time.sleep(100000)
+        except KeyboardInterrupt:
+            # hard quit, since receiver starts a new thread. dirty but works
+            sys.exit(1)
