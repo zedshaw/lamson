@@ -39,7 +39,7 @@ import email
 
 def log_command(port=8825, host='127.0.0.1', chroot=False,
                 chdir=".", uid=False, gid=False, umask=False, pid="./run/log.pid",
-               FORCE=False):
+               FORCE=False, debug=False):
     """
     Runs a logging only server on the given hosts and port.  It logs
     each message it receives and also stores it to the run/queue 
@@ -59,7 +59,7 @@ def log_command(port=8825, host='127.0.0.1', chroot=False,
     uid or gid without doing the priv drop operation.
     """
     loader = lambda: utils.make_fake_settings(host, port)
-    utils.start_server(pid, FORCE, chroot, chdir, uid, gid, umask, loader)
+    utils.start_server(pid, FORCE, chroot, chdir, uid, gid, umask, loader, debug)
 
 
 def send_command(port=8825, host='127.0.0.1', username=False, password=False,
