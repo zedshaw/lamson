@@ -124,4 +124,4 @@ def start_server(pid, force, chroot, chdir, uid, gid, umask, settings_loader, de
                 time.sleep(100000)
         except KeyboardInterrupt:
             # hard quit, since receiver starts a new thread. dirty but works
-            sys.exit(1)
+            os._exit(1)
