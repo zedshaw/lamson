@@ -175,8 +175,8 @@ class MIMEPart(MIMEBase):
     thing you'd encode, there's just this one, and it figures out how to
     encode what you ask it.
     """
-    def __init__(self, type, **params):
-        self.maintype, self.subtype = type.split('/')
+    def __init__(self, type_, **params):
+        self.maintype, self.subtype = type_.split('/')
         MIMEBase.__init__(self, self.maintype, self.subtype, **params)
 
     def add_text(self, content):
