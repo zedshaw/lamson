@@ -95,14 +95,15 @@ def check_for_pid(pid, force):
             os.unlink(pid)
 
 
-def start_server(pid, force, chroot, chdir, uid, gid, umask, settings_loader):
+def start_server(pid, force, chroot, chdir, uid, gid, umask, settings_loader, debug):
     """
     Starts the server by doing a daemonize and then dropping priv
     accordingly.  It will only drop to the uid/gid given if both are given.
     """
     check_for_pid(pid, force)
 
-    daemonize(pid, chdir, chroot, umask, files_preserve=[])
+    if not debug:
+        daemonize(pid, chdir, chroot, umask, files_preserve=[])
 
     sys.path.append(os.getcwd())
 
@@ -114,3 +115,13 @@ def start_server(pid, force, chroot, chdir, uid, gid, umask, settings_loader):
         logging.warning("You probably meant to give a uid and gid, but you gave: uid=%r, gid=%r.  Will not change to any user.", uid, gid)
 
     settings.receiver.start()
+
+    if debug:
+        print "Lamson started in debug mode. ctrl-c to quit..."
+        import time
+        try:
+            while True:
+                time.sleep(100000)
+        except KeyboardInterrupt:
+            # hard quit, since receiver starts a new thread. dirty but works
+            os._exit(1)
