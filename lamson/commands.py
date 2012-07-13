@@ -39,7 +39,7 @@ import email
 
 def log_command(port=8825, host='127.0.0.1', chroot=False,
                 chdir=".", uid=False, gid=False, umask=False, pid="./run/log.pid",
-               FORCE=False):
+               FORCE=False, debug=False):
     """
     Runs a logging only server on the given hosts and port.  It logs
     each message it receives and also stores it to the run/queue 
@@ -59,7 +59,7 @@ def log_command(port=8825, host='127.0.0.1', chroot=False,
     uid or gid without doing the priv drop operation.
     """
     loader = lambda: utils.make_fake_settings(host, port)
-    utils.start_server(pid, FORCE, chroot, chdir, uid, gid, umask, loader)
+    utils.start_server(pid, FORCE, chroot, chdir, uid, gid, umask, loader, debug)
 
 
 def send_command(port=8825, host='127.0.0.1', username=False, password=False,
@@ -110,7 +110,7 @@ def sendmail_command(port=8825, host='127.0.0.1', debug=0, TRAILING=None):
 
 
 def start_command(pid='./run/smtp.pid', FORCE=False, chroot=False, chdir=".",
-                  boot="config.boot", uid=False, gid=False, umask=False):
+                  boot="config.boot", uid=False, gid=False, umask=False, debug=False):
     """
     Runs a lamson server out of the current directory:
 
@@ -118,7 +118,7 @@ def start_command(pid='./run/smtp.pid', FORCE=False, chroot=False, chdir=".",
             -umask False -uid False -gid False -boot config.boot
     """
     loader = lambda: utils.import_settings(True, from_dir=os.getcwd(), boot_module=boot)
-    utils.start_server(pid, FORCE, chroot, chdir, uid, gid, umask, loader)
+    utils.start_server(pid, FORCE, chroot, chdir, uid, gid, umask, loader, debug)
 
 
 def stop_command(pid='./run/smtp.pid', KILL=False, ALL=False):
