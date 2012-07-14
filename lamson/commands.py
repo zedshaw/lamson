@@ -22,10 +22,11 @@ like saying they are optional (but expected), and TRAILING=None is
 like saying they are required.  You can't (afaik) do TRAILING=None
 with *args.
 
-See lamson.args for more details.
+See python-modargs for more details.
 """
 
-from lamson import server, args, utils, mail, routing, queue, encoding
+from lamson import server, utils, mail, routing, queue, encoding
+from modargs import args
 from pkg_resources import resource_stream
 from zipfile import ZipFile
 import glob

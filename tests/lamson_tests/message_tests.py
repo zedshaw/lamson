@@ -74,11 +74,11 @@ def test_mail_response_attachments():
                                  Subject="Test message",
                                  From="sender@localhost",
                                  Body="Test from test_mail_response_attachments.")
-    readme_data = open("./README").read()
+    readme_data = open("./README.md").read()
 
-    assert_raises(AssertionError, sample.attach, filename="./README", disposition="inline")
+    assert_raises(AssertionError, sample.attach, filename="./README.md", disposition="inline")
 
-    sample.attach(filename="./README", content_type="text/plain", disposition="inline")
+    sample.attach(filename="./README.md", content_type="text/plain", disposition="inline")
     assert len(sample.attachments) == 1
     assert sample.multipart
 
@@ -89,7 +89,7 @@ def test_mail_response_attachments():
     assert len(sample.attachments) == 0
     assert not sample.multipart
 
-    sample.attach(data=readme_data, filename="./README", content_type="text/plain")
+    sample.attach(data=readme_data, filename="./README.md", content_type="text/plain")
 
     msg = sample.to_message()
     assert_equal(len(msg.get_payload()), 2)
@@ -111,7 +111,7 @@ def test_mail_request_attachments():
     msg_parts = msg.all_parts()
     sample_parts = sample.all_parts()
 
-    readme = open("./README").read()
+    readme = open("./README.md").read()
 
     # BUG: Python's MIME text attachment decoding drops trailing newline chars
 

@@ -1,0 +1,9 @@
+*.pyc
+.*.sw*
+logs
+run
+ENV
+build
+dist
+*.egg-info
+tests/*.db

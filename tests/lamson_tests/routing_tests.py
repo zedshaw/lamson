@@ -128,16 +128,9 @@ def test_route___get___raises():
     br = BadRoute()
     br.wont_work("raises")
 
-def raises_ImportError(*args):
-    raise ImportError()
-
-@patch('__builtin__.reload', new=Mock())
-@patch('__builtin__.__import__', new=Mock())
+@patch('__builtin__.reload', new=Mock(side_effect=ImportError))
 @patch('lamson.routing.LOG', new=Mock())
 def test_reload_raises():
-    reload.side_effect = raises_ImportError
-    __import__.side_effect = raises_ImportError
-
     Router.LOG_EXCEPTIONS=True
     Router.reload()
     assert routing.LOG.exception.called
