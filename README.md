@@ -80,9 +80,9 @@ Lamson is 1.1 right now.
 License
 ----
 
-Lamson is released under the GNU GPLv3 license, which should be included with
-your copy of the source code.  If you didn't receive a copy of the license then
-you didn't get the right version of the source code.
+Lamson is licensed under the license in the https://github.com/zedshaw/lamson/blob/master/LICENSE
+file.  It's a variant of the BSD license that is revokeable and makes contributor's rights
+clear up front.
 
 
 Contributing
