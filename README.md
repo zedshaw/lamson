@@ -70,20 +70,12 @@ http://lamsonproject.org/
 Source
 -----
 
-If you want to get the source then you can use Bazaar:
-
-bzr branch lp:lamson
-
-Bazaar may ask you to login, but it should still give you the source.
-
+The source is here http://github.com/zedshaw/lamson so figure it out.
 
 Status
 ------
 
-Lamson is currently nearing the 1.0 stage, with almost everything you need to
-build an email based application server.  The source is well documented, has
-nearly full test coverage, and runs on Python 2.5 and 2.6.
-
+Lamson is 1.1 right now.
 
 License
 ----
