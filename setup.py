@@ -1,4 +1,3 @@
-
 try:
     from setuptools import setup
 except ImportError:
@@ -16,7 +15,7 @@ config = {
      'version': '1.2',
      'scripts': ['bin/lamson'],
      'install_requires': ['chardet', 'jinja2', 'mock', 'nose', 'python-daemon',
-                         python-modargs],
+                         'python-modargs'],
      'packages': ['lamson',
      'lamson.handlers'],
      'name': 'lamson'
