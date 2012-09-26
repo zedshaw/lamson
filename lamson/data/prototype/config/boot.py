@@ -6,6 +6,10 @@ import logging
 import logging.config
 import jinja2
 
+# Uncomment to persist state between runs:
+#from lamson.routing import ShelveStorage
+#Router.STATE_STORE = ShelveStorage("run/states")
+
 logging.config.fileConfig("config/logging.conf")
 
 # the relay host to actually send the final message to
