@@ -1,4 +1,3 @@
-
 """
 The meat of Lamson, doing all the work that actually takes an email and makes
 sure that your code gets it.
@@ -379,7 +378,8 @@ class RoutingBase(object):
         except SMTPError:
             raise
         except:
-            self.set_state(func.__module__, message, 'ERROR')
+            if 'ERROR' in dir(sys.modules[func.__module__]):
+                self.set_state(func.__module__, message, 'ERROR')
 
             if self.UNDELIVERABLE_QUEUE:
                 self.UNDELIVERABLE_QUEUE.push(message)
