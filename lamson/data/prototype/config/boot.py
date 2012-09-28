@@ -14,7 +14,10 @@ logging.config.fileConfig("config/logging.conf")
 
 # the relay host to actually send the final message to
 settings.relay = Relay(host=settings.relay_config['host'], 
-                       port=settings.relay_config['port'], debug=1)
+                       port=settings.relay_config['port'],
+                       username=settings.relay_config.get('username', None),
+                       password=settings.relay_config.get('password', None),
+                       debug=1)
 
 # where to listen for incoming messages
 settings.receiver = SMTPReceiver(settings.receiver_config['host'],
