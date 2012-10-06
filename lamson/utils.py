@@ -8,9 +8,9 @@ can be improved feel free to work up a patch.
 from lamson import server, routing
 import sys, os
 import logging
-import daemon
 
 try:
+    import daemon
     from daemon import pidlockfile 
 except:
     from lockfile import pidlockfile 
