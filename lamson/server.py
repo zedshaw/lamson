@@ -226,7 +226,7 @@ class QueueReceiver(object):
                      (self.queue_dir))
         logging.debug("Sleeping for %d seconds..." % self.sleep)
 
-        inq = queue.Queue(self.queue_dir)
+        inq = self.queue
 
         while True:
             keys = inq.keys()
