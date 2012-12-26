@@ -15,8 +15,7 @@ config = {
     'author_email': 'zedshaw@zedshaw.com',
      'version': '1.2',
      'scripts': ['bin/lamson'],
-     'install_requires': ['chardet', 'jinja2', 'mock', 'nose', 'python-daemon',
-                         python-modargs],
+     'install_requires': ['chardet', 'jinja2', 'mock', 'nose', 'python-daemon', 'python-modargs'],
      'packages': ['lamson',
      'lamson.handlers'],
      'name': 'lamson'
