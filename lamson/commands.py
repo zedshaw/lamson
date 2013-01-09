@@ -104,8 +104,8 @@ def sendmail_command(port=8825, host='127.0.0.1', debug=0, TRAILING=None):
     relay = server.Relay(host, port=port,
                            debug=debug)
     data = sys.stdin.read()
-    msg = mail.MailRequest(None, TRAILING, None, data)
-    relay.deliver(msg)
+    msg = mail.MailRequest(Peer=None, From=None, To=None, Data=data)
+    relay.deliver(msg, To=TRAILING)
 
 
 
