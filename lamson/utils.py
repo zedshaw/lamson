@@ -25,9 +25,8 @@ def import_settings(boot_also, from_dir=None, boot_module="config.boot"):
         sys.path.append(from_dir)
 
     # Assumes that the settings.py has the same parent module as boot.py
-    settings_module = "config.settings"
-    if boot_module.endswith(".boot"):
-        settings_module = ".".join( [ boot_module.rsplit(".", 1)[0], "settings" ] )
+    # ie config.boot -> config.settings (just changes the name of the last module)
+    settings_module = ".".join( [ boot_module.rsplit(".", 1)[0], "settings" ] )
 
     settings = __import__(settings_module, globals(), locals()).settings
 
