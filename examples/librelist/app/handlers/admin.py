@@ -30,7 +30,7 @@ def SPAMMING(message, **options):
 
 
 @route('(bad_list)@(host)', bad_list='.+')
-@route('(list_name)@(host)')
+@route('(list_name)@(host)')  # list_name and host regexes are defined in config/settings.py (router_defaults)
 @route('(list_name)-subscribe@(host)')
 @bounce_to(soft=bounce.BOUNCED_SOFT, hard=bounce.BOUNCED_HARD)
 @spam_filter(SPAM['db'], SPAM['rc'], SPAM['queue'], next_state=SPAMMING)
