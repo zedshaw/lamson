@@ -55,7 +55,6 @@ from functools import wraps
 import re
 import logging
 import sys
-import email.utils
 import shelve
 import threading
 
@@ -379,7 +378,8 @@ class RoutingBase(object):
         except SMTPError:
             raise
         except:
-            self.set_state(func.__module__, message, 'ERROR')
+            if 'ERROR' in dir(sys.modules[func.__module__]):
+                self.set_state(func.__module__, message, 'ERROR')
 
             if self.UNDELIVERABLE_QUEUE:
                 self.UNDELIVERABLE_QUEUE.push(message)
