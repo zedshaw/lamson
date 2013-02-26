@@ -2,10 +2,8 @@
 
 from nose.tools import *
 from mock import *
-import os
 from lamson import server, queue, routing
 from message_tests import *
-import re
 
 
 def test_router():

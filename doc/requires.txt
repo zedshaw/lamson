@@ -1,0 +1,16 @@
+BeautifulSoup
+CleverCSS
+Jinja2
+PyStemmer
+South
+chardet
+docutils
+lockfile
+lxml
+markdown2
+mock
+nose
+pydns
+python-daemon
+pytyrant
+spambayes

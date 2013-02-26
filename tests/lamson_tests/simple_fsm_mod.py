@@ -33,6 +33,9 @@ def NEXT(message, list_name=None, action=None, host=None):
     print "NEXT", message, list_name, action, host
     return END
 
+def ERROR(message):
+    return ERROR
+
 @route("(anything)@(host)", anything=".*")
 def END(message, anything=None, host=None):
     print "END", anything, host
