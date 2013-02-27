@@ -111,7 +111,11 @@ class Relay(object):
             logging.exception("Failed to connect to host %s:%d" % (hostname, self.port))
             return
 
-        relay_host.sendmail(sender, recipient, str(message))
+        try:
+            relay_host.sendmail(sender, recipient, str(message))
+        except:
+            logging.exception("Failed to send message to host %s:%s" % (hostname, self.port))
+
         relay_host.quit()
 
     def resolve_relay_host(self, To):
