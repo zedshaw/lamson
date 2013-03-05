@@ -139,6 +139,7 @@ class Queue(object):
             msg_file = self.mbox.get_file(key)
         except IOError:
             logging.exception("Failed to get file, message gone?")
+            return None
 
         if not msg_file: 
             return None
