@@ -135,7 +135,10 @@ class Queue(object):
         Get the specific message referenced by the key.  The message is NOT
         removed from the queue.
         """
-        msg_file = self.mbox.get_file(key)
+        try:
+            msg_file = self.mbox.get_file(key)
+        except IOError:
+            logging.exception("Failed to get file, message gone?")
 
         if not msg_file: 
             return None
