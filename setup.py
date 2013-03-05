@@ -12,7 +12,7 @@ config = {
     'url': 'http://pypi.python.org/pypi/lamson',
     'download_url': 'http://pypi.python.org/pypi/lamson',
     'author_email': 'zedshaw@zedshaw.com',
-     'version': '1.3.1',
+     'version': '1.3.2',
      'scripts': ['bin/lamson'],
      'install_requires': ['chardet', 'jinja2', 'mock', 'nose', 'python-daemon',
                          'python-modargs'],
