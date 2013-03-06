@@ -155,7 +155,10 @@ class Queue(object):
 
     def remove(self, key):
         """Removes the queue, but not returned."""
-        self.mbox.remove(key)
+        try:
+            self.mbox.remove(key)
+        except IOError:
+            logging.exception("Failed to remove message from queue.")
     
     def count(self):
         """Returns the number of messages in the queue."""
