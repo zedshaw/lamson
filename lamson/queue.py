@@ -137,7 +137,7 @@ class Queue(object):
         """
         try:
             msg_file = self.mbox.get_file(key)
-        except IOError:
+        except:
             logging.exception("Failed to get file, message gone?")
             return None
 
@@ -148,8 +148,8 @@ class Queue(object):
 
         try:
             return mail.MailRequest(self.dir, None, None, msg_data)
-        except Exception, exc:
-            logging.exception("Failed to decode message: %s; msg_data: %r",   exc, msg_data)
+        except:
+            logging.exception("Failed to decode message: msg_data: %r", msg_data)
             return None
 
 
@@ -157,7 +157,7 @@ class Queue(object):
         """Removes the queue, but not returned."""
         try:
             self.mbox.remove(key)
-        except IOError:
+        except:
             logging.exception("Failed to remove message from queue.")
     
     def count(self):
