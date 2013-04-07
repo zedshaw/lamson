@@ -110,8 +110,8 @@ def is_blog(current_dir, myself, headers, files):
 def content_format(current_dir, inp, headers, files, format, body):
     return {
             u'text/plain': lambda s: u'<pre>%s</pre>' % s,
-            u'text/x-textile':  lambda s: u'%s' % textile(s,head_offset=0, validate=0, 
-                                sanitize=0, encoding='utf-8', output='utf-8'),
+            u'text/x-textile':  lambda s: u'%s' % textile(s,head_offset=0,
+                                encoding='utf-8', output='utf-8'),
             u'text/html': lambda s: s,
             u'text/blog': is_blog(current_dir, inp, headers, files)
         }[format](body)

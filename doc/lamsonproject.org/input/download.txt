@@ -4,17 +4,10 @@ Title: Downloading Lamson
 You can get the Lamson *source*, read "the source releases":/releases/ documentation to
 find out how.
 
-For people who can't click the above link, and who still want the source code, Lamson
-uses the "Fossil SCM":http://fossil-scm.org/ for managing its source code.  To get your
-very own checkout of Lamson, first "go get fossil":http://www.fossil-scm.org/download.html
-and then do these commands:
+For people who can't click the above link, and who still want the source code:
 
 <pre class="code">
-mkdir ~/fossils
-fossil clone http://support.lamsonproject.org/ ~/fossils/lamson.fossil
-mkdir -p projects/lamson
-cd projects/lamson
-fossil open ~/fossils/lamson.fossil
+git clone <a href='http://github.com/zedshaw/lamson'>http://github.com/zedshaw/lamson</a>
 </pre>
 
 h2. Installing With Easy Install
