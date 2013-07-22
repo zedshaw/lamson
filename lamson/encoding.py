@@ -417,14 +417,18 @@ def attempt_decoding(charset, dec):
 
 
 def apply_charset_to_header(charset, encoding, data):
+    #  individually encoded base64 must be decoded separately,
+    #  but the characterset decoding into unicode must be done jointly
+    if not isinstance(data, list):
+        data = [data]
     if encoding == 'b' or encoding == 'B':
-        dec = email.base64mime.decode(data.encode('ascii'))
+        dec = [email.base64mime.decode(d.encode('ascii')) for d in data]
     elif encoding == 'q' or encoding == 'Q':
-        dec = email.quoprimime.header_decode(data.encode('ascii'))
+        dec = [email.quoprimime.header_decode(d.encode('ascii')) for d in data]
     else:
         raise EncodingError("Invalid header encoding %r should be 'Q' or 'B'." % encoding)
 
-    return attempt_decoding(charset, dec)
+    return attempt_decoding(charset, "".join(dec))
 
 
 
@@ -474,8 +478,10 @@ def _parse_charset_header(data):
         while True:
             if not oddness:
                 left, enc_header, enc_data, continued = scanner.next()
+                enc_data = [enc_data]
             else:
                 left, enc_header, enc_data, continued = oddness
+                enc_data = [enc_data]
                 oddness = None
 
             while continued:
@@ -485,7 +491,9 @@ def _parse_charset_header(data):
                     assert not ed, "Parsing error, give Zed this: %r" % data
                     oddness = (" " + l.lstrip(), eh, ed, continued)
                 elif eh[0] == enc_header[0] and eh[1] == enc_header[1]:
-                    enc_data += ed
+                    #  individually encoded base64 must be decoded separately,
+                    #  but the characterset decoding into unicode must be done jointly
+                    enc_data.append(ed)
                 else:
                     # odd case, it's continued but not from the same base64
                     # need to stack this for the next loop, and drop the \n\s+
