@@ -9,6 +9,7 @@ from lamson import server, routing
 import sys, os
 import logging
 import daemon
+import importlib
 
 try:
     from daemon import pidlockfile 
@@ -28,7 +29,7 @@ def import_settings(boot_also, from_dir=None, boot_module="config.boot"):
     # ie config.boot -> config.settings (just changes the name of the last module)
     settings_module = ".".join( [ boot_module.rsplit(".", 1)[0], "settings" ] )
 
-    settings = __import__(settings_module, globals(), locals()).settings
+    settings = importlib.import_module(settings_module)
 
     if boot_also:
         __import__(boot_module, globals(), locals())
