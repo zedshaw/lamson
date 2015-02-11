@@ -495,7 +495,7 @@ def _parse_charset_header(data):
                     oddness = ('', eh, ed, continued)
                     break
 
-            if left:
+            if left and not re.search("^\s+$", left):
                 yield attempt_decoding('ascii', left)
                        
             if enc_header:
