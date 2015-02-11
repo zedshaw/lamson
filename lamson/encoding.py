@@ -72,7 +72,7 @@ import re
 import email
 from email import encoders
 from email.mime.base import MIMEBase
-from email.utils import parseaddr
+from email.utils import getaddresses
 import sys
 
 
@@ -360,8 +360,11 @@ def properly_encode_header(value, encoder, not_email):
     except UnicodeEncodeError:
         if not_email is False and VALUE_IS_EMAIL_ADDRESS(value):
             # this could have an email address, make sure we don't screw it up
-            name, address = parseaddr(value)
-            return '"%s" <%s>' % (encoder.header_encode(name.encode("utf-8")), address)
+            addresses = getaddresses(value.split(","))
+            return ", ".join([
+                '"%s" <%s>' % (encoder.header_encode(name.encode("utf-8")), address)
+                for name, address in addresses
+            ])
 
         return encoder.header_encode(value.encode("utf-8"))
 
@@ -492,7 +495,7 @@ def _parse_charset_header(data):
                     oddness = ('', eh, ed, continued)
                     break
 
-            if left:
+            if left and not re.search("^\s+$", left):
                 yield attempt_decoding('ascii', left)
                        
             if enc_header:

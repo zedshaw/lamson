@@ -1,3 +1,4 @@
+# encoding: utf-8
 from __future__ import with_statement
 from nose.tools import *
 import re
@@ -197,6 +198,20 @@ def test_MIMEPart():
 def test_guess_encoding_fails_completely():
     chardet.detect.return_value = {'encoding': None, 'confidence': 0.0}
     encoding.guess_encoding_and_decode('ascii', 'some data', errors='strict')
+
+def test_decoding_drops_spaces_between_encoded_words():
+    expected = u"Vill bli borttagen från hitta.se"
+    actual = encoding.properly_decode_header('=?iso-8859-1?Q?Vill_bli_b?= =?iso-8859-1?Q?orttagen_f?= =?iso-8859-1?Q?r=E5n_hitta.?= =?iso-8859-1?Q?se?=')
+    assert_equal(actual, expected)
+
+    actual = encoding.properly_decode_header('Vill bli =?iso-8859-1?Q?borttagen_f?= =?iso-8859-1?Q?r=E5n_hitta.?= =?iso-8859-1?Q?se?=')
+    assert_equal(actual, expected)
+
+    actual = encoding.properly_decode_header('=?iso-8859-1?Q?Vill_bli?= borttagen =?iso-8859-1?Q?fr=E5n_hitta.?= =?iso-8859-1?Q?se?=')
+    assert_equal(actual, expected)
+
+    actual = encoding.properly_decode_header('=?iso-8859-1?Q?Vill_bli?= borttagen =?iso-8859-1?Q?fr=E5n_hitta.?= =?iso-8859-1?Q?se?= slut')
+    assert_equal(actual, u"Vill bli borttagen från hitta.se slut")
 
 
 def test_attach_text():
