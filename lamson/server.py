@@ -203,7 +203,7 @@ class SMTPReceiver(smtpd.SMTPServer):
 class QueueReceiver(object):
     """
     Rather than listen on a socket this will watch a queue directory and
-    process messages it recieves from that.  It works in almost the exact
+    process messages it receives from that.  It works in almost the exact
     same way otherwise.
     """
 
