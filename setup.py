@@ -8,7 +8,6 @@ config = {
         'lamson': ['data/prototype.zip']
     }, 
     'description': 'Lamson is a modern Pythonic mail server built like a web application server.',
-    'author': 'Zed A. Shaw',
     'url': 'http://pypi.python.org/pypi/lamson',
     'download_url': 'http://pypi.python.org/pypi/lamson',
     'author_email': 'zedshaw@zedshaw.com',
